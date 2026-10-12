@@ -46,6 +46,14 @@ Windows analytics workstation and administration client.
 - Python
 - SQL
 
+## Analytics Benchmark
+
+25,000,000-row dataframe benchmark:
+
+- pandas: 0.5617 s
+- Polars: 0.0672 s
+- DuckDB: 0.1156 s
+
 ## SSH and Remote Administration
 
 - OpenSSH
