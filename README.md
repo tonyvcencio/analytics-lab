@@ -1,20 +1,20 @@
 # Analytics Lab
 
-A mulit-system analytics and infrastructure environment built to develop practical skills across Windows, macOS, Linux, Python, SQL, Git, and remote administration.
+A multi-system analytics and infrastructure environment built to develop practical skills across Windows, macOS, Linux, Python, SQL, Git, and remote administration.
 
 ## Systems
 
 ### Nomad
 
-WIndows analytics workstation focused on:
+Windows analytics workstation focused on:
 
-- Power Bi
+- Power BI
 - Excel
 - Python
 - SQL
 - Git
 - PowerShell
-- Remote Linx administration
+- Remote Linux administration
 
 ### Mac
 

@@ -13,6 +13,14 @@ Primary macOS analytics and development workstation.
 
 Git-based development and project version control.
 
+### Analytics
+
+- Python
+- Unix Tooling
+- Git
+- Development workflows
+- Infrastructure preparation
+
 ## Python
 
 Python development environment established and tested.
