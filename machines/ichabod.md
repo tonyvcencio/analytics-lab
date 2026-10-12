@@ -58,7 +58,30 @@ Ichabod will be administered primarily from Nomad and Mac over SSH.
 
 Ubuntu Server is installed on the Samsung PM9B1 256GB NVMe SSD. The Kingston NV2 500GB NVMe SSD (Sr. Gimperihno) is reserved for secondary, noncritical workloads. Its filesystem and mounting configuration have not yet been established.
 
+### Primary Storage Layout
+
+- Primary device: Samsung PM9B1 256GB NVMe (`nvme0n1`)
+- Usable device capacity: approximately 238.5 GiB
+- Ubuntu installed using Logical Volume Manager (LVM)
+- EFI system partition: approximately 1 GiB
+- Boot partition: approximately 2 GiB
+- LVM physical volume: approximately 235.4 GiB
+- Root logical volume: approximately 100 GiB
+- Remaining volume-group capacity has not yet been allocated
+- Future storage allocation strategy remains undecided
+
 ## Validation
+
+**Initial hardware commissioning completed: October 11, 2026.**
+
+All completed initial hardware diagnostics passed.
+
+Commissioning established a baseline for CPU stability, memory operation,
+NVMe health, thermal performance, and operating-system reliability.
+
+These results do not constitute exhaustive hardware certification.
+Additional long-duration testing and secondary-storage validation remain
+future tasks.
 
 - [x] Hardware assembled
 - [x] POST successful
@@ -84,6 +107,34 @@ Ubuntu Server is installed on the Samsung PM9B1 256GB NVMe SSD. The Kingston NV2
 - [x] System temperatures inspected
 - [x] Kernel error logs reviewed
 
+#### CPU Stress and Thermal Validation
+
+Test performed: October 11, 2026.
+
+- Processor: Intel Core i3-12100T
+- Physical cores: 4
+- Logical threads: 8
+- Test utility: `stress-ng`
+- Workload: Matrix multiplication
+- CPU workers: 8
+- Duration: 300 seconds
+- Workers passed: 8
+- Workers failed: 0
+- Total reported operations: 2,805,817
+- Reported operations per second: 9,352.66
+- Observed CPU package temperature before testing: 32°C
+- Observed CPU package temperature during testing: 46°C
+- Observed CPU package temperature after testing: 35°C
+- Kernel warnings/errors during final inspection: None reported
+
+**Result: PASS**
+
+The ARCTIC Freezer 36 maintained low observed CPU temperatures
+during the workload.
+
+The recorded 46°C temperature represents an observation during
+testing, not a verified maximum temperature.
+
 #### Storage Health Notes
 
 - Samsung PM9B1: No media errors reported during initial SMART inspection.
@@ -102,3 +153,7 @@ Ubuntu Server is installed on the Samsung PM9B1 256GB NVMe SSD. The Kingston NV2
 - [ ] Establish storage strategy for Sr. Gimperihno
 - [ ] Configure scheduled maintenance and monitoring
 - [ ] Establish backup procedures
+- [ ] Review and apply outstanding Ubuntu package updates
+- [ ] Evaluate available firmware updates
+- [ ] Review and allocate unused LVM capacity
+- [ ] Perform controlled read/write testing on secondary SSD
