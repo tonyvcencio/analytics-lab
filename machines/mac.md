@@ -17,6 +17,14 @@ Git-based development and project version control.
 
 Python development environment established and tested.
 
+## Analytics Benchmark
+
+25,000,000-row dataframe benchmark run on 2026-10-08:
+
+- pandas: 0.1107 s
+- Polars: 0.0100 s
+- DuckDB: 0.0212 s
+
 ## Linux / Infrastructure Work
 
 Used to prepare the Ubuntu installation media for Ichabod.
