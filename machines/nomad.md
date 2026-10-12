@@ -41,10 +41,16 @@ Windows analytics workstation and administration client.
 
 ## Analytics
 
-- Power BI Desktop
 - Microsoft Excel
+- Power BI Desktop
 - Python
-- SQL
+- pandas
+- Polars
+- DuckDB
+- PyArrow
+- Jupyter
+- DBeaver Community
+- SQLTools
 
 ## Analytics Benchmark
 
@@ -53,6 +59,38 @@ Windows analytics workstation and administration client.
 - pandas: 0.5617 s
 - Polars: 0.0672 s
 - DuckDB: 0.1156 s
+
+## Analytics Workflow Validation
+
+Validated on 2026-10-11:
+
+- [x] Windows-native Python virtual environment rebuilt
+- [x] Shared `requirements.txt` installed successfully
+- [x] VS Code configured to use project `.venv`
+- [x] Jupyter notebook execution validated
+- [x] pandas import validated
+- [x] Polars import validated
+- [x] DuckDB import validated
+- [x] PyArrow interoperability validated
+- [x] 25,000,000-row benchmark completed
+- [x] DBeaver Community installed and configured
+- [x] DuckDB database created and queried in DBeaver
+- [x] Reproducible SQL creation script added
+- [x] Python queried the same DuckDB database successfully
+
+## Current State
+
+Nomad is now a validated Windows analytics workstation and administration client.
+
+It supports:
+
+- Local Python and SQL analytics
+- Jupyter-based exploration
+- Power BI and Excel workflows
+- Git/GitHub development
+- DuckDB-based local databases
+- DBeaver database administration
+- SSH and Remote-SSH administration of Ichabod
 
 ## SSH and Remote Administration
 
@@ -88,3 +126,10 @@ Windows analytics workstation and administration client.
 - SSH public and private keys serve different roles.
 - ssh-agent can hold an unlocked private key for authenticated sessions.
 - Git ignores empty directories unless placeholder files are used.
+- Git tracks saved files, not unsaved editor buffers.
+- Virtual environments isolate Python dependencies by project.
+- `requirements.txt` provides a shared dependency definition across machines.
+- DuckDB can be accessed from multiple tools, but local file locking matters.
+- DBeaver and Python can act as separate clients against the same database file.
+- SQL `INSERT` statements add rows rather than replacing existing data.
+- Reproducible workflows are better than committing local database files.
