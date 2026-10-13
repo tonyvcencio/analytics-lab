@@ -1,0 +1,8 @@
+[Unit]
+Description=Health Metrics Analytics Collector
+
+[Service]
+Type=oneshot
+User=tony
+WorkingDirectory=/home/tony/analytics/health-metrics
+ExecStart=/home/tony/analytics/health-metrics/.venv/bin/python /home/tony/analytics/health-metrics/collector/collect_metrics.py

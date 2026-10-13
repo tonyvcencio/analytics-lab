@@ -1,0 +1,11 @@
+[Unit]
+Description=Run Health Metrics Collector Every Five Minutes
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=5min
+AccuracySec=1min
+Unit=health-metrics.service
+
+[Install]
+WantedBy=timers.target

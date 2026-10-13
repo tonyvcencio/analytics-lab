@@ -12,3 +12,6 @@ __pycache__/
 # macOS
 .DS_Store
 *.duckdb
+
+# Health Metrics Analytics - generated observations
+projects/health-metrics/data/
