@@ -67,6 +67,12 @@ Version: 0.1
 - Deployed the collector to Ichabod.
 - Configured automated collection using systemd.
 - Verified successful unattended collection.
+- Installed PostgreSQL 16 on Ichabod.
+- Created the health_metrics database and system_observations table.
+- Configured restricted application database access.
+- Implemented JSONL-to-PostgreSQL ingestion using Psycopg.
+- Verified duplicate prevention.
+- Successfully ingested and analyzed 41 observations.
 
 ### Next Milestones
 - Deploy PostgreSQL on Ichabod.
@@ -75,3 +81,7 @@ Version: 0.1
 - Query collected observations using DuckDB.
 - Build the first Jupyter analytics notebook.
 - Add automated data-quality checks.
+- Automate PostgreSQL ingestion with systemd.
+- Connect the Mac to PostgreSQL through an SSH tunnel.
+- Build the first Jupyter analytics notebook.
+- Implement ingestion monitoring and data-quality checks.
