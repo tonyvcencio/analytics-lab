@@ -157,3 +157,113 @@ testing, not a verified maximum temperature.
 - [ ] Evaluate available firmware updates
 - [ ] Review and allocate unused LVM capacity
 - [ ] Perform controlled read/write testing on secondary SSD
+
+
+## Rabbit R1 Integration
+
+### Phase 1 — Agent Installation and Connectivity
+
+**Completed: October 13, 2026**
+
+Rabbit R1 running Rabbit OS3 was successfully connected to Ichabod
+through the official Rabbit computer agent.
+
+The integration establishes a foundation for future voice-controlled
+server monitoring, analytics operations, and automation.
+
+### Configuration
+
+| Component | Configuration |
+|---|---|
+| Device | Rabbit R1 |
+| Operating System | Rabbit OS3 |
+| AI Provider | OpenRouter |
+| Agent Version | rabbit-agent 0.1.16 |
+| Host System | Ichabod — Ubuntu Server 24.04.5 LTS |
+| Service Account | rabbit-agent |
+| Account UID/GID | 1001 / 1001 |
+| Installation Directory | /home/rabbit-agent/.rabbit-agent |
+| Connection | Rabbit Cloud |
+| Connection Status | Confirmed through Rabbit Hole |
+
+### Security and Isolation
+
+A dedicated, nonadministrative Linux account was created specifically
+for the Rabbit computer agent.
+
+- [x] Dedicated rabbit-agent account created
+- [x] Separate home directory established
+- [x] Account confirmed without sudo privileges
+- [x] Home directory write access verified
+- [x] Access to administrator SSH directory listing denied
+- [x] Installer reviewed before execution
+- [x] Installer includes cryptographic verification mechanisms
+- [x] Agent installed without elevated privileges
+- [x] Rabbit Hole connection confirmed
+- [x] Automatic workspace exploration deferred
+
+Account separation provides a basic security boundary but does not
+constitute complete filesystem or network isolation.
+
+The agent executable itself has not undergone a comprehensive
+security audit.
+
+### Background Maintenance
+
+The Rabbit installer configures user-level cron scheduling:
+
+- At system reboot: run Rabbit maintenance script
+- Every 10 minutes: run Rabbit maintenance script
+
+Scheduled command:
+
+`/home/rabbit-agent/.rabbit-agent/install.sh`
+
+The installer supports automatic updates and agent startup.
+
+### API Configuration
+
+Rabbit OS3 was configured with OpenRouter as its AI provider.
+
+Free-model variants were selected for initial experimentation.
+
+The OpenRouter API key was configured with a $50 spending allowance.
+This allowance is not prepaid credit and does not indicate actual
+expenditure.
+
+API usage and billing should be reviewed before expanding usage.
+
+No API credentials or pairing tokens are stored in this repository.
+
+### Phase 1 Results
+
+- [x] Rabbit OS3 onboarding completed
+- [x] OpenRouter provider configured
+- [x] Dedicated Linux account established
+- [x] Rabbit Agent v0.1.16 installed
+- [x] Agent startup successful
+- [x] Ichabod connection confirmed in Rabbit Hole
+- [ ] Agent process ownership independently verified
+- [ ] Scheduled cron entries independently verified
+- [ ] Rabbit-to-Ichabod command execution tested
+- [ ] Health metrics integration implemented
+
+**Result: PHASE 1 COMPLETE — CONNECTION ESTABLISHED**
+
+### Phase 2 — Planned Integration
+
+The next objective is to provide Rabbit R1 with controlled,
+read-only access to Ichabod's existing health-metrics collector.
+
+Planned capabilities include:
+
+- Retrieve current CPU utilization
+- Retrieve memory utilization
+- Retrieve disk usage
+- Report system uptime
+- Summarize server health through Rabbit R1
+
+Future access should remain limited to explicitly approved
+operations and directories.
+
+No server health integration has been implemented yet.
