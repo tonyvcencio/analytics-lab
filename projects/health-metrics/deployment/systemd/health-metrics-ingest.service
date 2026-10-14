@@ -1,0 +1,11 @@
+[Unit]
+Description=Health Metrics Analytics PostgreSQL Ingestion
+After=postgresql.service
+
+[Service]
+Type=oneshot
+User=tony
+WorkingDirectory=/home/tony/analytics/health-metrics
+Environment=HOME=/home/tony
+ExecStart=/home/tony/analytics/health-metrics/.venv/bin/python /home/tony/analytics/health-metrics/ingestion/ingest_jsonl.py
+

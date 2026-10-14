@@ -1,0 +1,11 @@
+[Unit]
+Description=Run Health Metrics PostgreSQL Ingestion Every Five Minutes
+
+[Timer]
+OnCalendar=*-*-* *:02/5:00
+Persistent=true
+AccuracySec=30s
+Unit=health-metrics-ingest.service
+
+[Install]
+WantedBy=timers.target
