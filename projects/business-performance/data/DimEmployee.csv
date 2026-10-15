@@ -1,0 +1,31 @@
+EmployeeKey,EmployeeCode,JobRole,Department,HomeLocationKey,HireDate,TerminationDate,EmploymentType,StandardHourlyRate,IsActive
+1,EMP-0001,Retail Associate,Retail,1,2025-05-16,2025-08-18,Full-Time,19.99,False
+2,EMP-0002,Retail Associate,Retail,1,2026-06-11,,Full-Time,18.79,True
+3,EMP-0003,Retail Associate,Retail,1,2024-09-06,,Full-Time,17.54,True
+4,EMP-0004,Senior Retail Associate,Retail,1,2025-10-02,,Full-Time,28.28,True
+5,EMP-0005,Senior Retail Associate,Retail,1,2023-01-13,2026-09-14,Full-Time,27.22,False
+6,EMP-0006,Service Technician,Service,1,2026-08-10,,Full-Time,29.24,True
+7,EMP-0007,Service Technician,Service,1,2025-01-04,,Full-Time,29.16,True
+8,EMP-0008,Senior Service Technician,Service,1,2023-09-09,,Full-Time,30.49,True
+9,EMP-0009,Store Manager,Administration,1,2026-03-29,,Full-Time,43.55,True
+10,EMP-0010,Assistant Manager,Administration,1,2023-05-20,,Full-Time,27.35,True
+11,EMP-0011,Retail Associate,Retail,2,2026-02-15,,Full-Time,21.36,True
+12,EMP-0012,Retail Associate,Retail,2,2025-06-05,,Part-Time,17.84,True
+13,EMP-0013,Retail Associate,Retail,2,2024-02-06,,Part-Time,20.85,True
+14,EMP-0014,Retail Associate,Retail,2,2026-09-20,,Full-Time,18.02,True
+15,EMP-0015,Senior Retail Associate,Retail,2,2025-01-24,,Full-Time,23.54,True
+16,EMP-0016,Service Technician,Service,2,2023-05-17,,Full-Time,25.41,True
+17,EMP-0017,Service Technician,Service,2,2023-09-15,,Full-Time,28.92,True
+18,EMP-0018,Store Manager,Administration,2,2025-07-25,,Full-Time,42.33,True
+19,EMP-0019,Assistant Manager,Administration,2,2023-01-28,,Full-Time,31.76,True
+20,EMP-0020,Administrative Support,Administration,2,2026-05-04,,Part-Time,23.36,True
+21,EMP-0021,Retail Associate,Retail,3,2025-08-11,,Full-Time,21.41,True
+22,EMP-0022,Retail Associate,Retail,3,2023-10-08,,Part-Time,22.33,True
+23,EMP-0023,Senior Retail Associate,Retail,3,2025-06-28,2026-07-20,Full-Time,27.99,False
+24,EMP-0024,Service Technician,Service,3,2023-07-07,,Full-Time,30.19,True
+25,EMP-0025,Service Technician,Service,3,2025-02-17,,Full-Time,29.49,True
+26,EMP-0026,Service Technician,Service,3,2024-02-06,2025-08-20,Full-Time,24.22,False
+27,EMP-0027,Senior Service Technician,Service,3,2025-11-19,,Full-Time,38.26,True
+28,EMP-0028,Senior Service Technician,Service,3,2025-07-13,,Full-Time,38.09,True
+29,EMP-0029,Store Manager,Administration,3,2025-05-23,,Full-Time,42.17,True
+30,EMP-0030,Assistant Manager,Administration,3,2024-05-22,,Full-Time,26.12,True

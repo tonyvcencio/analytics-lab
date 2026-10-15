@@ -253,10 +253,109 @@ def generate_products() -> pd.DataFrame:
 
     return pd.DataFrame(products)
 
+def generate_services() -> pd.DataFrame:
+    """Generate Northstar's 20 standard service offerings."""
+
+    offerings = [
+        # Computer Repair
+        ("Diagnostic Assessment", "Computer Repair", 49, 0.5, False),
+        ("Operating System Repair", "Computer Repair", 129, 2.0, True),
+        ("Hardware Replacement", "Computer Repair", 119, 1.5, True),
+        ("Malware Removal", "Computer Repair", 99, 1.5, True),
+
+        # Network Installation
+        ("Router Installation", "Network Installation", 129, 1.5, True),
+        ("Mesh Network Setup", "Network Installation", 199, 2.5, True),
+        ("Small Office Network Setup", "Network Installation", 399, 5.0, True),
+        ("Network Optimization", "Network Installation", 149, 2.0, True),
+
+        # Smart Home Installation
+        ("Security Camera Installation", "Smart Home Installation", 149, 2.0, True),
+        ("Smart Lighting Setup", "Smart Home Installation", 99, 1.5, True),
+        ("Video Doorbell Installation", "Smart Home Installation", 129, 1.5, True),
+        ("Smart Home Integration", "Smart Home Installation", 249, 3.0, True),
+
+        # Troubleshooting
+        ("Computer Troubleshooting", "Troubleshooting", 79, 1.0, False),
+        ("Network Troubleshooting", "Troubleshooting", 99, 1.5, False),
+        ("Peripheral Troubleshooting", "Troubleshooting", 59, 0.75, False),
+
+        # Technical Support
+        ("Remote Support Session", "Technical Support", 49, 0.5, False),
+        ("On-Site Technical Support", "Technical Support", 129, 1.5, True),
+
+        # Device Setup
+        ("New Computer Setup", "Device Setup", 99, 1.5, True),
+        ("Data Transfer", "Device Setup", 149, 2.0, True),
+        ("Printer Setup", "Device Setup", 69, 1.0, False),
+    ]
+
+    rows = []
+
+    for index, (name, category, rate, duration, appointment) in enumerate(
+        offerings, start=1
+    ):
+        rows.append(
+            {
+                "ServiceKey": index,
+                "ServiceCode": f"SRV-{index:04d}",
+                "ServiceName": name,
+                "ServiceCategory": category,
+                "StandardRate": float(rate),
+                "EstimatedDurationHours": float(duration),
+                "RequiresAppointment": appointment,
+                "IsActive": True,
+            }
+        )
+
+    return pd.DataFrame(rows)
+
+def generate_expense_categories() -> pd.DataFrame:
+    """Generate Northstar's operating expense classifications."""
+
+    categories = [
+        ("Rent", "Occupancy", "Fixed",
+         "Lease expense for retail and service locations."),
+        ("Utilities", "Occupancy", "Mixed",
+         "Electricity, water, and other facility utilities."),
+        ("Insurance", "General Operations", "Fixed",
+         "Business liability and property insurance."),
+        ("Marketing", "Sales and Marketing", "Variable",
+         "Advertising, promotions, and customer acquisition."),
+        ("Software Subscriptions", "Technology", "Fixed",
+         "Recurring software and business application expenses."),
+        ("Equipment Maintenance", "General Operations", "Mixed",
+         "Maintenance of company-owned operational equipment."),
+        ("Administrative Supplies", "Administration", "Variable",
+         "Office supplies and administrative consumables."),
+        ("Merchant Processing Fees", "Sales and Marketing", "Variable",
+         "Payment processing fees associated with transactions."),
+        ("Other Operating Expenses", "General Operations", "Mixed",
+         "Operating expenses not classified elsewhere."),
+    ]
+
+    return pd.DataFrame(
+        [
+            {
+                "ExpenseCategoryKey": index,
+                "ExpenseCategory": name,
+                "ExpenseGroup": group,
+                "CostBehavior": behavior,
+                "Description": description,
+            }
+            for index, (name, group, behavior, description)
+            in enumerate(categories, start=1)
+        ]
+    )
+
 def validate_dimensions(
     dates: pd.DataFrame,
     locations: pd.DataFrame,
     products: pd.DataFrame,
+    services: pd.DataFrame,
+    expense_categories: pd.DataFrame,
+    employees: pd.DataFrame,
+    customers: pd.DataFrame
 ) -> None:
     """Validate foundational dimension integrity."""
 
@@ -309,8 +408,228 @@ def validate_dimensions(
     if set(products["Category"]) != expected_categories:
         raise ValueError("Unexpected product categories.")
 
+    # Validate services
+    if len(services) != 20:
+        raise ValueError("Unexpected service count.")
+
+    if not services["ServiceKey"].is_unique:
+        raise ValueError("Duplicate ServiceKey detected.")
+
+    if not services["ServiceCode"].is_unique:
+        raise ValueError("Duplicate ServiceCode detected.")
+
+    if services.isnull().any().any():
+        raise ValueError("Missing service values detected.")
+
+    if (services["StandardRate"] < 0).any():
+        raise ValueError("Negative service rate detected.")
+
+    if (services["EstimatedDurationHours"] < 0).any():
+        raise ValueError("Negative service duration detected.")
+
+    expected_service_categories = {
+        "Computer Repair",
+        "Network Installation",
+        "Smart Home Installation",
+        "Troubleshooting",
+        "Technical Support",
+        "Device Setup",
+    }
+
+    if set(services["ServiceCategory"]) != expected_service_categories:
+        raise ValueError("Unexpected service categories.")
+
+    # Validate expense categories
+    if len(expense_categories) != 9:
+        raise ValueError("Unexpected expense category count.")
+
+    if not expense_categories["ExpenseCategoryKey"].is_unique:
+        raise ValueError("Duplicate ExpenseCategoryKey detected.")
+
+    if not expense_categories["ExpenseCategory"].is_unique:
+        raise ValueError("Duplicate expense category detected.")
+
+    if expense_categories.isnull().any().any():
+        raise ValueError("Missing expense category values detected.")
+
+    valid_cost_behaviors = {"Fixed", "Variable", "Mixed"}
+
+    if not set(expense_categories["CostBehavior"]).issubset(
+        valid_cost_behaviors
+    ):
+        raise ValueError("Invalid expense cost behavior.")
+        
+    # Validate employees
+    if len(employees) != 30:
+        raise ValueError("Unexpected employee count.")
+
+    if not employees["EmployeeKey"].is_unique:
+        raise ValueError("Duplicate EmployeeKey detected.")
+
+    if not employees["EmployeeCode"].is_unique:
+        raise ValueError("Duplicate EmployeeCode detected.")
+
+    required_columns = [
+        "EmployeeKey",
+        "EmployeeCode",
+        "JobRole",
+        "Department",
+        "HomeLocationKey",
+        "HireDate",
+        "EmploymentType",
+        "StandardHourlyRate",
+        "IsActive",
+    ]
+
+    if employees[required_columns].isnull().any().any():
+        raise ValueError("Missing required employee values.")
+
+    if not employees["HomeLocationKey"].isin(
+        locations["LocationKey"]
+    ).all():
+        raise ValueError("Invalid employee home location.")
+
+    hire_dates = pd.to_datetime(employees["HireDate"])
+    termination_dates = pd.to_datetime(employees["TerminationDate"])
+
+    if (
+        termination_dates.notna()
+        & (termination_dates < hire_dates)
+    ).any():
+        raise ValueError("Termination date precedes hire date.")
+
+    if (
+        employees["IsActive"].astype(bool)
+        != termination_dates.isna()
+    ).any():
+        raise ValueError("Employee active status is inconsistent.")
+
+    if (employees["StandardHourlyRate"] < 0).any():
+        raise ValueError("Negative employee hourly rate.")
+
+    if not employees["EmploymentType"].isin(
+        ["Full-Time", "Part-Time"]
+    ).all():
+        raise ValueError("Invalid employee employment type.")
+
+    if not employees["Department"].isin(
+        ["Retail", "Service", "Administration"]
+    ).all():
+        raise ValueError("Invalid employee department.")
+
+    # Validate customers
+    if len(customers) != 8000:
+        raise ValueError("Unexpected customer count.")
+
+    if customers["CustomerKey"].isnull().any():
+        raise ValueError("Missing CustomerKey detected.")
+
+    if not customers["CustomerKey"].is_unique:
+        raise ValueError("Duplicate CustomerKey detected.")
+
+    if customers.isnull().any().any():
+        raise ValueError("Missing customer values detected.")
+
+    if not customers["CustomerType"].isin(
+        ["Residential", "Small Business"]
+    ).all():
+        raise ValueError("Invalid customer type.")
+
+    valid_channels = {
+        "Walk-In",
+        "Online Search",
+        "Referral",
+        "Social Media",
+        "Local Advertising",
+        "Business Partnership",
+    }
+
+    if not customers["AcquisitionChannel"].isin(valid_channels).all():
+        raise ValueError("Invalid customer acquisition channel.")
+
+    if not customers["HomeLocationKey"].isin(
+        locations["LocationKey"]
+    ).all():
+        raise ValueError("Invalid customer home location.")
+
+    signup_dates = pd.to_datetime(customers["SignupDate"])
+
+    if signup_dates.isnull().any():
+        raise ValueError("Invalid customer signup date.")
+
+    if (
+        (signup_dates < pd.Timestamp("2023-01-01"))
+        | (signup_dates > pd.Timestamp("2026-12-31"))
+    ).any():
+        raise ValueError("Customer signup date outside expected range.")
+
     print("Dimension validation passed.")
 
+def generate_customers() -> pd.DataFrame:
+    """Generate 8,000 reproducible fictional customer records."""
+
+    rng = np.random.default_rng(2028)
+    customer_count = 8000
+
+    customer_types = rng.choice(
+        ["Residential", "Small Business"],
+        size=customer_count,
+        p=[0.84, 0.16],
+    )
+
+    channels = [
+        "Walk-In",
+        "Online Search",
+        "Referral",
+        "Social Media",
+        "Local Advertising",
+        "Business Partnership",
+    ]
+
+    residential_weights = [0.32, 0.26, 0.19, 0.13, 0.08, 0.02]
+    business_weights = [0.10, 0.20, 0.24, 0.05, 0.11, 0.30]
+
+    acquisition_channels = [
+        rng.choice(
+            channels,
+            p=(
+                residential_weights
+                if customer_type == "Residential"
+                else business_weights
+            ),
+        )
+        for customer_type in customer_types
+    ]
+
+    home_locations = rng.choice(
+        [1, 2, 3],
+        size=customer_count,
+        p=[0.42, 0.33, 0.25],
+    )
+
+    # Allow customers to register before the reporting period.
+    signup_start = pd.Timestamp("2023-01-01")
+    signup_end = pd.Timestamp("2026-12-31")
+    date_range_days = (signup_end - signup_start).days + 1
+
+    signup_offsets = rng.integers(
+        0, date_range_days, size=customer_count
+    )
+
+    signup_dates = [
+        (signup_start + pd.Timedelta(days=int(offset))).date()
+        for offset in signup_offsets
+    ]
+
+    return pd.DataFrame(
+        {
+            "CustomerKey": np.arange(1, customer_count + 1),
+            "CustomerType": customer_types,
+            "AcquisitionChannel": acquisition_channels,
+            "SignupDate": signup_dates,
+            "HomeLocationKey": home_locations,
+        }
+    )
 
 def main() -> None:
     """Generate, validate, and export dimensions."""
@@ -320,17 +639,120 @@ def main() -> None:
     dates = generate_dates()
     locations = generate_locations()
     products = generate_products()
-
-    validate_dimensions(dates, locations, products)
+    services = generate_services()
+    expense_categories = generate_expense_categories()
+    employees = generate_employees()
+    customers = generate_customers()
+    validate_dimensions(
+    dates,
+        locations,
+        products,
+        services,
+        expense_categories,
+        employees,
+        customers
+    )
 
     dates.to_csv(OUTPUT_DIR / "DimDate.csv", index=False)
     locations.to_csv(OUTPUT_DIR / "DimLocation.csv", index=False)
     products.to_csv(OUTPUT_DIR / "DimProduct.csv", index=False)
-    
+    services.to_csv(OUTPUT_DIR / "DimService.csv", index=False)
+    expense_categories.to_csv(
+        OUTPUT_DIR / "DimExpenseCategory.csv", index=False
+    )
+    employees.to_csv(OUTPUT_DIR / "DimEmployee.csv", index=False)
+    customers.to_csv(OUTPUT_DIR / "DimCustomer.csv", index=False)
+
     print(f"DimDate: {len(dates):,} records")
     print(f"DimLocation: {len(locations):,} records")
     print(f"DimProduct: {len(products):,} records")
+    print(f"DimService: {len(services):,} records")
+    print(f"DimExpenseCategory: {len(expense_categories):,} records")
+    print(f"DimEmployee: {len(employees):,} records")
+    print(f"DimCustomer: {len(customers):,} records")
     print(f"Output directory: {OUTPUT_DIR}")
+
+
+def generate_employees() -> pd.DataFrame:
+    """Generate 30 fictional Northstar employees."""
+
+    rng = np.random.default_rng(2027)
+
+    roles = [
+        ("Retail Associate", "Retail", 17, 23),
+        ("Senior Retail Associate", "Retail", 22, 29),
+        ("Service Technician", "Service", 22, 32),
+        ("Senior Service Technician", "Service", 30, 42),
+        ("Store Manager", "Administration", 34, 46),
+        ("Assistant Manager", "Administration", 26, 36),
+        ("Administrative Support", "Administration", 18, 26),
+    ]
+
+    # Each location receives ten employees.
+    location_roles = {
+        1: [0, 0, 0, 1, 1, 2, 2, 3, 4, 5],
+        2: [0, 0, 0, 0, 1, 2, 2, 4, 5, 6],
+        3: [0, 0, 1, 2, 2, 2, 3, 3, 4, 5],
+    }
+
+    rows = []
+    employee_key = 1
+
+    for location_key, role_indices in location_roles.items():
+        for role_index in role_indices:
+            role, department, wage_min, wage_max = roles[role_index]
+
+            hire_date = pd.Timestamp("2023-01-01") + pd.Timedelta(
+                days=int(rng.integers(0, 1370))
+            )
+
+            employment_type = (
+                "Part-Time"
+                if role_index in (0, 6) and rng.random() < 0.35
+                else "Full-Time"
+            )
+
+            termination_date = pd.NaT
+
+            # Some earlier hires leave during the reporting period.
+            if hire_date < pd.Timestamp("2026-04-01") and rng.random() < 0.12:
+                earliest_exit = max(
+                    hire_date + pd.Timedelta(days=90),
+                    pd.Timestamp("2025-01-01"),
+                )
+                latest_exit = pd.Timestamp("2026-12-31")
+
+                if earliest_exit <= latest_exit:
+                    available_days = (latest_exit - earliest_exit).days
+                    termination_date = earliest_exit + pd.Timedelta(
+                        days=int(rng.integers(0, available_days + 1))
+                    )
+
+            rows.append(
+                {
+                    "EmployeeKey": employee_key,
+                    "EmployeeCode": f"EMP-{employee_key:04d}",
+                    "JobRole": role,
+                    "Department": department,
+                    "HomeLocationKey": location_key,
+                    "HireDate": hire_date.date(),
+                    "TerminationDate": (
+                        termination_date.date()
+                        if pd.notna(termination_date)
+                        else None
+                    ),
+                    "EmploymentType": employment_type,
+                    "StandardHourlyRate": round(
+                        float(rng.uniform(wage_min, wage_max)), 2
+                    ),
+                    "IsActive": pd.isna(termination_date),
+                }
+            )
+
+            employee_key += 1
+
+    return pd.DataFrame(rows)
+
 
 
 if __name__ == "__main__":

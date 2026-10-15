@@ -1,0 +1,10 @@
+ExpenseCategoryKey,ExpenseCategory,ExpenseGroup,CostBehavior,Description
+1,Rent,Occupancy,Fixed,Lease expense for retail and service locations.
+2,Utilities,Occupancy,Mixed,"Electricity, water, and other facility utilities."
+3,Insurance,General Operations,Fixed,Business liability and property insurance.
+4,Marketing,Sales and Marketing,Variable,"Advertising, promotions, and customer acquisition."
+5,Software Subscriptions,Technology,Fixed,Recurring software and business application expenses.
+6,Equipment Maintenance,General Operations,Mixed,Maintenance of company-owned operational equipment.
+7,Administrative Supplies,Administration,Variable,Office supplies and administrative consumables.
+8,Merchant Processing Fees,Sales and Marketing,Variable,Payment processing fees associated with transactions.
+9,Other Operating Expenses,General Operations,Mixed,Operating expenses not classified elsewhere.

@@ -1,0 +1,21 @@
+ServiceKey,ServiceCode,ServiceName,ServiceCategory,StandardRate,EstimatedDurationHours,RequiresAppointment,IsActive
+1,SRV-0001,Diagnostic Assessment,Computer Repair,49.0,0.5,False,True
+2,SRV-0002,Operating System Repair,Computer Repair,129.0,2.0,True,True
+3,SRV-0003,Hardware Replacement,Computer Repair,119.0,1.5,True,True
+4,SRV-0004,Malware Removal,Computer Repair,99.0,1.5,True,True
+5,SRV-0005,Router Installation,Network Installation,129.0,1.5,True,True
+6,SRV-0006,Mesh Network Setup,Network Installation,199.0,2.5,True,True
+7,SRV-0007,Small Office Network Setup,Network Installation,399.0,5.0,True,True
+8,SRV-0008,Network Optimization,Network Installation,149.0,2.0,True,True
+9,SRV-0009,Security Camera Installation,Smart Home Installation,149.0,2.0,True,True
+10,SRV-0010,Smart Lighting Setup,Smart Home Installation,99.0,1.5,True,True
+11,SRV-0011,Video Doorbell Installation,Smart Home Installation,129.0,1.5,True,True
+12,SRV-0012,Smart Home Integration,Smart Home Installation,249.0,3.0,True,True
+13,SRV-0013,Computer Troubleshooting,Troubleshooting,79.0,1.0,False,True
+14,SRV-0014,Network Troubleshooting,Troubleshooting,99.0,1.5,False,True
+15,SRV-0015,Peripheral Troubleshooting,Troubleshooting,59.0,0.75,False,True
+16,SRV-0016,Remote Support Session,Technical Support,49.0,0.5,False,True
+17,SRV-0017,On-Site Technical Support,Technical Support,129.0,1.5,True,True
+18,SRV-0018,New Computer Setup,Device Setup,99.0,1.5,True,True
+19,SRV-0019,Data Transfer,Device Setup,149.0,2.0,True,True
+20,SRV-0020,Printer Setup,Device Setup,69.0,1.0,False,True
