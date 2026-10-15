@@ -7,3 +7,4 @@ ipykernel
 duckdb
 pyarrow
 psutil
+psycopg[binary]>=3.3,<4
