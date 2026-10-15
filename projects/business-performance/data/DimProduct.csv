@@ -1,0 +1,121 @@
+ProductKey,SKU,ProductName,Category,Subcategory,Brand,StandardRetailPrice,StandardUnitCost,ReorderPoint,IsActive
+1,CMP-0001,Aster Laptop 01,Computers,Laptop,Aster,731.62,597.01,6,True
+2,CMP-0002,Novatek Desktop 02,Computers,Desktop,Novatek,932.45,787.46,7,True
+3,CMP-0003,Orion Mini PC 03,Computers,Mini PC,Orion,773.31,610.52,10,True
+4,CMP-0004,Lumina Monitor 04,Computers,Monitor,Lumina,501.09,426.01,4,True
+5,CMP-0005,Vantage Workstation 05,Computers,Workstation,Vantage,2456.05,1935.4,5,True
+6,CMP-0006,Helix Laptop 06,Computers,Laptop,Helix,1477.55,1224.13,9,True
+7,CMP-0007,Aster Desktop 07,Computers,Desktop,Aster,1342.31,1121.05,7,True
+8,CMP-0008,Novatek Mini PC 08,Computers,Mini PC,Novatek,465.74,399.31,6,True
+9,CMP-0009,Orion Monitor 09,Computers,Monitor,Orion,428.72,358.8,5,True
+10,CMP-0010,Lumina Workstation 10,Computers,Workstation,Lumina,1215.69,1015.38,9,True
+11,CMP-0011,Vantage Laptop 11,Computers,Laptop,Vantage,973.74,837.86,7,True
+12,CMP-0012,Helix Desktop 12,Computers,Desktop,Helix,990.78,842.16,8,True
+13,CMP-0013,Aster Mini PC 13,Computers,Mini PC,Aster,424.65,336.55,12,True
+14,CMP-0014,Novatek Monitor 14,Computers,Monitor,Novatek,474.82,401.46,10,True
+15,CMP-0015,Orion Workstation 15,Computers,Workstation,Orion,2429.87,2001.39,8,True
+16,CMP-0016,Lumina Laptop 16,Computers,Laptop,Lumina,1669.58,1415.91,7,True
+17,CMP-0017,Vantage Desktop 17,Computers,Desktop,Vantage,1225.4,1039.9,3,True
+18,CMP-0018,Helix Mini PC 18,Computers,Mini PC,Helix,719.5,616.76,5,True
+19,CMP-0019,Aster Monitor 19,Computers,Monitor,Aster,410.07,337.08,9,True
+20,CMP-0020,Novatek Workstation 20,Computers,Workstation,Novatek,2149.61,1773.75,4,True
+21,CMP-0021,Orion Laptop 21,Computers,Laptop,Orion,1306.95,1101.48,6,True
+22,CMP-0022,Lumina Desktop 22,Computers,Desktop,Lumina,1044.35,869.95,7,True
+23,CMP-0023,Vantage Mini PC 23,Computers,Mini PC,Vantage,704.38,579.2,12,True
+24,CMP-0024,Helix Monitor 24,Computers,Monitor,Helix,130.03,104.1,7,True
+25,CMP-0025,Aster Workstation 25,Computers,Workstation,Aster,1874.2,1588.09,10,True
+26,ACC-0001,Aster Keyboard 01,Accessories,Keyboard,Aster,39.39,16.69,25,True
+27,ACC-0002,Novatek Mouse 02,Accessories,Mouse,Novatek,127.83,81.21,17,True
+28,ACC-0003,Orion USB-C Dock 03,Accessories,USB-C Dock,Orion,195.01,111.44,21,True
+29,ACC-0004,Lumina External SSD 04,Accessories,External SSD,Lumina,155.4,84.83,15,True
+30,ACC-0005,Vantage Webcam 05,Accessories,Webcam,Vantage,144.02,61.63,34,True
+31,ACC-0006,Helix Headset 06,Accessories,Headset,Helix,136.83,83.46,13,True
+32,ACC-0007,Aster Cable Kit 07,Accessories,Cable Kit,Aster,12.87,7.41,39,True
+33,ACC-0008,Novatek Laptop Stand 08,Accessories,Laptop Stand,Novatek,38.71,18.66,11,True
+34,ACC-0009,Orion Keyboard 09,Accessories,Keyboard,Orion,39.3,25.42,25,True
+35,ACC-0010,Lumina Mouse 10,Accessories,Mouse,Lumina,83.89,44.22,27,True
+36,ACC-0011,Vantage USB-C Dock 11,Accessories,USB-C Dock,Vantage,161.8,69.15,28,True
+37,ACC-0012,Helix External SSD 12,Accessories,External SSD,Helix,215.13,129.71,17,True
+38,ACC-0013,Aster Webcam 13,Accessories,Webcam,Aster,123.53,60.56,39,True
+39,ACC-0014,Novatek Headset 14,Accessories,Headset,Novatek,143.18,73.52,34,True
+40,ACC-0015,Orion Cable Kit 15,Accessories,Cable Kit,Orion,20.63,10.32,38,True
+41,ACC-0016,Lumina Laptop Stand 16,Accessories,Laptop Stand,Lumina,76.0,46.84,34,True
+42,ACC-0017,Vantage Keyboard 17,Accessories,Keyboard,Vantage,87.04,39.91,29,True
+43,ACC-0018,Helix Mouse 18,Accessories,Mouse,Helix,22.72,11.32,28,True
+44,ACC-0019,Aster USB-C Dock 19,Accessories,USB-C Dock,Aster,174.67,99.5,36,True
+45,ACC-0020,Novatek External SSD 20,Accessories,External SSD,Novatek,170.49,96.41,27,True
+46,ACC-0021,Orion Webcam 21,Accessories,Webcam,Orion,44.4,25.75,30,True
+47,ACC-0022,Lumina Headset 22,Accessories,Headset,Lumina,40.37,25.39,38,True
+48,ACC-0023,Vantage Cable Kit 23,Accessories,Cable Kit,Vantage,20.57,10.72,27,True
+49,ACC-0024,Helix Laptop Stand 24,Accessories,Laptop Stand,Helix,65.17,28.0,33,True
+50,ACC-0025,Aster Keyboard 25,Accessories,Keyboard,Aster,74.08,42.34,21,True
+51,ACC-0026,Novatek Mouse 26,Accessories,Mouse,Novatek,28.43,13.77,18,True
+52,ACC-0027,Orion USB-C Dock 27,Accessories,USB-C Dock,Orion,143.6,73.3,35,True
+53,ACC-0028,Lumina External SSD 28,Accessories,External SSD,Lumina,221.94,105.48,26,True
+54,ACC-0029,Vantage Webcam 29,Accessories,Webcam,Vantage,135.74,80.91,33,True
+55,ACC-0030,Helix Headset 30,Accessories,Headset,Helix,141.63,66.66,39,True
+56,ACC-0031,Aster Cable Kit 31,Accessories,Cable Kit,Aster,24.72,11.81,36,True
+57,ACC-0032,Novatek Laptop Stand 32,Accessories,Laptop Stand,Novatek,61.31,33.58,14,True
+58,ACC-0033,Orion Keyboard 33,Accessories,Keyboard,Orion,79.37,32.47,13,True
+59,ACC-0034,Lumina Mouse 34,Accessories,Mouse,Lumina,39.68,24.66,30,True
+60,ACC-0035,Vantage USB-C Dock 35,Accessories,USB-C Dock,Vantage,69.2,40.36,21,True
+61,ACC-0036,Helix External SSD 36,Accessories,External SSD,Helix,214.46,122.31,11,True
+62,ACC-0037,Aster Webcam 37,Accessories,Webcam,Aster,57.65,27.85,28,True
+63,ACC-0038,Novatek Headset 38,Accessories,Headset,Novatek,55.94,25.32,18,True
+64,ACC-0039,Orion Cable Kit 39,Accessories,Cable Kit,Orion,18.8,8.66,23,True
+65,ACC-0040,Lumina Laptop Stand 40,Accessories,Laptop Stand,Lumina,57.8,31.24,14,True
+66,NET-0001,Aster Wi-Fi Router 01,Networking,Wi-Fi Router,Aster,326.85,233.45,8,True
+67,NET-0002,Novatek Network Switch 02,Networking,Network Switch,Novatek,50.2,30.43,14,True
+68,NET-0003,Orion Access Point 03,Networking,Access Point,Orion,111.53,77.64,5,True
+69,NET-0004,Lumina Mesh Node 04,Networking,Mesh Node,Lumina,98.49,70.88,12,True
+70,NET-0005,Vantage Network Adapter 05,Networking,Network Adapter,Vantage,95.63,58.47,14,True
+71,NET-0006,Helix Wi-Fi Router 06,Networking,Wi-Fi Router,Helix,93.39,58.5,9,True
+72,NET-0007,Aster Network Switch 07,Networking,Network Switch,Aster,249.97,181.64,7,True
+73,NET-0008,Novatek Access Point 08,Networking,Access Point,Novatek,272.82,177.5,8,True
+74,NET-0009,Orion Mesh Node 09,Networking,Mesh Node,Orion,245.13,179.05,18,True
+75,NET-0010,Lumina Network Adapter 10,Networking,Network Adapter,Lumina,69.26,44.81,16,True
+76,NET-0011,Vantage Wi-Fi Router 11,Networking,Wi-Fi Router,Vantage,287.78,207.81,6,True
+77,NET-0012,Helix Network Switch 12,Networking,Network Switch,Helix,80.98,55.16,5,True
+78,NET-0013,Aster Access Point 13,Networking,Access Point,Aster,234.81,156.02,12,True
+79,NET-0014,Novatek Mesh Node 14,Networking,Mesh Node,Novatek,153.75,94.87,14,True
+80,NET-0015,Orion Network Adapter 15,Networking,Network Adapter,Orion,42.1,30.14,7,True
+81,NET-0016,Lumina Wi-Fi Router 16,Networking,Wi-Fi Router,Lumina,324.55,215.05,5,True
+82,NET-0017,Vantage Network Switch 17,Networking,Network Switch,Vantage,232.55,149.09,8,True
+83,NET-0018,Helix Access Point 18,Networking,Access Point,Helix,286.97,219.79,11,True
+84,NET-0019,Aster Mesh Node 19,Networking,Mesh Node,Aster,229.12,142.44,8,True
+85,NET-0020,Novatek Network Adapter 20,Networking,Network Adapter,Novatek,35.45,24.13,8,True
+86,NET-0021,Orion Wi-Fi Router 21,Networking,Wi-Fi Router,Orion,206.37,160.19,9,True
+87,NET-0022,Lumina Network Switch 22,Networking,Network Switch,Lumina,112.26,82.09,11,True
+88,NET-0023,Vantage Access Point 23,Networking,Access Point,Vantage,237.75,177.85,19,True
+89,NET-0024,Helix Mesh Node 24,Networking,Mesh Node,Helix,140.24,96.94,6,True
+90,NET-0025,Aster Network Adapter 25,Networking,Network Adapter,Aster,61.6,43.38,15,True
+91,SMH-0001,Aster Security Camera 01,Smart Home,Security Camera,Aster,111.16,70.59,7,True
+92,SMH-0002,Novatek Smart Plug 02,Smart Home,Smart Plug,Novatek,33.8,19.35,25,True
+93,SMH-0003,Orion Smart Bulb 03,Smart Home,Smart Bulb,Orion,12.72,9.02,22,True
+94,SMH-0004,Lumina Motion Sensor 04,Smart Home,Motion Sensor,Lumina,53.17,34.69,23,True
+95,SMH-0005,Vantage Smart Hub 05,Smart Home,Smart Hub,Vantage,135.38,93.54,20,True
+96,SMH-0006,Helix Video Doorbell 06,Smart Home,Video Doorbell,Helix,159.46,105.71,19,True
+97,SMH-0007,Aster Security Camera 07,Smart Home,Security Camera,Aster,204.37,114.6,23,True
+98,SMH-0008,Novatek Smart Plug 08,Smart Home,Smart Plug,Novatek,31.49,22.75,25,True
+99,SMH-0009,Orion Smart Bulb 09,Smart Home,Smart Bulb,Orion,13.17,8.57,11,True
+100,SMH-0010,Lumina Motion Sensor 10,Smart Home,Motion Sensor,Lumina,26.06,18.32,6,True
+101,SMH-0011,Vantage Smart Hub 11,Smart Home,Smart Hub,Vantage,247.56,177.64,11,True
+102,SMH-0012,Helix Video Doorbell 12,Smart Home,Video Doorbell,Helix,280.5,175.48,7,True
+103,SMH-0013,Aster Security Camera 13,Smart Home,Security Camera,Aster,196.98,133.76,6,True
+104,SMH-0014,Novatek Smart Plug 14,Smart Home,Smart Plug,Novatek,48.19,30.76,24,True
+105,SMH-0015,Orion Smart Bulb 15,Smart Home,Smart Bulb,Orion,58.38,37.88,9,True
+106,SMH-0016,Lumina Motion Sensor 16,Smart Home,Motion Sensor,Lumina,66.13,41.08,14,True
+107,SMH-0017,Vantage Smart Hub 17,Smart Home,Smart Hub,Vantage,105.1,68.0,9,True
+108,SMH-0018,Helix Video Doorbell 18,Smart Home,Video Doorbell,Helix,271.65,174.27,5,True
+109,SMH-0019,Aster Security Camera 19,Smart Home,Security Camera,Aster,58.24,32.76,15,True
+110,SMH-0020,Novatek Smart Plug 20,Smart Home,Smart Plug,Novatek,40.07,26.6,25,True
+111,SMH-0021,Orion Smart Bulb 21,Smart Home,Smart Bulb,Orion,39.8,29.77,17,True
+112,SMH-0022,Lumina Motion Sensor 22,Smart Home,Motion Sensor,Lumina,38.86,25.95,7,True
+113,SMH-0023,Vantage Smart Hub 23,Smart Home,Smart Hub,Vantage,205.07,146.8,14,True
+114,SMH-0024,Helix Video Doorbell 24,Smart Home,Video Doorbell,Helix,232.44,133.05,7,True
+115,SMH-0025,Aster Security Camera 25,Smart Home,Security Camera,Aster,224.93,135.32,10,True
+116,SMH-0026,Novatek Smart Plug 26,Smart Home,Smart Plug,Novatek,32.75,19.49,25,True
+117,SMH-0027,Orion Smart Bulb 27,Smart Home,Smart Bulb,Orion,31.61,21.47,11,True
+118,SMH-0028,Lumina Motion Sensor 28,Smart Home,Motion Sensor,Lumina,44.84,26.94,24,True
+119,SMH-0029,Vantage Smart Hub 29,Smart Home,Smart Hub,Vantage,158.46,115.29,10,True
+120,SMH-0030,Helix Video Doorbell 30,Smart Home,Video Doorbell,Helix,191.23,116.36,7,True
