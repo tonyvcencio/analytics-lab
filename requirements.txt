@@ -8,3 +8,5 @@ duckdb
 pyarrow
 psutil
 psycopg[binary]>=3.3,<4
+
+Faker>=40,<41
