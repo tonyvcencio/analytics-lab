@@ -117,7 +117,7 @@ Database credentials are stored outside the Git repository.
 
 The Mac serves as the primary development and analytical environment.
 
-Planned analytical responsibilities:
+Analytical responsibilities:
 
 - Connect securely to PostgreSQL through an SSH tunnel.
 - Retrieve observations from Ichabod.
@@ -168,10 +168,38 @@ The current collector records:
 - Network activity
 - Additional system-health indicators
 
+## Exploratory Data Analysis
+
+The first analytical notebook examines system-health observations
+collected from Ichabod.
+
+The analysis includes:
+
+- CPU utilization trends.
+- Memory utilization trends.
+- Disk utilization trends.
+- Descriptive statistics.
+- Missing-value analysis.
+
+The initial dataset contained 577 observations with no missing values
+in the seven analyzed columns.
+
+The analysis identified low sampled CPU utilization, changes in memory
+consumption, and a gradual increase in disk utilization.
+
+These findings are preliminary because the observation period is short
+and CPU measurements represent periodic samples rather than continuous
+utilization.
+
+**Notebook:** [System Health Exploration](notebooks/01_system_health_exploration.ipynb)
+
+The notebook contains saved analytical outputs. Reexecuting its
+database queries requires authorized access to Ichabod.
+
 ## Project Status
 
-**Version:** 0.2  
-**Current Phase:** Automated Data Pipeline Complete  
+**Version:** 0.3
+**Current Phase:** Initial Analytics and Visualization Complete
 **Last Updated:** October 14, 2026
 
 ### Completed
@@ -188,24 +216,30 @@ The current collector records:
 - Configured restricted application database access.
 - Implemented JSONL-to-PostgreSQL ingestion using Psycopg.
 - Implemented duplicate prevention and idempotent ingestion.
-- Successfully ingested 328 observations.
+- Verified automated PostgreSQL ingestion and queried 577 observations during initial analysis.
 - Created a dedicated PostgreSQL ingestion systemd service.
 - Configured automated ingestion using a systemd timer.
 - Verified successful unattended PostgreSQL ingestion.
 - Confirmed independent operation of collection and ingestion.
+- Created a dedicated read-only PostgreSQL analytics role.
+- Established secure remote PostgreSQL access using an SSH tunnel.
+- Connected the Mac analytics environment to Ichabod using Psycopg.
+- Retrieved PostgreSQL observations into pandas.
+- Created the first Jupyter exploratory analysis notebook.
+- Visualized CPU, memory, and disk utilization over time.
+- Calculated descriptive statistics for system-health metrics.
+- Verified that the initial 577 observations contained no missing values.
+- Published the analytics notebook to GitHub.
 
 ### Next Milestones
 
-1. Connect the Mac to PostgreSQL through a secure SSH tunnel.
-2. Create a read-only PostgreSQL role for analytical access.
-3. Query collected observations using SQL and DuckDB.
-4. Build the first Jupyter analytics notebook.
-5. Visualize CPU, memory, disk, and uptime trends.
-6. Implement ingestion monitoring and automated data-quality checks.
-7. Establish PostgreSQL backup and recovery procedures.
-8. Optimize ingestion to process new observations incrementally.
-9. Extend system-health collection to Nomad.
-10. Expand the collected metrics and analytical capabilities.
+1. Validate timestamp ordering, sampling intervals, and duplicate records.
+2. Implement ingestion monitoring and automated data-quality checks.
+3. Establish PostgreSQL backup and recovery procedures.
+4. Optimize ingestion to process new observations incrementally.
+5. Extend system-health collection to Nomad.
+6. Expand the collected metrics and analytical capabilities.
+7. Evaluate Power BI integration for operational monitoring.
 
 ## Development Roadmap
 
@@ -227,10 +261,13 @@ Automate both collection and PostgreSQL ingestion using independent
 systemd services and timers.
 
 ### Phase 4 — Analytics and Visualization
-**Status: Next**
+**Status: Initial implementation complete**
 
-Establish secure analytical access, develop SQL queries, and create
-Jupyter notebooks for operational performance analysis.
+Established secure, read-only PostgreSQL access from the Mac,
+developed the first Jupyter notebook, and visualized system-health
+trends using pandas and Matplotlib.
+
+Additional analytical validation and reporting improvements remain planned.
 
 ### Phase 5 — Monitoring and Expansion
 **Status: Planned**

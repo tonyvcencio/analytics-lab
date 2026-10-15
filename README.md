@@ -1,6 +1,12 @@
 # Analytics Lab
 
-A multi-system analytics and infrastructure environment built to develop practical skills across Windows, macOS, Linux, Python, SQL, Git, and remote administration.
+A multi-system analytics environment for developing and demonstrating
+practical solutions in data engineering, business intelligence,
+automation, and data visualization.
+
+The laboratory combines Windows, macOS, and Linux systems to build
+end-to-end analytical workflows using Python, SQL, PostgreSQL,
+Power BI, and Git.
 
 ## Systems
 
@@ -28,14 +34,13 @@ macOS analytics and development workstation focused on:
 
 ### Ichabod
 
-Headless Linux server planned for:
+Headless Ubuntu Linux server supporting:
 
-- Databases
-- Python workloads
-- Automation
-- Services
-- Containers
-- Remote development
+- PostgreSQL databases
+- Automated Python workloads
+- Scheduled data collection and ingestion
+- Remote analytics and administration
+- Future containerized services
 
 ### Gimperihno
 
@@ -49,8 +54,34 @@ Ichabod provides Linux-based server services and remote compute/storage capabili
 
 GitHub acts as the shared version-control layer across the environment.
 
-## Current Projects
+## Featured Projects
 
-- SQL-Python
-- Analytics Lab
-- Ichabod build and deployment
+### 001 — Health Metrics Analytics
+
+**Status:** Initial analytics implementation complete (v0.3)
+
+An automated system-health monitoring and analytics pipeline
+built using Python, PostgreSQL, Linux systemd, pandas,
+Jupyter, and Matplotlib.
+
+The project demonstrates:
+
+- Automated data collection and ingestion
+- Relational database design
+- Secure remote database access
+- Exploratory data analysis
+- Operational performance visualization
+- Cross-platform development
+
+[Explore Health Metrics Analytics](projects/health-metrics/README.md)
+
+[View the Jupyter Notebook](projects/health-metrics/notebooks/01_system_health_exploration.ipynb)
+
+### 002 — Small Business Performance Analytics
+
+**Status:** Planned
+
+A business intelligence project focused on sales, profitability,
+customer behavior, and operational performance.
+
+Planned technologies include Python, PostgreSQL, SQL, and Power BI.
