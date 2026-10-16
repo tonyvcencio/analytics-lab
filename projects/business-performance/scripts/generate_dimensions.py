@@ -19,6 +19,7 @@ OUTPUT_DIR = PROJECT_ROOT / "data"
 
 START_DATE = "2025-01-01"
 END_DATE = "2026-12-31"
+CALENDAR_END_DATE = "2027-01-14"
 
 
 def generate_dates() -> pd.DataFrame:
@@ -26,7 +27,7 @@ def generate_dates() -> pd.DataFrame:
 
     dates = pd.date_range(
         start=START_DATE,
-        end=END_DATE,
+        end=CALENDAR_END_DATE,
         freq="D",
     )
 
@@ -359,8 +360,17 @@ def validate_dimensions(
 ) -> None:
     """Validate foundational dimension integrity."""
 
-    if len(dates) != 730:
-        raise ValueError("Unexpected calendar row count.")
+    expected_calendar_days = (
+        pd.Timestamp(CALENDAR_END_DATE)
+        - pd.Timestamp(START_DATE)
+    ).days + 1
+
+    if len(dates) != expected_calendar_days:
+        raise ValueError(
+            f"Unexpected calendar row count. "
+            f"Expected {expected_calendar_days}, "
+            f"found {len(dates)}."
+        )
 
     if not dates["DateKey"].is_unique:
         raise ValueError("Duplicate DateKey detected.")
