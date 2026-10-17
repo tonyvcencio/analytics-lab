@@ -1,7 +1,7 @@
 
 # Northstar Home & Tech — Data Dictionary
 
-**Project:** Portfolio Project 002 — Business Performance Analytics  
+**Project:** Project 002 — Northstar Business Performance Analytics  
 **Organization:** Northstar Home & Tech (fictional)  
 **Consultancy:** Atlas Realm Consulting  
 **Dataset:** 100% synthetic  

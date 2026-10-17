@@ -1,6 +1,6 @@
 """
 Northstar Home & Tech
-Portfolio Project 002 — Business Performance Analytics
+Project 002 — Northstar Business Performance Analytics
 
 Generate reproducible synthetic fact tables.
 
@@ -2975,6 +2975,440 @@ def generate_expenses(
 
     return expenses
 
+def generate_inventory_snapshots(
+    dimensions: dict[str, pd.DataFrame],
+    sales: pd.DataFrame,
+    rng: np.random.Generator,
+) -> pd.DataFrame:
+    """
+    Generate monthly product inventory snapshots.
+
+    Inventory movements are based on FactSales quantities.
+    Positive quantities represent sales.
+    Negative quantities represent returns.
+    """
+
+    products = dimensions["DimProduct"].copy()
+    locations = dimensions["DimLocation"].copy()
+
+    months = pd.date_range(
+        START_DATE,
+        END_DATE,
+        freq="MS",
+    )
+
+    print("\nFactInventorySnapshot generation initialized.")
+
+    # Establish all product/location combinations.
+    inventory_base = products[
+        [
+            "ProductKey",
+            "Category",
+            "StandardUnitCost",
+            "ReorderPoint",
+            "IsActive",
+        ]
+    ].merge(
+        locations[["LocationKey"]],
+        how="cross",
+    )
+
+    assert len(inventory_base) == (
+        len(products) * len(locations)
+    )
+
+    assert not inventory_base.duplicated(
+        ["LocationKey", "ProductKey"]
+    ).any()
+
+    print(
+        f"Product/location combinations: "
+        f"{len(inventory_base):,}"
+    )
+
+    # Opening inventory is established before January 2025.
+    # The opening balance is internal to the simulation,
+    # not an exported snapshot.
+    inventory_base["OpeningUnits"] = [
+        int(
+            row.ReorderPoint
+            * rng.integers(2, 5)
+        )
+        for row in inventory_base.itertuples(index=False)
+    ]
+
+    assert (
+        inventory_base["OpeningUnits"] >=
+        inventory_base["ReorderPoint"]
+    ).all()
+
+    print(
+        f"Total opening inventory units: "
+        f"{inventory_base['OpeningUnits'].sum():,}"
+    )
+
+    # Prepare sales and returns.
+    inventory_sales = sales[
+        [
+            "DateKey",
+            "LocationKey",
+            "ProductKey",
+            "TransactionType",
+            "Quantity",
+        ]
+    ].copy()
+
+    assert inventory_sales["TransactionType"].isin(
+        ["Sale", "Return"]
+    ).all()
+
+    assert (
+        inventory_sales.loc[
+            inventory_sales["TransactionType"] == "Sale",
+            "Quantity",
+        ] > 0
+    ).all()
+
+    assert (
+        inventory_sales.loc[
+            inventory_sales["TransactionType"] == "Return",
+            "Quantity",
+        ] < 0
+    ).all()
+
+    inventory_sales["Month"] = (
+        pd.to_datetime(
+            inventory_sales["DateKey"].astype(str),
+            format="%Y%m%d",
+        )
+        .dt.to_period("M")
+    )
+
+    monthly_sales = (
+        inventory_sales.groupby(
+            ["Month", "LocationKey", "ProductKey"]
+        )["Quantity"]
+        .sum()
+    )
+
+    print("\nInventory transaction quantities:")
+
+    gross_sales = inventory_sales.loc[
+        inventory_sales["TransactionType"] == "Sale",
+        "Quantity",
+    ].sum()
+
+    returned_units = -inventory_sales.loc[
+        inventory_sales["TransactionType"] == "Return",
+        "Quantity",
+    ].sum()
+
+    net_sales = inventory_sales["Quantity"].sum()
+
+    print(f"Gross units sold: {gross_sales:,}")
+    print(f"Units returned: {returned_units:,}")
+    print(f"Net units sold: {net_sales:,}")
+
+    assert gross_sales == 64093
+    assert returned_units == 2914
+    assert net_sales == 61179
+
+    assert monthly_sales.sum() == net_sales
+
+    print("Inventory transaction reconciliation passed.")
+
+    print(f"Reporting months: {len(months)}")
+
+    # Daily sales quantities, preserving the signed-return convention.
+    daily_sales = (
+        inventory_sales.groupby(
+            ["DateKey", "LocationKey", "ProductKey"]
+        )["Quantity"]
+        .sum()
+        .to_dict()
+    )
+
+    # Initialize inventory balances and metadata.
+    inventory_state = {}
+
+    for row in inventory_base.itertuples(index=False):
+        key = (int(row.LocationKey), int(row.ProductKey))
+
+        inventory_state[key] = {
+            "OnHand": int(row.OpeningUnits),
+            "ReorderPoint": int(row.ReorderPoint),
+            "UnitCost": Decimal(str(row.StandardUnitCost)),
+            "LastSaleDate": None,
+            "TotalReplenished": 0,
+        }
+
+    snapshots = []
+    snapshot_key = 1
+
+    # Process inventory chronologically.
+    for month in months:
+        month_end = month + pd.offsets.MonthEnd(0)
+
+        days = pd.date_range(month, month_end, freq="D")
+
+        for date in days:
+            date_key = int(date.strftime("%Y%m%d"))
+
+            for (location_key, product_key), state in inventory_state.items():
+                net_quantity = int(
+                    daily_sales.get(
+                        (date_key, location_key, product_key),
+                        0,
+                    )
+                )
+
+                # Ensure sufficient inventory before fulfilling net sales.
+                if net_quantity > state["OnHand"]:
+                    reorder_quantity = max(
+                        state["ReorderPoint"] * 3,
+                        net_quantity - state["OnHand"]
+                        + state["ReorderPoint"] * 2,
+                    )
+
+                    state["OnHand"] += reorder_quantity
+                    state["TotalReplenished"] += reorder_quantity
+
+                # Positive quantity reduces stock.
+                # Negative quantity (net returns) increases stock.
+                state["OnHand"] -= net_quantity
+
+                assert state["OnHand"] >= 0
+
+                if net_quantity > 0:
+                    state["LastSaleDate"] = date
+
+                # Replenish again when inventory reaches reorder point.
+                if state["OnHand"] <= state["ReorderPoint"]:
+                    reorder_quantity = state["ReorderPoint"] * 3
+
+                    state["OnHand"] += reorder_quantity
+                    state["TotalReplenished"] += reorder_quantity
+
+        # Capture one month-end snapshot per product/location.
+        for (location_key, product_key), state in inventory_state.items():
+            on_hand = state["OnHand"]
+
+            # Simplified reservation model: 0–5% of current stock.
+            reserved = int(
+                rng.integers(
+                    0,
+                    max(1, int(on_hand * 0.05) + 1),
+                )
+            )
+
+            available = on_hand - reserved
+
+            inventory_value = money(
+                Decimal(on_hand) * state["UnitCost"]
+            )
+
+            if state["LastSaleDate"] is None:
+                days_since_last_sale = (
+                    month_end - pd.Timestamp(START_DATE)
+                ).days + 1
+            else:
+                days_since_last_sale = (
+                    month_end - state["LastSaleDate"]
+                ).days
+
+            if available == 0:
+                stock_status = "Out of Stock"
+            elif available <= state["ReorderPoint"]:
+                stock_status = "Low Stock"
+            else:
+                stock_status = "Available"
+
+            snapshots.append({
+                "InventorySnapshotKey": snapshot_key,
+                "DateKey": int(month_end.strftime("%Y%m%d")),
+                "LocationKey": location_key,
+                "ProductKey": product_key,
+                "UnitsOnHand": on_hand,
+                "UnitsReserved": reserved,
+                "UnitsAvailable": available,
+                "UnitInventoryCost": float(state["UnitCost"]),
+                "InventoryValue": float(inventory_value),
+                "ReorderPoint": state["ReorderPoint"],
+                "DaysSinceLastSale": days_since_last_sale,
+                "StockStatus": stock_status,
+            })
+
+            snapshot_key += 1
+
+    inventory = pd.DataFrame(snapshots)
+
+    print("\nInventory simulation completed.")
+    print(f"Monthly snapshot records: {len(inventory):,}")
+
+    assert len(inventory) == (
+        len(products) * len(locations) * len(months)
+    )
+
+    assert inventory["InventorySnapshotKey"].is_unique
+
+    assert not inventory.duplicated(
+        ["DateKey", "LocationKey", "ProductKey"]
+    ).any()
+
+    assert (inventory["UnitsOnHand"] >= 0).all()
+    assert (inventory["UnitsReserved"] >= 0).all()
+    assert (inventory["UnitsAvailable"] >= 0).all()
+
+    assert (
+        inventory["UnitsOnHand"]
+        == inventory["UnitsReserved"] + inventory["UnitsAvailable"]
+    ).all()
+
+    total_replenished = sum(
+        state["TotalReplenished"]
+        for state in inventory_state.values()
+    )
+
+    closing_units = sum(
+        state["OnHand"]
+        for state in inventory_state.values()
+    )
+
+    opening_units = inventory_base["OpeningUnits"].sum()
+
+    assert (
+        opening_units + total_replenished - net_sales
+        == closing_units
+    ), (
+        "Inventory movement reconciliation failed."
+    )
+
+    print("\nInventory movement reconciliation:")
+    print(f"Opening units: {opening_units:,}")
+    print(f"Replenished units: {total_replenished:,}")
+    print(f"Net units sold: {net_sales:,}")
+    print(f"Closing units: {closing_units:,}")
+    print("Inventory movement reconciliation passed.")
+
+    print("\nStock status distribution:")
+    print(inventory["StockStatus"].value_counts().to_string())
+
+    # Validate inventory snapshot foreign keys.
+    assert inventory["DateKey"].isin(
+        dimensions["DimDate"]["DateKey"]
+    ).all()
+
+    assert inventory["LocationKey"].isin(
+        locations["LocationKey"]
+    ).all()
+
+    assert inventory["ProductKey"].isin(
+        products["ProductKey"]
+    ).all()
+
+    # Validate inventory valuation using exact decimal arithmetic.
+    expected_values = [
+        money(
+            Decimal(int(row.UnitsOnHand))
+            * Decimal(str(row.UnitInventoryCost))
+        )
+        for row in inventory.itertuples(index=False)
+    ]
+
+    actual_values = [
+        Decimal(str(value))
+        for value in inventory["InventoryValue"]
+    ]
+
+    assert expected_values == actual_values, (
+        "Inventory valuations do not reconcile."
+    )
+
+    # Validate inventory aging.
+    assert (
+        inventory["DaysSinceLastSale"] >= 0
+    ).all()
+
+    # Validate inventory stock classifications.
+    for row in inventory.itertuples(index=False):
+        if row.UnitsAvailable == 0:
+            expected_status = "Out of Stock"
+        elif row.UnitsAvailable <= row.ReorderPoint:
+            expected_status = "Low Stock"
+        else:
+            expected_status = "Available"
+
+        assert row.StockStatus == expected_status, (
+            "Inventory stock status does not match available units."
+        )
+
+    # Every reporting month must contain 360 snapshots.
+    monthly_counts = inventory.groupby("DateKey").size()
+
+    assert len(monthly_counts) == 24
+    assert (monthly_counts == 360).all()
+
+    print("\nInventory valuation and integrity validation passed.")
+
+    print(
+        f"Total inventory value across all snapshots: "
+        f"${inventory['InventoryValue'].sum():,.2f}"
+    )
+
+    latest_date = inventory["DateKey"].max()
+
+    latest_inventory = inventory[
+        inventory["DateKey"] == latest_date
+    ]
+
+    print(
+        f"Closing inventory value ({latest_date}): "
+        f"${latest_inventory['InventoryValue'].sum():,.2f}"
+    )
+
+    # Final FactInventorySnapshot schema.
+    inventory_columns = [
+        "InventorySnapshotKey",
+        "DateKey",
+        "LocationKey",
+        "ProductKey",
+        "UnitsOnHand",
+        "UnitsReserved",
+        "UnitsAvailable",
+        "UnitInventoryCost",
+        "InventoryValue",
+        "ReorderPoint",
+        "DaysSinceLastSale",
+        "StockStatus",
+    ]
+
+    assert len(inventory_columns) == 12
+    assert set(inventory_columns).issubset(inventory.columns)
+
+    inventory_final = inventory[inventory_columns].copy()
+
+    assert inventory_final.shape == (8640, 12)
+    assert not inventory_final.isna().any().any()
+    assert inventory_final["InventorySnapshotKey"].is_unique
+
+    print("\nFinal FactInventorySnapshot schema validated.")
+    print(f"Rows: {len(inventory_final):,}")
+    print(f"Columns: {len(inventory_final.columns)}")
+
+    inventory_path = DATA_DIR / "FactInventorySnapshot.csv"
+
+    inventory_final.to_csv(
+        inventory_path,
+        index=False,
+        float_format="%.2f",
+    )
+
+    print(f"FactInventorySnapshot exported: {inventory_path}")
+
+    return inventory_final
+
+    return inventory
+
 def main() -> None:
     """Generate and validate Northstar fact tables."""
 
@@ -3218,6 +3652,18 @@ def main() -> None:
     print(
         f"FactExpenses working records: "
         f"{len(expenses):,}"
+    )
+
+    # Initialize the inventory snapshot simulation.
+    inventory_snapshots = generate_inventory_snapshots(
+        dimensions,
+        sales,
+        rng,
+    )
+
+    print(
+        f"Inventory initialization records: "
+        f"{len(inventory_snapshots):,}"
     )
 
 if __name__ == "__main__":

@@ -77,7 +77,7 @@ The project demonstrates:
 
 [View the Jupyter Notebook](projects/health-metrics/notebooks/01_system_health_exploration.ipynb)
 
-### 002 — Small Business Performance Analytics
+### [002 — Northstar Business Performance Analytics](projects/business-performance/README.md)
 
 **Status:** Planned
 

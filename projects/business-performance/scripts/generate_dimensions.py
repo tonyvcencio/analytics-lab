@@ -1,6 +1,6 @@
 """
 Northstar Home & Tech
-Portfolio Project 002 — Business Performance Analytics
+Project 002 — Northstar Business Performance Analytics
 
 Generate foundational synthetic dimension tables.
 
