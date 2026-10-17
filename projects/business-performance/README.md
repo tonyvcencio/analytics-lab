@@ -38,9 +38,12 @@ The analytical solution is designed to answer questions such as:
 | pandas | Data transformation and aggregation | Implemented |
 | NumPy | Synthetic data simulation | Implemented |
 | Git and GitHub | Version control and documentation | Implemented |
-| PostgreSQL | Relational analytical database | Planned |
+| PostgreSQL | Relational analytical database | Implemented |
 | Power BI | Business intelligence dashboards | Planned |
 | DAX | Analytical measures and KPIs | Planned |
+
+See [Database Infrastructure](docs/database_infrastructure.md)
+for PostgreSQL deployment, data loading, validation, and security details.
 
 ### Development Environment
 
