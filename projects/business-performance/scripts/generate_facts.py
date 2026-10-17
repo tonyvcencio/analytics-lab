@@ -1313,7 +1313,458 @@ def generate_service_jobs(
         .to_string()
     )
 
-    return pd.DataFrame()
+    # Populate operational service-job fields.
+    # Scheduled hours represent the appointment's estimated duration.
+    duration_lookup = services.set_index(
+        "ServiceKey"
+    )["EstimatedDurationHours"].to_dict()
+
+    service_jobs["ScheduledHours"] = (
+        service_jobs["ServiceKey"]
+        .map(duration_lookup)
+        .astype(float)
+    )
+
+    # Completed jobs are modeled as same-day service completions.
+    # Incomplete jobs have no completion date.
+    completed_mask = service_jobs["JobStatus"] == "Completed"
+
+    service_jobs["CompletedDateKey"] = pd.Series(
+        pd.NA,
+        index=service_jobs.index,
+        dtype="Int64",
+    )
+
+    service_jobs.loc[
+        completed_mask, "CompletedDateKey"
+    ] = service_jobs.loc[
+        completed_mask, "ScheduledDateKey"
+    ].astype("Int64")
+
+    # Validate operational fields.
+    assert service_jobs["ScheduledHours"].notna().all(), (
+        "Service jobs contain missing scheduled hours."
+    )
+
+    assert (service_jobs["ScheduledHours"] > 0).all(), (
+        "Service jobs contain invalid scheduled hours."
+    )
+
+    assert service_jobs.loc[
+        completed_mask, "CompletedDateKey"
+    ].notna().all(), (
+        "Completed jobs are missing completion dates."
+    )
+
+    assert service_jobs.loc[
+        ~completed_mask, "CompletedDateKey"
+    ].isna().all(), (
+        "Incomplete jobs contain completion dates."
+    )
+
+    print("\nService operational fields validated.")
+    print(
+        f"Total scheduled service hours: "
+        f"{service_jobs['ScheduledHours'].sum():,.2f}"
+    )
+
+    # Generate actual service hours for completed jobs.
+    # Incomplete jobs do not consume completed-job labor hours.
+    service_jobs["ActualServiceHours"] = 0.0
+
+    completed_indices = service_jobs.index[completed_mask]
+
+    # Introduce realistic variation around estimated durations.
+    duration_factors = rng.uniform(
+        0.85,
+        1.15,
+        size=len(completed_indices),
+    )
+
+    service_jobs.loc[
+        completed_indices, "ActualServiceHours"
+    ] = (
+        service_jobs.loc[
+            completed_indices, "ScheduledHours"
+        ].to_numpy()
+        * duration_factors
+    )
+
+    # Calculate technician workload using actual service hours.
+    # ScheduledDate represents the completion date for completed jobs.
+    daily_actual_hours = (
+        service_jobs.loc[completed_mask]
+        .groupby(["ScheduledDate", "EmployeeKey"])[
+            "ActualServiceHours"
+        ]
+        .transform("sum")
+    )
+
+    # Scale overloaded technician-days to the eight-hour limit.
+    capacity_factors = np.minimum(
+        1.0,
+        8.0 / daily_actual_hours.to_numpy(),
+    )
+
+    # Quantify how often capacity normalization is required.
+    adjusted_job_count = int(
+        (capacity_factors < 1.0).sum()
+    )
+
+    adjusted_technician_days = (
+        service_jobs.loc[completed_mask]
+        .assign(RequiredAdjustment=capacity_factors < 1.0)
+        .groupby(["ScheduledDate", "EmployeeKey"])[
+            "RequiredAdjustment"
+        ]
+        .any()
+        .sum()
+    )
+
+    print("\nActual service capacity adjustments:")
+    print(f"Jobs adjusted: {adjusted_job_count:,}")
+    print(
+        f"Technician-days requiring adjustment: "
+        f"{adjusted_technician_days:,}"
+    )
+
+    adjusted_hours = (
+        service_jobs.loc[
+            completed_mask, "ActualServiceHours"
+        ].to_numpy()
+        * capacity_factors
+    )
+
+    # Round down to hundredths to avoid exceeding capacity
+    # because of rounding.
+    service_jobs.loc[
+        completed_mask, "ActualServiceHours"
+    ] = (
+        np.floor(adjusted_hours * 100 + 1e-9) / 100
+    )
+
+    # Validate generated service hours.
+    assert (
+        service_jobs.loc[
+            completed_mask, "ActualServiceHours"
+        ] > 0
+    ).all(), (
+        "Completed jobs contain invalid actual service hours."
+    )
+
+    assert (
+        service_jobs.loc[
+            ~completed_mask, "ActualServiceHours"
+        ] == 0
+    ).all(), (
+        "Incomplete jobs contain actual service hours."
+    )
+
+    actual_workload = (
+        service_jobs.loc[completed_mask]
+        .groupby(["ScheduledDate", "EmployeeKey"])[
+            "ActualServiceHours"
+        ]
+        .sum()
+    )
+
+    assert (actual_workload <= 8.0 + 1e-9).all(), (
+        "Actual technician workload exceeds daily capacity."
+    )
+
+    print("\nActual service hours validation passed.")
+
+    print(
+        f"Total actual service hours: "
+        f"{service_jobs['ActualServiceHours'].sum():,.2f}"
+    )
+
+    print(
+        f"Maximum actual technician workload: "
+        f"{actual_workload.max():.2f} hours"
+    )
+
+    print(
+        f"Technician-days exceeding actual capacity: "
+        f"{(actual_workload > 8.0).sum():,}"
+    )
+
+    # Generate service financial fields.
+    # StandardServiceFee is the published catalog price.
+    fee_lookup = services.set_index(
+        "ServiceKey"
+    )["StandardRate"].to_dict()
+
+    service_jobs["StandardServiceFee"] = (
+        service_jobs["ServiceKey"]
+        .map(fee_lookup)
+        .astype(float)
+        .round(2)
+    )
+
+    service_jobs["DiscountAmount"] = 0.0
+    service_jobs["ServiceRevenue"] = 0.0
+    service_jobs["PartsCost"] = 0.0
+
+    # Apply discounts to completed jobs only.
+    discount_rates = rng.choice(
+        [0.00, 0.05, 0.10, 0.15],
+        size=int(completed_mask.sum()),
+        p=[0.75, 0.10, 0.10, 0.05],
+    )
+
+    completed_fees = service_jobs.loc[
+        completed_mask, "StandardServiceFee"
+    ].to_numpy()
+
+    discounts = np.round(
+        completed_fees * discount_rates,
+        2,
+    )
+
+    service_jobs.loc[
+        completed_mask, "DiscountAmount"
+    ] = discounts
+
+    service_jobs.loc[
+        completed_mask, "ServiceRevenue"
+    ] = np.round(
+        completed_fees - discounts,
+        2,
+    )
+
+    # Parts consumption varies by service category.
+    parts_rules = {
+        "Computer Repair": (0.45, 10, 85),
+        "Device Setup": (0.10, 5, 20),
+        "Network Installation": (0.35, 15, 100),
+        "Smart Home Installation": (0.40, 10, 80),
+        "Technical Support": (0.05, 5, 15),
+        "Troubleshooting": (0.10, 5, 25),
+    }
+
+    category_lookup = services.set_index(
+        "ServiceKey"
+    )["ServiceCategory"].to_dict()
+
+    service_jobs["ServiceCategory"] = (
+        service_jobs["ServiceKey"].map(category_lookup)
+    )
+
+    for category, (probability, minimum, maximum) in parts_rules.items():
+        category_mask = (
+            completed_mask
+            & (service_jobs["ServiceCategory"] == category)
+        )
+
+        category_indices = service_jobs.index[category_mask]
+        count = len(category_indices)
+
+        if count == 0:
+            continue
+
+        uses_parts = rng.random(count) < probability
+
+        generated_costs = np.round(
+            rng.uniform(minimum, maximum, size=count),
+            2,
+        )
+
+        service_jobs.loc[
+            category_indices, "PartsCost"
+        ] = np.where(uses_parts, generated_costs, 0.0)
+
+    # Keep category as a dimension attribute, not a fact column.
+    service_jobs.drop(
+        columns=["ServiceCategory"],
+        inplace=True,
+    )
+
+    # Validate financial integrity.
+    assert service_jobs["StandardServiceFee"].notna().all(), (
+        "Missing standard service fees."
+    )
+
+    assert (
+        service_jobs["StandardServiceFee"] > 0
+    ).all(), "Invalid standard service fees."
+
+    assert (
+        service_jobs["DiscountAmount"]
+        <= service_jobs["StandardServiceFee"]
+    ).all(), "Discount exceeds standard service fee."
+
+    assert (
+        service_jobs["ServiceRevenue"] >= 0
+    ).all(), "Negative service revenue detected."
+
+    assert (
+        service_jobs["PartsCost"] >= 0
+    ).all(), "Negative parts cost detected."
+
+    assert (
+        service_jobs.loc[
+            ~completed_mask,
+            ["DiscountAmount", "ServiceRevenue", "PartsCost"],
+        ] == 0
+    ).all().all(), (
+        "Incomplete jobs contain recognized financial activity."
+    )
+
+    expected_revenue = (
+        service_jobs.loc[
+            completed_mask, "StandardServiceFee"
+        ]
+        - service_jobs.loc[
+            completed_mask, "DiscountAmount"
+        ]
+    )
+
+    assert np.allclose(
+        service_jobs.loc[
+            completed_mask, "ServiceRevenue"
+        ],
+        expected_revenue,
+    ), "Service revenue reconciliation failed."
+
+    print("\nService financial validation passed.")
+
+    print(
+        f"Gross completed service fees: "
+        f"${completed_fees.sum():,.2f}"
+    )
+
+    print(
+        f"Total service discounts: "
+        f"${service_jobs['DiscountAmount'].sum():,.2f}"
+    )
+
+    print(
+        f"Net service revenue: "
+        f"${service_jobs['ServiceRevenue'].sum():,.2f}"
+    )
+
+    print(
+        f"Total service parts cost: "
+        f"${service_jobs['PartsCost'].sum():,.2f}"
+    )
+
+    # Assign cancellation reasons only to cancelled service jobs.
+    cancellation_reasons = [
+        "Customer Request",
+        "Scheduling Conflict",
+        "Price Concern",
+        "Service No Longer Needed",
+        "Unable to Contact Customer",
+        "Other",
+    ]
+
+    cancellation_probabilities = [
+        0.30,
+        0.20,
+        0.15,
+        0.20,
+        0.10,
+        0.05,
+    ]
+
+    service_jobs["CancellationReason"] = pd.Series(
+        pd.NA,
+        index=service_jobs.index,
+        dtype="string",
+    )
+
+    cancelled_mask = service_jobs["JobStatus"] == "Cancelled"
+
+    service_jobs.loc[
+        cancelled_mask, "CancellationReason"
+    ] = rng.choice(
+        cancellation_reasons,
+        size=int(cancelled_mask.sum()),
+        p=cancellation_probabilities,
+    )
+
+    # Related retail transactions are optional.
+    # Leave them unassigned until cross-table matching is implemented.
+    service_jobs["RelatedTransactionID"] = pd.Series(
+        pd.NA,
+        index=service_jobs.index,
+        dtype="string",
+    )
+
+    # Validate cancellation data.
+    assert service_jobs.loc[
+        cancelled_mask, "CancellationReason"
+    ].notna().all(), (
+        "Cancelled jobs are missing cancellation reasons."
+    )
+
+    assert service_jobs.loc[
+        ~cancelled_mask, "CancellationReason"
+    ].isna().all(), (
+        "Non-cancelled jobs contain cancellation reasons."
+    )
+
+    assert service_jobs["RelatedTransactionID"].isna().all(), (
+        "Unexpected related retail transactions detected."
+    )
+
+    print("\nCancellation and transaction-link validation passed.")
+
+    print("\nCancellation reasons:")
+    print(
+        service_jobs.loc[
+            cancelled_mask, "CancellationReason"
+        ]
+        .value_counts()
+        .to_string()
+    )
+
+    # Select the documented analytical schema.
+    service_job_columns = [
+        "ServiceJobKey",
+        "JobReference",
+        "CustomerKey",
+        "LocationKey",
+        "ServiceKey",
+        "EmployeeKey",
+        "ScheduledDateKey",
+        "CompletedDateKey",
+        "JobStatus",
+        "ScheduledHours",
+        "ActualServiceHours",
+        "StandardServiceFee",
+        "DiscountAmount",
+        "ServiceRevenue",
+        "PartsCost",
+        "CancellationReason",
+        "RelatedTransactionID",
+    ]
+
+    # Ensure every required field exists.
+    missing_columns = set(service_job_columns) - set(
+        service_jobs.columns
+    )
+
+    assert not missing_columns, (
+        f"Missing FactServiceJobs columns: {missing_columns}"
+    )
+
+    service_jobs = service_jobs[service_job_columns].copy()
+
+    assert len(service_jobs) == len(job_records), (
+        "Service-job rows were lost during schema selection."
+    )
+
+    assert service_jobs["ServiceJobKey"].is_unique, (
+        "Duplicate service-job keys detected."
+    )
+
+    print("\nFinal FactServiceJobs schema validation passed.")
+    print(f"Rows: {len(service_jobs):,}")
+    print(f"Columns: {len(service_jobs.columns)}")
+
+    return service_jobs
 
 def main() -> None:
     """Generate and validate Northstar fact tables."""
@@ -1352,7 +1803,18 @@ def main() -> None:
     print(f"\nFactSales generated: {len(sales):,} sales lines")
     print(f"Unique transactions: {sales['TransactionID'].nunique():,}")
 
-    generate_service_jobs(dimensions, rng)
+    # Generate and export completed service-job fact table.
+    service_jobs = generate_service_jobs(dimensions, rng)
+
+    service_output_path = DATA_DIR / "FactServiceJobs.csv"
+
+    service_jobs.to_csv(
+        service_output_path,
+        index=False,
+    )
+
+    print(f"\nFactServiceJobs exported: {service_output_path}")
+    print(f"Service-job records exported: {len(service_jobs):,}")
 
 if __name__ == "__main__":
     main()
