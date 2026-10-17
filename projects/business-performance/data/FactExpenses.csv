@@ -1,0 +1,538 @@
+ExpenseKey,ExpenseReference,DateKey,LocationKey,ExpenseCategoryKey,VendorCode,ExpenseDescription,ExpenseAmount,IsRecurring,AllocationMethod
+1,NS-EXP-0000001,20250131,1,1,NS-VENDOR-RENT,Monthly facility lease,4500.0,True,Direct
+2,NS-EXP-0000002,20250131,1,2,NS-VENDOR-UTILITY,Monthly facility utilities,710.76,True,Direct
+3,NS-EXP-0000003,20250131,1,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,188.21,False,Direct
+4,NS-EXP-0000004,20250131,1,9,NS-VENDOR-OTHER,Miscellaneous location operating expense,595.42,False,Direct
+5,NS-EXP-0000005,20250131,2,1,NS-VENDOR-RENT,Monthly facility lease,3200.0,True,Direct
+6,NS-EXP-0000006,20250131,2,2,NS-VENDOR-UTILITY,Monthly facility utilities,594.2,True,Direct
+7,NS-EXP-0000007,20250131,3,1,NS-VENDOR-RENT,Monthly facility lease,3900.0,True,Direct
+8,NS-EXP-0000008,20250131,3,2,NS-VENDOR-UTILITY,Monthly facility utilities,793.34,True,Direct
+9,NS-EXP-0000009,20250131,3,9,NS-VENDOR-OTHER,Miscellaneous location operating expense,235.9,False,Direct
+10,NS-EXP-0000010,20250131,1,3,NS-VENDOR-INS,Monthly business insurance,720.0,True,Allocated
+11,NS-EXP-0000010,20250131,2,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+12,NS-EXP-0000010,20250131,3,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+13,NS-EXP-0000011,20250131,1,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,380.0,True,Allocated
+14,NS-EXP-0000011,20250131,2,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+15,NS-EXP-0000011,20250131,3,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+16,NS-EXP-0000012,20250131,1,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1085.53,False,Allocated
+17,NS-EXP-0000012,20250131,2,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,814.15,False,Allocated
+18,NS-EXP-0000012,20250131,3,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,814.15,False,Allocated
+19,NS-EXP-0000013,20250228,1,1,NS-VENDOR-RENT,Monthly facility lease,4500.0,True,Direct
+20,NS-EXP-0000014,20250228,1,2,NS-VENDOR-UTILITY,Monthly facility utilities,700.19,True,Direct
+21,NS-EXP-0000015,20250228,1,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,290.99,False,Direct
+22,NS-EXP-0000016,20250228,1,9,NS-VENDOR-OTHER,Miscellaneous location operating expense,378.93,False,Direct
+23,NS-EXP-0000017,20250228,2,1,NS-VENDOR-RENT,Monthly facility lease,3200.0,True,Direct
+24,NS-EXP-0000018,20250228,2,2,NS-VENDOR-UTILITY,Monthly facility utilities,809.55,True,Direct
+25,NS-EXP-0000019,20250228,3,1,NS-VENDOR-RENT,Monthly facility lease,3900.0,True,Direct
+26,NS-EXP-0000020,20250228,3,2,NS-VENDOR-UTILITY,Monthly facility utilities,667.27,True,Direct
+27,NS-EXP-0000021,20250228,3,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,182.89,False,Direct
+28,NS-EXP-0000022,20250228,3,9,NS-VENDOR-OTHER,Miscellaneous location operating expense,277.35,False,Direct
+29,NS-EXP-0000023,20250228,1,3,NS-VENDOR-INS,Monthly business insurance,720.0,True,Allocated
+30,NS-EXP-0000023,20250228,2,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+31,NS-EXP-0000023,20250228,3,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+32,NS-EXP-0000024,20250228,1,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,380.0,True,Allocated
+33,NS-EXP-0000024,20250228,2,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+34,NS-EXP-0000024,20250228,3,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+35,NS-EXP-0000025,20250228,1,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,772.39,False,Allocated
+36,NS-EXP-0000025,20250228,2,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,579.29,False,Allocated
+37,NS-EXP-0000025,20250228,3,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,579.3,False,Allocated
+38,NS-EXP-0000026,20250331,1,1,NS-VENDOR-RENT,Monthly facility lease,4500.0,True,Direct
+39,NS-EXP-0000027,20250331,1,2,NS-VENDOR-UTILITY,Monthly facility utilities,528.71,True,Direct
+40,NS-EXP-0000028,20250331,1,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,205.1,False,Direct
+41,NS-EXP-0000029,20250331,2,1,NS-VENDOR-RENT,Monthly facility lease,3200.0,True,Direct
+42,NS-EXP-0000030,20250331,2,2,NS-VENDOR-UTILITY,Monthly facility utilities,750.09,True,Direct
+43,NS-EXP-0000031,20250331,2,9,NS-VENDOR-OTHER,Miscellaneous location operating expense,143.64,False,Direct
+44,NS-EXP-0000032,20250331,3,1,NS-VENDOR-RENT,Monthly facility lease,3900.0,True,Direct
+45,NS-EXP-0000033,20250331,3,2,NS-VENDOR-UTILITY,Monthly facility utilities,703.28,True,Direct
+46,NS-EXP-0000034,20250331,3,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,95.7,False,Direct
+47,NS-EXP-0000035,20250331,3,9,NS-VENDOR-OTHER,Miscellaneous location operating expense,566.49,False,Direct
+48,NS-EXP-0000036,20250331,1,3,NS-VENDOR-INS,Monthly business insurance,720.0,True,Allocated
+49,NS-EXP-0000036,20250331,2,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+50,NS-EXP-0000036,20250331,3,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+51,NS-EXP-0000037,20250331,1,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,380.0,True,Allocated
+52,NS-EXP-0000037,20250331,2,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+53,NS-EXP-0000037,20250331,3,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+54,NS-EXP-0000038,20250331,1,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,823.34,False,Allocated
+55,NS-EXP-0000038,20250331,2,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,617.51,False,Allocated
+56,NS-EXP-0000038,20250331,3,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,617.5,False,Allocated
+57,NS-EXP-0000039,20250430,1,1,NS-VENDOR-RENT,Monthly facility lease,4500.0,True,Direct
+58,NS-EXP-0000040,20250430,1,2,NS-VENDOR-UTILITY,Monthly facility utilities,613.41,True,Direct
+59,NS-EXP-0000041,20250430,1,6,NS-VENDOR-MAINT,Operational equipment maintenance,623.58,False,Direct
+60,NS-EXP-0000042,20250430,2,1,NS-VENDOR-RENT,Monthly facility lease,3200.0,True,Direct
+61,NS-EXP-0000043,20250430,2,2,NS-VENDOR-UTILITY,Monthly facility utilities,820.56,True,Direct
+62,NS-EXP-0000044,20250430,2,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,230.24,False,Direct
+63,NS-EXP-0000045,20250430,3,1,NS-VENDOR-RENT,Monthly facility lease,3900.0,True,Direct
+64,NS-EXP-0000046,20250430,3,2,NS-VENDOR-UTILITY,Monthly facility utilities,487.16,True,Direct
+65,NS-EXP-0000047,20250430,3,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,312.1,False,Direct
+66,NS-EXP-0000048,20250430,3,6,NS-VENDOR-MAINT,Operational equipment maintenance,840.36,False,Direct
+67,NS-EXP-0000049,20250430,3,9,NS-VENDOR-OTHER,Miscellaneous location operating expense,134.17,False,Direct
+68,NS-EXP-0000050,20250430,1,3,NS-VENDOR-INS,Monthly business insurance,720.0,True,Allocated
+69,NS-EXP-0000050,20250430,2,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+70,NS-EXP-0000050,20250430,3,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+71,NS-EXP-0000051,20250430,1,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,380.0,True,Allocated
+72,NS-EXP-0000051,20250430,2,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+73,NS-EXP-0000051,20250430,3,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+74,NS-EXP-0000052,20250430,1,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1220.46,False,Allocated
+75,NS-EXP-0000052,20250430,2,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,915.35,False,Allocated
+76,NS-EXP-0000052,20250430,3,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,915.35,False,Allocated
+77,NS-EXP-0000053,20250531,1,1,NS-VENDOR-RENT,Monthly facility lease,4500.0,True,Direct
+78,NS-EXP-0000054,20250531,1,2,NS-VENDOR-UTILITY,Monthly facility utilities,817.03,True,Direct
+79,NS-EXP-0000055,20250531,1,9,NS-VENDOR-OTHER,Miscellaneous location operating expense,523.81,False,Direct
+80,NS-EXP-0000056,20250531,2,1,NS-VENDOR-RENT,Monthly facility lease,3200.0,True,Direct
+81,NS-EXP-0000057,20250531,2,2,NS-VENDOR-UTILITY,Monthly facility utilities,687.67,True,Direct
+82,NS-EXP-0000058,20250531,3,1,NS-VENDOR-RENT,Monthly facility lease,3900.0,True,Direct
+83,NS-EXP-0000059,20250531,3,2,NS-VENDOR-UTILITY,Monthly facility utilities,605.02,True,Direct
+84,NS-EXP-0000060,20250531,3,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,201.34,False,Direct
+85,NS-EXP-0000061,20250531,1,3,NS-VENDOR-INS,Monthly business insurance,720.0,True,Allocated
+86,NS-EXP-0000061,20250531,2,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+87,NS-EXP-0000061,20250531,3,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+88,NS-EXP-0000062,20250531,1,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,380.0,True,Allocated
+89,NS-EXP-0000062,20250531,2,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+90,NS-EXP-0000062,20250531,3,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+91,NS-EXP-0000063,20250531,1,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1377.62,False,Allocated
+92,NS-EXP-0000063,20250531,2,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1033.22,False,Allocated
+93,NS-EXP-0000063,20250531,3,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1033.22,False,Allocated
+94,NS-EXP-0000064,20250630,1,1,NS-VENDOR-RENT,Monthly facility lease,4500.0,True,Direct
+95,NS-EXP-0000065,20250630,1,2,NS-VENDOR-UTILITY,Monthly facility utilities,823.63,True,Direct
+96,NS-EXP-0000066,20250630,1,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,266.53,False,Direct
+97,NS-EXP-0000067,20250630,2,1,NS-VENDOR-RENT,Monthly facility lease,3200.0,True,Direct
+98,NS-EXP-0000068,20250630,2,2,NS-VENDOR-UTILITY,Monthly facility utilities,921.81,True,Direct
+99,NS-EXP-0000069,20250630,3,1,NS-VENDOR-RENT,Monthly facility lease,3900.0,True,Direct
+100,NS-EXP-0000070,20250630,3,2,NS-VENDOR-UTILITY,Monthly facility utilities,537.29,True,Direct
+101,NS-EXP-0000071,20250630,3,9,NS-VENDOR-OTHER,Miscellaneous location operating expense,399.32,False,Direct
+102,NS-EXP-0000072,20250630,1,3,NS-VENDOR-INS,Monthly business insurance,720.0,True,Allocated
+103,NS-EXP-0000072,20250630,2,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+104,NS-EXP-0000072,20250630,3,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+105,NS-EXP-0000073,20250630,1,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,380.0,True,Allocated
+106,NS-EXP-0000073,20250630,2,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+107,NS-EXP-0000073,20250630,3,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+108,NS-EXP-0000074,20250630,1,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,809.75,False,Allocated
+109,NS-EXP-0000074,20250630,2,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,607.31,False,Allocated
+110,NS-EXP-0000074,20250630,3,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,607.32,False,Allocated
+111,NS-EXP-0000075,20250731,1,1,NS-VENDOR-RENT,Monthly facility lease,4500.0,True,Direct
+112,NS-EXP-0000076,20250731,1,2,NS-VENDOR-UTILITY,Monthly facility utilities,599.94,True,Direct
+113,NS-EXP-0000077,20250731,1,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,330.56,False,Direct
+114,NS-EXP-0000078,20250731,1,6,NS-VENDOR-MAINT,Operational equipment maintenance,905.68,False,Direct
+115,NS-EXP-0000079,20250731,2,1,NS-VENDOR-RENT,Monthly facility lease,3200.0,True,Direct
+116,NS-EXP-0000080,20250731,2,2,NS-VENDOR-UTILITY,Monthly facility utilities,869.92,True,Direct
+117,NS-EXP-0000081,20250731,2,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,310.95,False,Direct
+118,NS-EXP-0000082,20250731,3,1,NS-VENDOR-RENT,Monthly facility lease,3900.0,True,Direct
+119,NS-EXP-0000083,20250731,3,2,NS-VENDOR-UTILITY,Monthly facility utilities,634.9,True,Direct
+120,NS-EXP-0000084,20250731,1,3,NS-VENDOR-INS,Monthly business insurance,720.0,True,Allocated
+121,NS-EXP-0000084,20250731,2,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+122,NS-EXP-0000084,20250731,3,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+123,NS-EXP-0000085,20250731,1,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,380.0,True,Allocated
+124,NS-EXP-0000085,20250731,2,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+125,NS-EXP-0000085,20250731,3,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+126,NS-EXP-0000086,20250731,1,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1263.13,False,Allocated
+127,NS-EXP-0000086,20250731,2,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,947.35,False,Allocated
+128,NS-EXP-0000086,20250731,3,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,947.35,False,Allocated
+129,NS-EXP-0000087,20250831,1,1,NS-VENDOR-RENT,Monthly facility lease,4500.0,True,Direct
+130,NS-EXP-0000088,20250831,1,2,NS-VENDOR-UTILITY,Monthly facility utilities,1000.71,True,Direct
+131,NS-EXP-0000089,20250831,1,9,NS-VENDOR-OTHER,Miscellaneous location operating expense,348.16,False,Direct
+132,NS-EXP-0000090,20250831,2,1,NS-VENDOR-RENT,Monthly facility lease,3200.0,True,Direct
+133,NS-EXP-0000091,20250831,2,2,NS-VENDOR-UTILITY,Monthly facility utilities,872.46,True,Direct
+134,NS-EXP-0000092,20250831,2,6,NS-VENDOR-MAINT,Operational equipment maintenance,989.15,False,Direct
+135,NS-EXP-0000093,20250831,3,1,NS-VENDOR-RENT,Monthly facility lease,3900.0,True,Direct
+136,NS-EXP-0000094,20250831,3,2,NS-VENDOR-UTILITY,Monthly facility utilities,540.51,True,Direct
+137,NS-EXP-0000095,20250831,3,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,212.6,False,Direct
+138,NS-EXP-0000096,20250831,1,3,NS-VENDOR-INS,Monthly business insurance,720.0,True,Allocated
+139,NS-EXP-0000096,20250831,2,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+140,NS-EXP-0000096,20250831,3,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+141,NS-EXP-0000097,20250831,1,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,380.0,True,Allocated
+142,NS-EXP-0000097,20250831,2,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+143,NS-EXP-0000097,20250831,3,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+144,NS-EXP-0000098,20250831,1,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1477.15,False,Allocated
+145,NS-EXP-0000098,20250831,2,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1107.86,False,Allocated
+146,NS-EXP-0000098,20250831,3,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1107.86,False,Allocated
+147,NS-EXP-0000099,20250930,1,1,NS-VENDOR-RENT,Monthly facility lease,4500.0,True,Direct
+148,NS-EXP-0000100,20250930,1,2,NS-VENDOR-UTILITY,Monthly facility utilities,840.0,True,Direct
+149,NS-EXP-0000101,20250930,1,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,161.14,False,Direct
+150,NS-EXP-0000102,20250930,2,1,NS-VENDOR-RENT,Monthly facility lease,3200.0,True,Direct
+151,NS-EXP-0000103,20250930,2,2,NS-VENDOR-UTILITY,Monthly facility utilities,556.32,True,Direct
+152,NS-EXP-0000104,20250930,2,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,78.24,False,Direct
+153,NS-EXP-0000105,20250930,2,6,NS-VENDOR-MAINT,Operational equipment maintenance,278.8,False,Direct
+154,NS-EXP-0000106,20250930,2,9,NS-VENDOR-OTHER,Miscellaneous location operating expense,298.08,False,Direct
+155,NS-EXP-0000107,20250930,3,1,NS-VENDOR-RENT,Monthly facility lease,3900.0,True,Direct
+156,NS-EXP-0000108,20250930,3,2,NS-VENDOR-UTILITY,Monthly facility utilities,1027.42,True,Direct
+157,NS-EXP-0000109,20250930,1,3,NS-VENDOR-INS,Monthly business insurance,720.0,True,Allocated
+158,NS-EXP-0000109,20250930,2,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+159,NS-EXP-0000109,20250930,3,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+160,NS-EXP-0000110,20250930,1,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,380.0,True,Allocated
+161,NS-EXP-0000110,20250930,2,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+162,NS-EXP-0000110,20250930,3,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+163,NS-EXP-0000111,20250930,1,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1166.94,False,Allocated
+164,NS-EXP-0000111,20250930,2,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,875.21,False,Allocated
+165,NS-EXP-0000111,20250930,3,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,875.2,False,Allocated
+166,NS-EXP-0000112,20251031,1,1,NS-VENDOR-RENT,Monthly facility lease,4500.0,True,Direct
+167,NS-EXP-0000113,20251031,1,2,NS-VENDOR-UTILITY,Monthly facility utilities,895.25,True,Direct
+168,NS-EXP-0000114,20251031,1,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,103.79,False,Direct
+169,NS-EXP-0000115,20251031,1,6,NS-VENDOR-MAINT,Operational equipment maintenance,536.51,False,Direct
+170,NS-EXP-0000116,20251031,1,9,NS-VENDOR-OTHER,Miscellaneous location operating expense,605.67,False,Direct
+171,NS-EXP-0000117,20251031,2,1,NS-VENDOR-RENT,Monthly facility lease,3200.0,True,Direct
+172,NS-EXP-0000118,20251031,2,2,NS-VENDOR-UTILITY,Monthly facility utilities,595.26,True,Direct
+173,NS-EXP-0000119,20251031,2,6,NS-VENDOR-MAINT,Operational equipment maintenance,628.24,False,Direct
+174,NS-EXP-0000120,20251031,3,1,NS-VENDOR-RENT,Monthly facility lease,3900.0,True,Direct
+175,NS-EXP-0000121,20251031,3,2,NS-VENDOR-UTILITY,Monthly facility utilities,639.51,True,Direct
+176,NS-EXP-0000122,20251031,3,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,81.86,False,Direct
+177,NS-EXP-0000123,20251031,3,9,NS-VENDOR-OTHER,Miscellaneous location operating expense,612.56,False,Direct
+178,NS-EXP-0000124,20251031,1,3,NS-VENDOR-INS,Monthly business insurance,720.0,True,Allocated
+179,NS-EXP-0000124,20251031,2,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+180,NS-EXP-0000124,20251031,3,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+181,NS-EXP-0000125,20251031,1,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,380.0,True,Allocated
+182,NS-EXP-0000125,20251031,2,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+183,NS-EXP-0000125,20251031,3,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+184,NS-EXP-0000126,20251031,1,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,940.5,False,Allocated
+185,NS-EXP-0000126,20251031,2,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,705.37,False,Allocated
+186,NS-EXP-0000126,20251031,3,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,705.37,False,Allocated
+187,NS-EXP-0000127,20251130,1,1,NS-VENDOR-RENT,Monthly facility lease,4500.0,True,Direct
+188,NS-EXP-0000128,20251130,1,2,NS-VENDOR-UTILITY,Monthly facility utilities,769.7,True,Direct
+189,NS-EXP-0000129,20251130,1,6,NS-VENDOR-MAINT,Operational equipment maintenance,648.59,False,Direct
+190,NS-EXP-0000130,20251130,2,1,NS-VENDOR-RENT,Monthly facility lease,3200.0,True,Direct
+191,NS-EXP-0000131,20251130,2,2,NS-VENDOR-UTILITY,Monthly facility utilities,645.41,True,Direct
+192,NS-EXP-0000132,20251130,2,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,135.79,False,Direct
+193,NS-EXP-0000133,20251130,3,1,NS-VENDOR-RENT,Monthly facility lease,3900.0,True,Direct
+194,NS-EXP-0000134,20251130,3,2,NS-VENDOR-UTILITY,Monthly facility utilities,739.95,True,Direct
+195,NS-EXP-0000135,20251130,3,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,145.32,False,Direct
+196,NS-EXP-0000136,20251130,1,3,NS-VENDOR-INS,Monthly business insurance,720.0,True,Allocated
+197,NS-EXP-0000136,20251130,2,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+198,NS-EXP-0000136,20251130,3,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+199,NS-EXP-0000137,20251130,1,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,380.0,True,Allocated
+200,NS-EXP-0000137,20251130,2,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+201,NS-EXP-0000137,20251130,3,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+202,NS-EXP-0000138,20251130,1,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1565.22,False,Allocated
+203,NS-EXP-0000138,20251130,2,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1173.91,False,Allocated
+204,NS-EXP-0000138,20251130,3,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1173.91,False,Allocated
+205,NS-EXP-0000139,20251231,1,1,NS-VENDOR-RENT,Monthly facility lease,4500.0,True,Direct
+206,NS-EXP-0000140,20251231,1,2,NS-VENDOR-UTILITY,Monthly facility utilities,713.63,True,Direct
+207,NS-EXP-0000141,20251231,1,6,NS-VENDOR-MAINT,Operational equipment maintenance,275.03,False,Direct
+208,NS-EXP-0000142,20251231,2,1,NS-VENDOR-RENT,Monthly facility lease,3200.0,True,Direct
+209,NS-EXP-0000143,20251231,2,2,NS-VENDOR-UTILITY,Monthly facility utilities,472.13,True,Direct
+210,NS-EXP-0000144,20251231,3,1,NS-VENDOR-RENT,Monthly facility lease,3900.0,True,Direct
+211,NS-EXP-0000145,20251231,3,2,NS-VENDOR-UTILITY,Monthly facility utilities,696.29,True,Direct
+212,NS-EXP-0000146,20251231,3,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,168.99,False,Direct
+213,NS-EXP-0000147,20251231,3,6,NS-VENDOR-MAINT,Operational equipment maintenance,787.75,False,Direct
+214,NS-EXP-0000148,20251231,1,3,NS-VENDOR-INS,Monthly business insurance,720.0,True,Allocated
+215,NS-EXP-0000148,20251231,2,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+216,NS-EXP-0000148,20251231,3,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+217,NS-EXP-0000149,20251231,1,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,380.0,True,Allocated
+218,NS-EXP-0000149,20251231,2,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+219,NS-EXP-0000149,20251231,3,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+220,NS-EXP-0000150,20251231,1,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1677.12,False,Allocated
+221,NS-EXP-0000150,20251231,2,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1257.84,False,Allocated
+222,NS-EXP-0000150,20251231,3,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1257.83,False,Allocated
+223,NS-EXP-0000151,20260131,1,1,NS-VENDOR-RENT,Monthly facility lease,4500.0,True,Direct
+224,NS-EXP-0000152,20260131,1,2,NS-VENDOR-UTILITY,Monthly facility utilities,664.15,True,Direct
+225,NS-EXP-0000153,20260131,1,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,147.77,False,Direct
+226,NS-EXP-0000154,20260131,2,1,NS-VENDOR-RENT,Monthly facility lease,3200.0,True,Direct
+227,NS-EXP-0000155,20260131,2,2,NS-VENDOR-UTILITY,Monthly facility utilities,856.36,True,Direct
+228,NS-EXP-0000156,20260131,2,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,265.49,False,Direct
+229,NS-EXP-0000157,20260131,3,1,NS-VENDOR-RENT,Monthly facility lease,3900.0,True,Direct
+230,NS-EXP-0000158,20260131,3,2,NS-VENDOR-UTILITY,Monthly facility utilities,459.57,True,Direct
+231,NS-EXP-0000159,20260131,3,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,224.24,False,Direct
+232,NS-EXP-0000160,20260131,1,3,NS-VENDOR-INS,Monthly business insurance,720.0,True,Allocated
+233,NS-EXP-0000160,20260131,2,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+234,NS-EXP-0000160,20260131,3,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+235,NS-EXP-0000161,20260131,1,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,380.0,True,Allocated
+236,NS-EXP-0000161,20260131,2,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+237,NS-EXP-0000161,20260131,3,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+238,NS-EXP-0000162,20260131,1,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1472.79,False,Allocated
+239,NS-EXP-0000162,20260131,2,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1104.59,False,Allocated
+240,NS-EXP-0000162,20260131,3,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1104.59,False,Allocated
+241,NS-EXP-0000163,20260228,1,1,NS-VENDOR-RENT,Monthly facility lease,4500.0,True,Direct
+242,NS-EXP-0000164,20260228,1,2,NS-VENDOR-UTILITY,Monthly facility utilities,542.91,True,Direct
+243,NS-EXP-0000165,20260228,1,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,281.58,False,Direct
+244,NS-EXP-0000166,20260228,1,9,NS-VENDOR-OTHER,Miscellaneous location operating expense,465.62,False,Direct
+245,NS-EXP-0000167,20260228,2,1,NS-VENDOR-RENT,Monthly facility lease,3200.0,True,Direct
+246,NS-EXP-0000168,20260228,2,2,NS-VENDOR-UTILITY,Monthly facility utilities,527.33,True,Direct
+247,NS-EXP-0000169,20260228,2,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,90.96,False,Direct
+248,NS-EXP-0000170,20260228,2,9,NS-VENDOR-OTHER,Miscellaneous location operating expense,593.86,False,Direct
+249,NS-EXP-0000171,20260228,3,1,NS-VENDOR-RENT,Monthly facility lease,3900.0,True,Direct
+250,NS-EXP-0000172,20260228,3,2,NS-VENDOR-UTILITY,Monthly facility utilities,543.22,True,Direct
+251,NS-EXP-0000173,20260228,3,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,183.16,False,Direct
+252,NS-EXP-0000174,20260228,3,6,NS-VENDOR-MAINT,Operational equipment maintenance,1101.64,False,Direct
+253,NS-EXP-0000175,20260228,1,3,NS-VENDOR-INS,Monthly business insurance,720.0,True,Allocated
+254,NS-EXP-0000175,20260228,2,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+255,NS-EXP-0000175,20260228,3,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+256,NS-EXP-0000176,20260228,1,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,380.0,True,Allocated
+257,NS-EXP-0000176,20260228,2,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+258,NS-EXP-0000176,20260228,3,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+259,NS-EXP-0000177,20260228,1,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1498.5,False,Allocated
+260,NS-EXP-0000177,20260228,2,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1123.87,False,Allocated
+261,NS-EXP-0000177,20260228,3,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1123.87,False,Allocated
+262,NS-EXP-0000178,20260331,1,1,NS-VENDOR-RENT,Monthly facility lease,4500.0,True,Direct
+263,NS-EXP-0000179,20260331,1,2,NS-VENDOR-UTILITY,Monthly facility utilities,450.54,True,Direct
+264,NS-EXP-0000180,20260331,1,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,98.09,False,Direct
+265,NS-EXP-0000181,20260331,2,1,NS-VENDOR-RENT,Monthly facility lease,3200.0,True,Direct
+266,NS-EXP-0000182,20260331,2,2,NS-VENDOR-UTILITY,Monthly facility utilities,776.29,True,Direct
+267,NS-EXP-0000183,20260331,2,6,NS-VENDOR-MAINT,Operational equipment maintenance,539.88,False,Direct
+268,NS-EXP-0000184,20260331,2,9,NS-VENDOR-OTHER,Miscellaneous location operating expense,153.8,False,Direct
+269,NS-EXP-0000185,20260331,3,1,NS-VENDOR-RENT,Monthly facility lease,3900.0,True,Direct
+270,NS-EXP-0000186,20260331,3,2,NS-VENDOR-UTILITY,Monthly facility utilities,499.11,True,Direct
+271,NS-EXP-0000187,20260331,3,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,216.07,False,Direct
+272,NS-EXP-0000188,20260331,3,6,NS-VENDOR-MAINT,Operational equipment maintenance,1035.17,False,Direct
+273,NS-EXP-0000189,20260331,3,9,NS-VENDOR-OTHER,Miscellaneous location operating expense,561.53,False,Direct
+274,NS-EXP-0000190,20260331,1,3,NS-VENDOR-INS,Monthly business insurance,720.0,True,Allocated
+275,NS-EXP-0000190,20260331,2,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+276,NS-EXP-0000190,20260331,3,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+277,NS-EXP-0000191,20260331,1,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,380.0,True,Allocated
+278,NS-EXP-0000191,20260331,2,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+279,NS-EXP-0000191,20260331,3,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+280,NS-EXP-0000192,20260331,1,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1334.78,False,Allocated
+281,NS-EXP-0000192,20260331,2,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1001.09,False,Allocated
+282,NS-EXP-0000192,20260331,3,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1001.08,False,Allocated
+283,NS-EXP-0000193,20260430,1,1,NS-VENDOR-RENT,Monthly facility lease,4500.0,True,Direct
+284,NS-EXP-0000194,20260430,1,2,NS-VENDOR-UTILITY,Monthly facility utilities,517.32,True,Direct
+285,NS-EXP-0000195,20260430,1,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,224.88,False,Direct
+286,NS-EXP-0000196,20260430,1,9,NS-VENDOR-OTHER,Miscellaneous location operating expense,387.13,False,Direct
+287,NS-EXP-0000197,20260430,2,1,NS-VENDOR-RENT,Monthly facility lease,3200.0,True,Direct
+288,NS-EXP-0000198,20260430,2,2,NS-VENDOR-UTILITY,Monthly facility utilities,588.96,True,Direct
+289,NS-EXP-0000199,20260430,2,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,301.52,False,Direct
+290,NS-EXP-0000200,20260430,2,6,NS-VENDOR-MAINT,Operational equipment maintenance,551.23,False,Direct
+291,NS-EXP-0000201,20260430,3,1,NS-VENDOR-RENT,Monthly facility lease,3900.0,True,Direct
+292,NS-EXP-0000202,20260430,3,2,NS-VENDOR-UTILITY,Monthly facility utilities,713.62,True,Direct
+293,NS-EXP-0000203,20260430,3,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,246.81,False,Direct
+294,NS-EXP-0000204,20260430,3,9,NS-VENDOR-OTHER,Miscellaneous location operating expense,540.59,False,Direct
+295,NS-EXP-0000205,20260430,1,3,NS-VENDOR-INS,Monthly business insurance,720.0,True,Allocated
+296,NS-EXP-0000205,20260430,2,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+297,NS-EXP-0000205,20260430,3,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+298,NS-EXP-0000206,20260430,1,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,380.0,True,Allocated
+299,NS-EXP-0000206,20260430,2,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+300,NS-EXP-0000206,20260430,3,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+301,NS-EXP-0000207,20260430,1,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1143.96,False,Allocated
+302,NS-EXP-0000207,20260430,2,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,857.97,False,Allocated
+303,NS-EXP-0000207,20260430,3,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,857.97,False,Allocated
+304,NS-EXP-0000208,20260531,1,1,NS-VENDOR-RENT,Monthly facility lease,4500.0,True,Direct
+305,NS-EXP-0000209,20260531,1,2,NS-VENDOR-UTILITY,Monthly facility utilities,718.28,True,Direct
+306,NS-EXP-0000210,20260531,1,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,232.66,False,Direct
+307,NS-EXP-0000211,20260531,1,6,NS-VENDOR-MAINT,Operational equipment maintenance,722.39,False,Direct
+308,NS-EXP-0000212,20260531,1,9,NS-VENDOR-OTHER,Miscellaneous location operating expense,181.08,False,Direct
+309,NS-EXP-0000213,20260531,2,1,NS-VENDOR-RENT,Monthly facility lease,3200.0,True,Direct
+310,NS-EXP-0000214,20260531,2,2,NS-VENDOR-UTILITY,Monthly facility utilities,590.03,True,Direct
+311,NS-EXP-0000215,20260531,2,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,87.28,False,Direct
+312,NS-EXP-0000216,20260531,3,1,NS-VENDOR-RENT,Monthly facility lease,3900.0,True,Direct
+313,NS-EXP-0000217,20260531,3,2,NS-VENDOR-UTILITY,Monthly facility utilities,615.99,True,Direct
+314,NS-EXP-0000218,20260531,3,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,179.94,False,Direct
+315,NS-EXP-0000219,20260531,1,3,NS-VENDOR-INS,Monthly business insurance,720.0,True,Allocated
+316,NS-EXP-0000219,20260531,2,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+317,NS-EXP-0000219,20260531,3,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+318,NS-EXP-0000220,20260531,1,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,380.0,True,Allocated
+319,NS-EXP-0000220,20260531,2,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+320,NS-EXP-0000220,20260531,3,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+321,NS-EXP-0000221,20260531,1,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1115.86,False,Allocated
+322,NS-EXP-0000221,20260531,2,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,836.9,False,Allocated
+323,NS-EXP-0000221,20260531,3,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,836.9,False,Allocated
+324,NS-EXP-0000222,20260630,1,1,NS-VENDOR-RENT,Monthly facility lease,4500.0,True,Direct
+325,NS-EXP-0000223,20260630,1,2,NS-VENDOR-UTILITY,Monthly facility utilities,691.42,True,Direct
+326,NS-EXP-0000224,20260630,1,6,NS-VENDOR-MAINT,Operational equipment maintenance,509.5,False,Direct
+327,NS-EXP-0000225,20260630,1,9,NS-VENDOR-OTHER,Miscellaneous location operating expense,276.07,False,Direct
+328,NS-EXP-0000226,20260630,2,1,NS-VENDOR-RENT,Monthly facility lease,3200.0,True,Direct
+329,NS-EXP-0000227,20260630,2,2,NS-VENDOR-UTILITY,Monthly facility utilities,534.66,True,Direct
+330,NS-EXP-0000228,20260630,2,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,239.04,False,Direct
+331,NS-EXP-0000229,20260630,2,6,NS-VENDOR-MAINT,Operational equipment maintenance,1045.26,False,Direct
+332,NS-EXP-0000230,20260630,3,1,NS-VENDOR-RENT,Monthly facility lease,3900.0,True,Direct
+333,NS-EXP-0000231,20260630,3,2,NS-VENDOR-UTILITY,Monthly facility utilities,1021.68,True,Direct
+334,NS-EXP-0000232,20260630,3,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,173.41,False,Direct
+335,NS-EXP-0000233,20260630,3,9,NS-VENDOR-OTHER,Miscellaneous location operating expense,428.57,False,Direct
+336,NS-EXP-0000234,20260630,1,3,NS-VENDOR-INS,Monthly business insurance,720.0,True,Allocated
+337,NS-EXP-0000234,20260630,2,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+338,NS-EXP-0000234,20260630,3,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+339,NS-EXP-0000235,20260630,1,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,380.0,True,Allocated
+340,NS-EXP-0000235,20260630,2,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+341,NS-EXP-0000235,20260630,3,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+342,NS-EXP-0000236,20260630,1,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1301.74,False,Allocated
+343,NS-EXP-0000236,20260630,2,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,976.3,False,Allocated
+344,NS-EXP-0000236,20260630,3,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,976.3,False,Allocated
+345,NS-EXP-0000237,20260731,1,1,NS-VENDOR-RENT,Monthly facility lease,4500.0,True,Direct
+346,NS-EXP-0000238,20260731,1,2,NS-VENDOR-UTILITY,Monthly facility utilities,985.43,True,Direct
+347,NS-EXP-0000239,20260731,1,6,NS-VENDOR-MAINT,Operational equipment maintenance,259.97,False,Direct
+348,NS-EXP-0000240,20260731,2,1,NS-VENDOR-RENT,Monthly facility lease,3200.0,True,Direct
+349,NS-EXP-0000241,20260731,2,2,NS-VENDOR-UTILITY,Monthly facility utilities,923.8,True,Direct
+350,NS-EXP-0000242,20260731,2,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,226.97,False,Direct
+351,NS-EXP-0000243,20260731,2,6,NS-VENDOR-MAINT,Operational equipment maintenance,856.8,False,Direct
+352,NS-EXP-0000244,20260731,3,1,NS-VENDOR-RENT,Monthly facility lease,3900.0,True,Direct
+353,NS-EXP-0000245,20260731,3,2,NS-VENDOR-UTILITY,Monthly facility utilities,810.19,True,Direct
+354,NS-EXP-0000246,20260731,3,6,NS-VENDOR-MAINT,Operational equipment maintenance,253.58,False,Direct
+355,NS-EXP-0000247,20260731,1,3,NS-VENDOR-INS,Monthly business insurance,720.0,True,Allocated
+356,NS-EXP-0000247,20260731,2,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+357,NS-EXP-0000247,20260731,3,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+358,NS-EXP-0000248,20260731,1,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,380.0,True,Allocated
+359,NS-EXP-0000248,20260731,2,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+360,NS-EXP-0000248,20260731,3,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+361,NS-EXP-0000249,20260731,1,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1664.59,False,Allocated
+362,NS-EXP-0000249,20260731,2,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1248.44,False,Allocated
+363,NS-EXP-0000249,20260731,3,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1248.44,False,Allocated
+364,NS-EXP-0000250,20260831,1,1,NS-VENDOR-RENT,Monthly facility lease,4500.0,True,Direct
+365,NS-EXP-0000251,20260831,1,2,NS-VENDOR-UTILITY,Monthly facility utilities,1003.69,True,Direct
+366,NS-EXP-0000252,20260831,1,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,299.76,False,Direct
+367,NS-EXP-0000253,20260831,1,6,NS-VENDOR-MAINT,Operational equipment maintenance,511.98,False,Direct
+368,NS-EXP-0000254,20260831,2,1,NS-VENDOR-RENT,Monthly facility lease,3200.0,True,Direct
+369,NS-EXP-0000255,20260831,2,2,NS-VENDOR-UTILITY,Monthly facility utilities,904.55,True,Direct
+370,NS-EXP-0000256,20260831,2,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,280.02,False,Direct
+371,NS-EXP-0000257,20260831,2,6,NS-VENDOR-MAINT,Operational equipment maintenance,955.41,False,Direct
+372,NS-EXP-0000258,20260831,2,9,NS-VENDOR-OTHER,Miscellaneous location operating expense,165.81,False,Direct
+373,NS-EXP-0000259,20260831,3,1,NS-VENDOR-RENT,Monthly facility lease,3900.0,True,Direct
+374,NS-EXP-0000260,20260831,3,2,NS-VENDOR-UTILITY,Monthly facility utilities,817.19,True,Direct
+375,NS-EXP-0000261,20260831,3,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,238.19,False,Direct
+376,NS-EXP-0000262,20260831,1,3,NS-VENDOR-INS,Monthly business insurance,720.0,True,Allocated
+377,NS-EXP-0000262,20260831,2,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+378,NS-EXP-0000262,20260831,3,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+379,NS-EXP-0000263,20260831,1,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,380.0,True,Allocated
+380,NS-EXP-0000263,20260831,2,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+381,NS-EXP-0000263,20260831,3,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+382,NS-EXP-0000264,20260831,1,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1296.6,False,Allocated
+383,NS-EXP-0000264,20260831,2,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,972.45,False,Allocated
+384,NS-EXP-0000264,20260831,3,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,972.46,False,Allocated
+385,NS-EXP-0000265,20260930,1,1,NS-VENDOR-RENT,Monthly facility lease,4500.0,True,Direct
+386,NS-EXP-0000266,20260930,1,2,NS-VENDOR-UTILITY,Monthly facility utilities,644.12,True,Direct
+387,NS-EXP-0000267,20260930,1,9,NS-VENDOR-OTHER,Miscellaneous location operating expense,270.65,False,Direct
+388,NS-EXP-0000268,20260930,2,1,NS-VENDOR-RENT,Monthly facility lease,3200.0,True,Direct
+389,NS-EXP-0000269,20260930,2,2,NS-VENDOR-UTILITY,Monthly facility utilities,778.71,True,Direct
+390,NS-EXP-0000270,20260930,2,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,255.05,False,Direct
+391,NS-EXP-0000271,20260930,2,9,NS-VENDOR-OTHER,Miscellaneous location operating expense,585.39,False,Direct
+392,NS-EXP-0000272,20260930,3,1,NS-VENDOR-RENT,Monthly facility lease,3900.0,True,Direct
+393,NS-EXP-0000273,20260930,3,2,NS-VENDOR-UTILITY,Monthly facility utilities,626.36,True,Direct
+394,NS-EXP-0000274,20260930,3,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,320.13,False,Direct
+395,NS-EXP-0000275,20260930,1,3,NS-VENDOR-INS,Monthly business insurance,720.0,True,Allocated
+396,NS-EXP-0000275,20260930,2,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+397,NS-EXP-0000275,20260930,3,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+398,NS-EXP-0000276,20260930,1,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,380.0,True,Allocated
+399,NS-EXP-0000276,20260930,2,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+400,NS-EXP-0000276,20260930,3,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+401,NS-EXP-0000277,20260930,1,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1520.52,False,Allocated
+402,NS-EXP-0000277,20260930,2,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1140.39,False,Allocated
+403,NS-EXP-0000277,20260930,3,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1140.39,False,Allocated
+404,NS-EXP-0000278,20261031,1,1,NS-VENDOR-RENT,Monthly facility lease,4500.0,True,Direct
+405,NS-EXP-0000279,20261031,1,2,NS-VENDOR-UTILITY,Monthly facility utilities,768.14,True,Direct
+406,NS-EXP-0000280,20261031,1,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,143.14,False,Direct
+407,NS-EXP-0000281,20261031,1,6,NS-VENDOR-MAINT,Operational equipment maintenance,445.51,False,Direct
+408,NS-EXP-0000282,20261031,1,9,NS-VENDOR-OTHER,Miscellaneous location operating expense,118.27,False,Direct
+409,NS-EXP-0000283,20261031,2,1,NS-VENDOR-RENT,Monthly facility lease,3200.0,True,Direct
+410,NS-EXP-0000284,20261031,2,2,NS-VENDOR-UTILITY,Monthly facility utilities,634.38,True,Direct
+411,NS-EXP-0000285,20261031,2,6,NS-VENDOR-MAINT,Operational equipment maintenance,200.2,False,Direct
+412,NS-EXP-0000286,20261031,3,1,NS-VENDOR-RENT,Monthly facility lease,3900.0,True,Direct
+413,NS-EXP-0000287,20261031,3,2,NS-VENDOR-UTILITY,Monthly facility utilities,539.89,True,Direct
+414,NS-EXP-0000288,20261031,3,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,184.96,False,Direct
+415,NS-EXP-0000289,20261031,3,6,NS-VENDOR-MAINT,Operational equipment maintenance,634.72,False,Direct
+416,NS-EXP-0000290,20261031,1,3,NS-VENDOR-INS,Monthly business insurance,720.0,True,Allocated
+417,NS-EXP-0000290,20261031,2,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+418,NS-EXP-0000290,20261031,3,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+419,NS-EXP-0000291,20261031,1,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,380.0,True,Allocated
+420,NS-EXP-0000291,20261031,2,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+421,NS-EXP-0000291,20261031,3,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+422,NS-EXP-0000292,20261031,1,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1332.04,False,Allocated
+423,NS-EXP-0000292,20261031,2,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,999.03,False,Allocated
+424,NS-EXP-0000292,20261031,3,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,999.03,False,Allocated
+425,NS-EXP-0000293,20261130,1,1,NS-VENDOR-RENT,Monthly facility lease,4500.0,True,Direct
+426,NS-EXP-0000294,20261130,1,2,NS-VENDOR-UTILITY,Monthly facility utilities,563.44,True,Direct
+427,NS-EXP-0000295,20261130,1,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,222.35,False,Direct
+428,NS-EXP-0000296,20261130,1,9,NS-VENDOR-OTHER,Miscellaneous location operating expense,463.4,False,Direct
+429,NS-EXP-0000297,20261130,2,1,NS-VENDOR-RENT,Monthly facility lease,3200.0,True,Direct
+430,NS-EXP-0000298,20261130,2,2,NS-VENDOR-UTILITY,Monthly facility utilities,616.87,True,Direct
+431,NS-EXP-0000299,20261130,2,9,NS-VENDOR-OTHER,Miscellaneous location operating expense,669.06,False,Direct
+432,NS-EXP-0000300,20261130,3,1,NS-VENDOR-RENT,Monthly facility lease,3900.0,True,Direct
+433,NS-EXP-0000301,20261130,3,2,NS-VENDOR-UTILITY,Monthly facility utilities,821.36,True,Direct
+434,NS-EXP-0000302,20261130,3,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,95.33,False,Direct
+435,NS-EXP-0000303,20261130,3,9,NS-VENDOR-OTHER,Miscellaneous location operating expense,281.27,False,Direct
+436,NS-EXP-0000304,20261130,1,3,NS-VENDOR-INS,Monthly business insurance,720.0,True,Allocated
+437,NS-EXP-0000304,20261130,2,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+438,NS-EXP-0000304,20261130,3,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+439,NS-EXP-0000305,20261130,1,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,380.0,True,Allocated
+440,NS-EXP-0000305,20261130,2,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+441,NS-EXP-0000305,20261130,3,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+442,NS-EXP-0000306,20261130,1,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1116.49,False,Allocated
+443,NS-EXP-0000306,20261130,2,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,837.37,False,Allocated
+444,NS-EXP-0000306,20261130,3,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,837.36,False,Allocated
+445,NS-EXP-0000307,20261231,1,1,NS-VENDOR-RENT,Monthly facility lease,4500.0,True,Direct
+446,NS-EXP-0000308,20261231,1,2,NS-VENDOR-UTILITY,Monthly facility utilities,457.27,True,Direct
+447,NS-EXP-0000309,20261231,1,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,150.88,False,Direct
+448,NS-EXP-0000310,20261231,1,9,NS-VENDOR-OTHER,Miscellaneous location operating expense,329.6,False,Direct
+449,NS-EXP-0000311,20261231,2,1,NS-VENDOR-RENT,Monthly facility lease,3200.0,True,Direct
+450,NS-EXP-0000312,20261231,2,2,NS-VENDOR-UTILITY,Monthly facility utilities,567.19,True,Direct
+451,NS-EXP-0000313,20261231,2,6,NS-VENDOR-MAINT,Operational equipment maintenance,362.36,False,Direct
+452,NS-EXP-0000314,20261231,2,9,NS-VENDOR-OTHER,Miscellaneous location operating expense,255.92,False,Direct
+453,NS-EXP-0000315,20261231,3,1,NS-VENDOR-RENT,Monthly facility lease,3900.0,True,Direct
+454,NS-EXP-0000316,20261231,3,2,NS-VENDOR-UTILITY,Monthly facility utilities,847.12,True,Direct
+455,NS-EXP-0000317,20261231,3,7,NS-VENDOR-SUPPLIES,Administrative and office supplies,304.07,False,Direct
+456,NS-EXP-0000318,20261231,3,6,NS-VENDOR-MAINT,Operational equipment maintenance,698.42,False,Direct
+457,NS-EXP-0000319,20261231,1,3,NS-VENDOR-INS,Monthly business insurance,720.0,True,Allocated
+458,NS-EXP-0000319,20261231,2,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+459,NS-EXP-0000319,20261231,3,3,NS-VENDOR-INS,Monthly business insurance,540.0,True,Allocated
+460,NS-EXP-0000320,20261231,1,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,380.0,True,Allocated
+461,NS-EXP-0000320,20261231,2,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+462,NS-EXP-0000320,20261231,3,5,NS-VENDOR-SOFTWARE,Monthly business software subscriptions,285.0,True,Allocated
+463,NS-EXP-0000321,20261231,1,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,1175.85,False,Allocated
+464,NS-EXP-0000321,20261231,2,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,881.89,False,Allocated
+465,NS-EXP-0000321,20261231,3,4,NS-VENDOR-MARKETING,Company-wide marketing campaign,881.89,False,Allocated
+466,NS-EXP-0000322,20250131,1,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,7291.16,True,Direct
+467,NS-EXP-0000323,20250131,2,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,6206.64,True,Direct
+468,NS-EXP-0000324,20250131,3,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,4109.95,True,Direct
+469,NS-EXP-0000325,20250228,1,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,7141.9,True,Direct
+470,NS-EXP-0000326,20250228,2,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,4991.95,True,Direct
+471,NS-EXP-0000327,20250228,3,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,3282.76,True,Direct
+472,NS-EXP-0000328,20250331,1,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,8101.28,True,Direct
+473,NS-EXP-0000329,20250331,2,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,6691.0,True,Direct
+474,NS-EXP-0000330,20250331,3,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,4081.27,True,Direct
+475,NS-EXP-0000331,20250430,1,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,6921.12,True,Direct
+476,NS-EXP-0000332,20250430,2,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,5742.09,True,Direct
+477,NS-EXP-0000333,20250430,3,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,4812.57,True,Direct
+478,NS-EXP-0000334,20250531,1,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,8462.42,True,Direct
+479,NS-EXP-0000335,20250531,2,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,6927.6,True,Direct
+480,NS-EXP-0000336,20250531,3,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,4738.42,True,Direct
+481,NS-EXP-0000337,20250630,1,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,8338.34,True,Direct
+482,NS-EXP-0000338,20250630,2,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,6881.02,True,Direct
+483,NS-EXP-0000339,20250630,3,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,5324.37,True,Direct
+484,NS-EXP-0000340,20250731,1,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,9809.48,True,Direct
+485,NS-EXP-0000341,20250731,2,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,7339.24,True,Direct
+486,NS-EXP-0000342,20250731,3,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,4680.91,True,Direct
+487,NS-EXP-0000343,20250831,1,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,6790.43,True,Direct
+488,NS-EXP-0000344,20250831,2,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,7046.98,True,Direct
+489,NS-EXP-0000345,20250831,3,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,4614.41,True,Direct
+490,NS-EXP-0000346,20250930,1,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,8395.46,True,Direct
+491,NS-EXP-0000347,20250930,2,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,5810.81,True,Direct
+492,NS-EXP-0000348,20250930,3,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,4139.85,True,Direct
+493,NS-EXP-0000349,20251031,1,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,8396.05,True,Direct
+494,NS-EXP-0000350,20251031,2,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,6512.16,True,Direct
+495,NS-EXP-0000351,20251031,3,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,4646.01,True,Direct
+496,NS-EXP-0000352,20251130,1,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,11331.19,True,Direct
+497,NS-EXP-0000353,20251130,2,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,8813.98,True,Direct
+498,NS-EXP-0000354,20251130,3,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,5692.31,True,Direct
+499,NS-EXP-0000355,20251231,1,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,12710.79,True,Direct
+500,NS-EXP-0000356,20251231,2,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,12039.3,True,Direct
+501,NS-EXP-0000357,20251231,3,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,7252.16,True,Direct
+502,NS-EXP-0000358,20260131,1,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,6376.91,True,Direct
+503,NS-EXP-0000359,20260131,2,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,5356.74,True,Direct
+504,NS-EXP-0000360,20260131,3,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,3751.28,True,Direct
+505,NS-EXP-0000361,20260228,1,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,7182.13,True,Direct
+506,NS-EXP-0000362,20260228,2,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,6048.99,True,Direct
+507,NS-EXP-0000363,20260228,3,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,3852.85,True,Direct
+508,NS-EXP-0000364,20260331,1,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,8625.22,True,Direct
+509,NS-EXP-0000365,20260331,2,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,6225.78,True,Direct
+510,NS-EXP-0000366,20260331,3,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,4263.85,True,Direct
+511,NS-EXP-0000367,20260430,1,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,7968.46,True,Direct
+512,NS-EXP-0000368,20260430,2,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,7371.33,True,Direct
+513,NS-EXP-0000369,20260430,3,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,4587.84,True,Direct
+514,NS-EXP-0000370,20260531,1,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,7433.18,True,Direct
+515,NS-EXP-0000371,20260531,2,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,6691.22,True,Direct
+516,NS-EXP-0000372,20260531,3,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,5052.57,True,Direct
+517,NS-EXP-0000373,20260630,1,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,9673.81,True,Direct
+518,NS-EXP-0000374,20260630,2,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,6732.35,True,Direct
+519,NS-EXP-0000375,20260630,3,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,5055.01,True,Direct
+520,NS-EXP-0000376,20260731,1,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,8578.91,True,Direct
+521,NS-EXP-0000377,20260731,2,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,6988.14,True,Direct
+522,NS-EXP-0000378,20260731,3,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,4915.96,True,Direct
+523,NS-EXP-0000379,20260831,1,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,8825.46,True,Direct
+524,NS-EXP-0000380,20260831,2,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,6709.13,True,Direct
+525,NS-EXP-0000381,20260831,3,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,4293.39,True,Direct
+526,NS-EXP-0000382,20260930,1,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,8172.99,True,Direct
+527,NS-EXP-0000383,20260930,2,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,7164.53,True,Direct
+528,NS-EXP-0000384,20260930,3,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,5165.0,True,Direct
+529,NS-EXP-0000385,20261031,1,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,8175.33,True,Direct
+530,NS-EXP-0000386,20261031,2,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,7760.64,True,Direct
+531,NS-EXP-0000387,20261031,3,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,4454.77,True,Direct
+532,NS-EXP-0000388,20261130,1,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,11528.45,True,Direct
+533,NS-EXP-0000389,20261130,2,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,8023.88,True,Direct
+534,NS-EXP-0000390,20261130,3,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,6191.28,True,Direct
+535,NS-EXP-0000391,20261231,1,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,14939.98,True,Direct
+536,NS-EXP-0000392,20261231,2,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,9832.06,True,Direct
+537,NS-EXP-0000393,20261231,3,8,NS-VENDOR-PAYMENTS,Monthly payment processing fees,6889.63,True,Direct

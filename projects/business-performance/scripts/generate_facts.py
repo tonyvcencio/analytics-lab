@@ -2542,6 +2542,439 @@ def generate_job_labor_allocations(
 
     return allocations
 
+def generate_expenses(
+    dimensions: dict[str, pd.DataFrame],
+    sales: pd.DataFrame,
+    service_jobs: pd.DataFrame,
+    rng: np.random.Generator,
+) -> pd.DataFrame:
+    """Generate Northstar non-payroll operating expenses."""
+
+    categories = dimensions["DimExpenseCategory"]
+    locations = dimensions["DimLocation"]
+
+    category_lookup = categories.set_index(
+        "ExpenseCategory"
+    )["ExpenseCategoryKey"].to_dict()
+
+    location_keys = sorted(
+        locations["LocationKey"].astype(int).tolist()
+    )
+
+    # Shared company expenses are allocated across locations.
+    allocation_weights = {
+        1: Decimal("0.40"),
+        2: Decimal("0.30"),
+        3: Decimal("0.30"),
+    }
+
+    assert set(location_keys) == set(allocation_weights), (
+        "Missing shared-expense allocation weights."
+    )
+
+    records = []
+    expense_key = 1
+    reference_number = 1
+
+    months = pd.date_range(
+        START_DATE,
+        END_DATE,
+        freq="MS",
+    )
+
+    def add_expense(
+        date,
+        category,
+        amount,
+        description,
+        recurring,
+        location_key=None,
+        vendor="NS-VENDOR-001",
+    ):
+        nonlocal expense_key, reference_number
+
+        reference = f"NS-EXP-{reference_number:07d}"
+        reference_number += 1
+
+        amount = money(amount)
+
+        if amount == 0:
+            return
+
+        if location_key is not None:
+            allocations = {
+                int(location_key): amount
+            }
+            method = "Direct"
+
+        else:
+            # Allocate to all locations, assigning any rounding
+            # remainder to the final location.
+            allocations = {}
+            remaining = amount
+
+            for key in location_keys[:-1]:
+                allocated = money(
+                    amount * allocation_weights[key]
+                )
+                allocations[key] = allocated
+                remaining -= allocated
+
+            allocations[location_keys[-1]] = money(remaining)
+            method = "Allocated"
+
+            assert sum(
+                allocations.values(),
+                Decimal("0"),
+            ) == amount
+
+        for key, allocated_amount in allocations.items():
+            if allocated_amount == 0:
+                continue
+
+            records.append({
+                "ExpenseKey": expense_key,
+                "ExpenseReference": reference,
+                "DateKey": int(date.strftime("%Y%m%d")),
+                "LocationKey": key,
+                "ExpenseCategoryKey": int(
+                    category_lookup[category]
+                ),
+                "VendorCode": vendor,
+                "ExpenseDescription": description,
+                "ExpenseAmount": float(allocated_amount),
+                "IsRecurring": bool(recurring),
+                "AllocationMethod": method,
+            })
+
+            expense_key += 1
+
+    # Monthly expenses.
+    for month in months:
+        # Use month-end as the accounting recognition date.
+        date = month + pd.offsets.MonthEnd(0)
+
+        for location_key in location_keys:
+            # Location-specific monthly rent.
+            rent = {
+                1: 4500,
+                2: 3200,
+                3: 3900,
+            }[location_key]
+
+            add_expense(
+                date,
+                "Rent",
+                rent,
+                "Monthly facility lease",
+                True,
+                location_key,
+                "NS-VENDOR-RENT",
+            )
+
+            # Utilities fluctuate with seasonal demand.
+            seasonal_factor = (
+                1.15 if month.month in [6, 7, 8, 9]
+                else 1.0
+            )
+
+            utilities = money(
+                Decimal(str(rng.uniform(450, 900)))
+                * Decimal(str(seasonal_factor))
+            )
+
+            add_expense(
+                date,
+                "Utilities",
+                utilities,
+                "Monthly facility utilities",
+                True,
+                location_key,
+                "NS-VENDOR-UTILITY",
+            )
+
+            # Periodic administrative supplies.
+            if rng.random() < 0.65:
+                add_expense(
+                    date,
+                    "Administrative Supplies",
+                    rng.uniform(75, 350),
+                    "Administrative and office supplies",
+                    False,
+                    location_key,
+                    "NS-VENDOR-SUPPLIES",
+                )
+
+            # Equipment maintenance.
+            if rng.random() < 0.30:
+                add_expense(
+                    date,
+                    "Equipment Maintenance",
+                    rng.uniform(150, 1200),
+                    "Operational equipment maintenance",
+                    False,
+                    location_key,
+                    "NS-VENDOR-MAINT",
+                )
+
+            # Other miscellaneous operating expenses.
+            if rng.random() < 0.45:
+                add_expense(
+                    date,
+                    "Other Operating Expenses",
+                    rng.uniform(100, 700),
+                    "Miscellaneous location operating expense",
+                    False,
+                    location_key,
+                    "NS-VENDOR-OTHER",
+                )
+
+        # Shared company expenses.
+        add_expense(
+            date,
+            "Insurance",
+            1800,
+            "Monthly business insurance",
+            True,
+            vendor="NS-VENDOR-INS",
+        )
+
+        add_expense(
+            date,
+            "Software Subscriptions",
+            950,
+            "Monthly business software subscriptions",
+            True,
+            vendor="NS-VENDOR-SOFTWARE",
+        )
+
+        # Marketing varies by campaign and season.
+        marketing = money(
+            rng.uniform(1800, 4200)
+            * (1.30 if month.month in [11, 12] else 1.0)
+        )
+
+        add_expense(
+            date,
+            "Marketing",
+            marketing,
+            "Company-wide marketing campaign",
+            False,
+            vendor="NS-VENDOR-MARKETING",
+        )
+
+    # Generate monthly merchant processing fees.
+    # Fees are based on recognized retail and service revenue.
+    processing_rate = Decimal("0.025")
+
+    retail_activity = sales.copy()
+
+    retail_activity["Month"] = (
+        pd.to_datetime(
+            retail_activity["DateKey"].astype(str),
+            format="%Y%m%d",
+        )
+        .dt.to_period("M")
+    )
+
+    retail_monthly = (
+        retail_activity.groupby(
+            ["Month", "LocationKey"]
+        )["NetRevenue"]
+        .sum()
+    )
+
+    completed_services = service_jobs[
+        service_jobs["JobStatus"] == "Completed"
+    ].copy()
+
+    completed_services["Month"] = (
+        pd.to_datetime(
+            completed_services["CompletedDateKey"]
+            .astype(int)
+            .astype(str),
+            format="%Y%m%d",
+        )
+        .dt.to_period("M")
+    )
+
+    service_monthly = (
+        completed_services.groupby(
+            ["Month", "LocationKey"]
+        )["ServiceRevenue"]
+        .sum()
+    )
+
+    for month in months:
+        period = month.to_period("M")
+        recognition_date = month + pd.offsets.MonthEnd(0)
+
+        for location_key in location_keys:
+            retail_revenue = retail_monthly.get(
+                (period, location_key),
+                0.0,
+            )
+
+            service_revenue = service_monthly.get(
+                (period, location_key),
+                0.0,
+            )
+
+            combined_revenue = money(
+                Decimal(str(retail_revenue))
+                + Decimal(str(service_revenue))
+            )
+
+            processing_fee = money(
+                combined_revenue * processing_rate
+            )
+
+            if processing_fee <= 0:
+                continue
+
+            add_expense(
+                recognition_date,
+                "Merchant Processing Fees",
+                processing_fee,
+                "Monthly payment processing fees",
+                True,
+                location_key,
+                "NS-VENDOR-PAYMENTS",
+            )
+
+    expenses = pd.DataFrame(records)
+
+    print("\nFactExpenses generation initialized.")
+    print(f"Expense records generated: {len(expenses):,}")
+
+    assert expenses["ExpenseKey"].is_unique
+    assert expenses["DateKey"].isin(
+        dimensions["DimDate"]["DateKey"]
+    ).all()
+
+    assert expenses["LocationKey"].isin(
+        locations["LocationKey"]
+    ).all()
+
+    assert expenses["ExpenseCategoryKey"].isin(
+        categories["ExpenseCategoryKey"]
+    ).all()
+
+    assert (expenses["ExpenseAmount"] != 0).all()
+
+    print("Expense primary-key and foreign-key validation passed.")
+
+    # Verify all documented expense categories are represented.
+    expected_categories = set(
+        categories["ExpenseCategoryKey"]
+    )
+
+    actual_categories = set(
+        expenses["ExpenseCategoryKey"]
+    )
+
+    assert expected_categories == actual_categories, (
+        "One or more expense categories are missing."
+    )
+
+    # Shared expenses must reconcile to their original amount.
+    allocated = expenses[
+        expenses["AllocationMethod"] == "Allocated"
+    ]
+
+    allocation_counts = (
+        allocated.groupby("ExpenseReference")[
+            "LocationKey"
+        ]
+        .nunique()
+    )
+
+    assert (
+        allocation_counts == len(location_keys)
+    ).all(), (
+        "Shared expenses are missing location allocations."
+    )
+
+    assert not expenses.duplicated(
+        ["ExpenseReference", "LocationKey"]
+    ).any(), (
+        "Duplicate expense reference/location combinations."
+    )
+
+    print("\nAll nine expense categories validated.")
+
+    print("\nExpenses by category:")
+
+    summary = expenses.merge(
+        categories[
+            ["ExpenseCategoryKey", "ExpenseCategory"]
+        ],
+        on="ExpenseCategoryKey",
+        validate="many_to_one",
+    )
+
+    print(
+        summary.groupby("ExpenseCategory")[
+            "ExpenseAmount"
+        ]
+        .agg(["count", "sum"])
+        .round(2)
+        .to_string()
+    )
+
+    print(
+        f"\nTotal non-payroll operating expenses: "
+        f"${expenses['ExpenseAmount'].sum():,.2f}"
+    )
+
+    # Final FactExpenses schema.
+    expense_columns = [
+        "ExpenseKey",
+        "ExpenseReference",
+        "DateKey",
+        "LocationKey",
+        "ExpenseCategoryKey",
+        "VendorCode",
+        "ExpenseDescription",
+        "ExpenseAmount",
+        "IsRecurring",
+        "AllocationMethod",
+    ]
+
+    assert len(expenses) == 537
+    assert len(expense_columns) == 10
+
+    assert expenses["ExpenseKey"].is_unique
+    assert not expenses[expense_columns].isna().any().any()
+
+    assert expenses["AllocationMethod"].isin(
+        ["Direct", "Allocated"]
+    ).all()
+
+    # Every shared expense must allocate to exactly three locations.
+    shared = expenses[
+        expenses["AllocationMethod"] == "Allocated"
+    ]
+
+    assert (
+        shared.groupby("ExpenseReference")["LocationKey"]
+        .nunique()
+        == len(location_keys)
+    ).all()
+
+    expenses = expenses[expense_columns].copy()
+
+    print("\nFinal FactExpenses schema validation passed.")
+    print(f"Rows: {len(expenses):,}")
+    print(f"Columns: {len(expenses.columns)}")
+
+    expense_path = DATA_DIR / "FactExpenses.csv"
+    expenses.to_csv(expense_path, index=False)
+
+    print(f"FactExpenses exported: {expense_path}")
+
+    return expenses
+
 def main() -> None:
     """Generate and validate Northstar fact tables."""
 
@@ -2772,6 +3205,19 @@ def main() -> None:
     print(
         f"Job labor allocation records: "
         f"{len(job_labor_allocations):,}"
+    )
+
+    # Generate non-payroll operating expenses.
+    expenses = generate_expenses(
+        dimensions,
+        sales,
+        service_jobs,
+        rng,
+    )
+
+    print(
+        f"FactExpenses working records: "
+        f"{len(expenses):,}"
     )
 
 if __name__ == "__main__":
