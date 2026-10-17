@@ -529,6 +529,45 @@ def validate_sales(
 
     print("FactSales validation passed.")
 
+def technician_workdays(
+    technicians: pd.DataFrame,
+) -> dict[int, set[int]]:
+    """
+    Assign recurring five-day work schedules to service technicians.
+
+    Weekdays use Python's convention:
+    Monday = 0, Sunday = 6.
+    """
+
+    schedules = {}
+
+    # Stagger schedules independently within each location.
+    # Stagger technician schedules to preserve weekend coverage.
+    # Monday = 0, Sunday = 6.
+    #
+    # A two-technician location needs complementary schedules
+    # so at least one technician is available every weekday.
+    workweek_starts = [0, 2, 4, 1, 3]
+
+    for location_key, group in technicians.groupby(
+        "HomeLocationKey"
+    ):
+        location_technicians = group.sort_values("EmployeeKey")
+
+        for position, technician in enumerate(
+            location_technicians.itertuples(index=False)
+        ):
+            start_day = workweek_starts[
+                position % len(workweek_starts)
+            ]
+
+            schedules[int(technician.EmployeeKey)] = {
+                (start_day + offset) % 7
+                for offset in range(5)
+            }
+
+    return schedules
+
 def generate_service_jobs(
     dimensions: dict[str, pd.DataFrame],
     rng: np.random.Generator,
@@ -554,6 +593,19 @@ def generate_service_jobs(
     technicians = employees[
         employees["Department"] == "Service"
     ].copy()
+
+        # Establish recurring technician work schedules.
+    technician_schedules = technician_workdays(technicians)
+
+    print("\nTechnician weekly schedules:")
+
+    for employee_key, weekdays in sorted(
+        technician_schedules.items()
+    ):
+        print(
+            f"Employee {employee_key}: "
+            f"{sorted(weekdays)}"
+        )
 
     # Convert employment dates for historical eligibility checks.
     technicians["HireDate"] = pd.to_datetime(
@@ -585,6 +637,16 @@ def generate_service_jobs(
         for location_key in locations["LocationKey"]:
             location_technicians = eligible[
                 eligible["HomeLocationKey"] == location_key
+            ].copy()
+
+            # Only scheduled employees contribute to daily capacity.
+            location_technicians = location_technicians[
+                location_technicians["EmployeeKey"].map(
+                    lambda employee_key: (
+                        date.weekday()
+                        in technician_schedules[int(employee_key)]
+                    )
+                )
             ]
 
             staffing_records.append(
@@ -928,6 +990,16 @@ def generate_service_jobs(
             )
         ]
 
+        # Only assign technicians scheduled to work this weekday.
+        eligible_technicians = eligible_technicians[
+            eligible_technicians["EmployeeKey"].map(
+                lambda employee_key: (
+                    scheduled_date.weekday()
+                    in technician_schedules[int(employee_key)]
+                )
+            )
+        ]
+
         if eligible_technicians.empty:
             technician_assignments.append(pd.NA)
             continue
@@ -1028,6 +1100,8 @@ def generate_service_jobs(
         & (service_jobs["EmployeeKey"].isna())
     ]
 
+    service_jobs["CapacityCancellation"] = False
+
     for job_index in unassigned_indices:
         job = service_jobs.loc[job_index]
 
@@ -1058,6 +1132,16 @@ def generate_service_jobs(
                     | (
                         technicians["TerminationDate"]
                         >= candidate_date
+                    )
+                )
+            ]
+
+            # Rescheduled jobs must also respect technician days off.
+            eligible_technicians = eligible_technicians[
+                eligible_technicians["EmployeeKey"].map(
+                    lambda employee_key: (
+                        candidate_date.weekday()
+                        in technician_schedules[int(employee_key)]
                     )
                 )
             ]
@@ -1123,9 +1207,18 @@ def generate_service_jobs(
         if not rescheduled:
             unresolved_count += 1
 
+            # A service cannot be completed without an eligible technician.
+            # Jobs exceeding available capacity become cancellations.
+            service_jobs.at[job_index, "JobStatus"] = "Cancelled"
+            service_jobs.at[job_index, "EmployeeKey"] = pd.NA
+            service_jobs.at[job_index, "CapacityCancellation"] = True
+
     print("\nCapacity-aware rescheduling results:")
     print(f"Jobs rescheduled: {rescheduled_count:,}")
-    print(f"Jobs still unresolved: {unresolved_count:,}")
+    print(
+    f"Jobs cancelled due to staffing capacity: "
+    f"{unresolved_count:,}"
+)
 
     # Diagnose completed jobs that remain unassigned.
     unresolved_jobs = service_jobs[
@@ -1166,6 +1259,31 @@ def generate_service_jobs(
             .size()
             .to_string()
         )
+
+    # Completed jobs must always have a valid technician assignment.
+    assert unresolved_jobs.empty, (
+        "Completed service jobs remain without assigned technicians."
+    )
+
+    # Validate that completed work occurs on scheduled workdays.
+    completed_assignments = service_jobs.loc[
+        service_jobs["JobStatus"] == "Completed",
+        ["EmployeeKey", "ScheduledDate"],
+    ].copy()
+
+    scheduled_workday_valid = completed_assignments.apply(
+        lambda row: (
+            row["ScheduledDate"].weekday()
+            in technician_schedules[int(row["EmployeeKey"])]
+        ),
+        axis=1,
+    )
+
+    assert scheduled_workday_valid.all(), (
+        "Completed jobs assigned on technician days off."
+    )
+
+    print("Technician workday validation passed.")
 
     # Examine preliminary technician workload.
     completed_jobs = service_jobs[
@@ -1676,13 +1794,28 @@ def generate_service_jobs(
 
     cancelled_mask = service_jobs["JobStatus"] == "Cancelled"
 
+    # Distinguish customer cancellations from staffing failures.
+    capacity_cancelled = (
+        cancelled_mask
+        & service_jobs["CapacityCancellation"]
+    )
+
+    ordinary_cancelled = (
+        cancelled_mask
+        & ~service_jobs["CapacityCancellation"]
+    )
+
     service_jobs.loc[
-        cancelled_mask, "CancellationReason"
+        ordinary_cancelled, "CancellationReason"
     ] = rng.choice(
         cancellation_reasons,
-        size=int(cancelled_mask.sum()),
+        size=int(ordinary_cancelled.sum()),
         p=cancellation_probabilities,
     )
+
+    service_jobs.loc[
+        capacity_cancelled, "CancellationReason"
+    ] = "Staffing Capacity"
 
     # Related retail transactions are optional.
     # Leave them unassigned until cross-table matching is implemented.
@@ -1766,6 +1899,649 @@ def generate_service_jobs(
 
     return service_jobs
 
+def generate_labor(
+    dimensions: dict[str, pd.DataFrame],
+    service_jobs: pd.DataFrame,
+    rng: np.random.Generator,
+) -> pd.DataFrame:
+    """
+    Generate Northstar employee labor records.
+
+    Labor records will reconcile with completed service jobs
+    and provide the authoritative source for payroll costs.
+    """
+
+    employees = dimensions["DimEmployee"].copy()
+
+    employees["HireDate"] = pd.to_datetime(
+        employees["HireDate"]
+    )
+
+    employees["TerminationDate"] = pd.to_datetime(
+        employees["TerminationDate"]
+    )
+
+    # Start with actual service work already performed.
+    completed_jobs = service_jobs.loc[
+        service_jobs["JobStatus"] == "Completed"
+    ].copy()
+
+    completed_jobs["WorkDate"] = pd.to_datetime(
+        completed_jobs["CompletedDateKey"].astype(str),
+        format="%Y%m%d",
+    )
+
+    # Aggregate service hours by technician, date, and location.
+    service_workload = (
+        completed_jobs.groupby(
+            ["EmployeeKey", "WorkDate", "LocationKey"],
+            as_index=False,
+        )["ActualServiceHours"]
+        .sum()
+        .rename(
+            columns={
+                "ActualServiceHours": "RequiredServiceHours"
+            }
+        )
+    )
+
+    print("\nFactLabor generation initialized.")
+
+    print(
+        f"Completed service hours: "
+        f"{completed_jobs['ActualServiceHours'].sum():,.2f}"
+    )
+
+    print(
+        f"Labor assignments requiring coverage: "
+        f"{len(service_workload):,}"
+    )
+
+    # Validate that all service assignments have valid employees.
+    assert service_workload["EmployeeKey"].isin(
+        employees["EmployeeKey"]
+    ).all(), (
+        "Service work references an invalid employee."
+    )
+
+    assert (
+        service_workload["RequiredServiceHours"] > 0
+    ).all(), (
+        "Service work contains invalid required hours."
+    )
+
+    assert abs(
+        service_workload["RequiredServiceHours"].sum()
+        - completed_jobs["ActualServiceHours"].sum()
+    ) < 0.01, (
+        "Service labor hours do not reconcile."
+    )
+
+    print("Service workload aggregation validated.")
+
+    # Create recurring employee work schedules.
+    # Service technicians retain the schedules used for job assignment.
+    technician_schedules = technician_workdays(
+        employees[employees["Department"] == "Service"]
+    )
+
+    employee_schedules = {}
+
+    for department, group in employees.groupby("Department"):
+        group = group.sort_values("EmployeeKey")
+
+        for position, employee in enumerate(
+            group.itertuples(index=False)
+        ):
+            employee_key = int(employee.EmployeeKey)
+
+            if department == "Service":
+                employee_schedules[employee_key] = (
+                    technician_schedules[employee_key]
+                )
+                continue
+
+            if employee.EmploymentType == "Part-Time":
+                if department == "Retail":
+                    patterns = [
+                        {0, 2, 5},
+                        {1, 4, 6},
+                        {2, 4, 5},
+                    ]
+                else:
+                    patterns = [
+                        {0, 2, 4},
+                        {1, 3, 4},
+                    ]
+            else:
+                if department == "Retail":
+                    starts = [0, 2, 4, 1, 3]
+                    start = starts[position % len(starts)]
+
+                    employee_schedules[employee_key] = {
+                        (start + offset) % 7
+                        for offset in range(5)
+                    }
+                    continue
+
+                patterns = [{0, 1, 2, 3, 4}]
+
+            employee_schedules[employee_key] = patterns[
+                position % len(patterns)
+            ]
+
+    # Generate workdays within each employee's employment period.
+    labor_records = []
+
+    for employee in employees.itertuples(index=False):
+        employee_key = int(employee.EmployeeKey)
+
+        first_day = max(employee.HireDate, START_DATE)
+
+        last_day = (
+            min(employee.TerminationDate, END_DATE)
+            if pd.notna(employee.TerminationDate)
+            else END_DATE
+        )
+
+        if first_day > last_day:
+            continue
+
+        for work_date in pd.date_range(
+            first_day,
+            last_day,
+            freq="D",
+        ):
+            if (
+                work_date.weekday()
+                not in employee_schedules[employee_key]
+            ):
+                continue
+
+            labor_records.append(
+                {
+                    "EmployeeKey": employee_key,
+                    "WorkDate": work_date,
+                    "LocationKey": int(
+                        employee.HomeLocationKey
+                    ),
+                    "Department": employee.Department,
+                    "EmploymentType": employee.EmploymentType,
+                    "StandardHourlyRate": float(
+                        employee.StandardHourlyRate
+                    ),
+                }
+            )
+
+    labor_calendar = pd.DataFrame(labor_records)
+
+    # Attach completed service hours to employee workdays.
+    labor_calendar = labor_calendar.merge(
+        service_workload,
+        on=["EmployeeKey", "WorkDate", "LocationKey"],
+        how="left",
+        validate="one_to_one",
+    )
+
+    labor_calendar["RequiredServiceHours"] = (
+        labor_calendar["RequiredServiceHours"].fillna(0.0)
+    )
+
+    # Verify all completed service assignments were preserved.
+    assert abs(
+        labor_calendar["RequiredServiceHours"].sum()
+        - service_workload["RequiredServiceHours"].sum()
+    ) < 0.01, (
+        "Employee calendar failed to preserve service hours."
+    )
+
+    assert not labor_calendar.duplicated(
+        ["EmployeeKey", "WorkDate", "LocationKey"]
+    ).any(), (
+        "Duplicate employee workday records detected."
+    )
+
+    print("\nFull employee labor calendar generated.")
+
+    print(
+        f"Employee workday records: "
+        f"{len(labor_calendar):,}"
+    )
+
+    print("\nWorkdays by department:")
+    print(
+        labor_calendar.groupby("Department")
+        .size()
+        .to_string()
+    )
+
+    print(
+        f"\nService hours preserved: "
+        f"{labor_calendar['RequiredServiceHours'].sum():,.2f}"
+    )
+
+    # Generate initial employee shift and paid-hour fields.
+    # Full-time employees work eight-hour shifts.
+    # Part-time employees work four-hour shifts.
+    shift_hours = {
+        "Full-Time": 8.0,
+        "Part-Time": 4.0,
+    }
+
+    labor_calendar["ScheduledHours"] = (
+        labor_calendar["EmploymentType"]
+        .map(shift_hours)
+        .astype(float)
+    )
+
+    # Initial model: paid hours equal scheduled hours.
+    # Overtime will be introduced after baseline validation.
+    labor_calendar["RegularHours"] = (
+        labor_calendar["ScheduledHours"].copy()
+    )
+
+    labor_calendar["OvertimeHours"] = 0.0
+
+    # Completed service hours are billable technician hours.
+    labor_calendar["BillableHours"] = (
+        labor_calendar["RequiredServiceHours"].round(2)
+    )
+
+    # Nonbillable hours include retail work, administration,
+    # technician preparation, documentation, and idle time.
+    labor_calendar["NonBillableHours"] = (
+        labor_calendar["RegularHours"]
+        + labor_calendar["OvertimeHours"]
+        - labor_calendar["BillableHours"]
+    ).round(2)
+
+    # Initial assumption: all paid hours are available for
+    # productive activity, including nonbillable duties.
+    labor_calendar["AvailableProductiveHours"] = (
+        labor_calendar["RegularHours"]
+        + labor_calendar["OvertimeHours"]
+    )
+
+    # Add the date dimension foreign key.
+    labor_calendar["DateKey"] = (
+        labor_calendar["WorkDate"]
+        .dt.strftime("%Y%m%d")
+        .astype(int)
+    )
+
+    # Validate employee work hours.
+    assert labor_calendar["ScheduledHours"].notna().all(), (
+        "Missing scheduled shift hours."
+    )
+
+    assert (
+        labor_calendar["BillableHours"]
+        <= labor_calendar["AvailableProductiveHours"] + 1e-9
+    ).all(), (
+        "Billable service hours exceed available labor hours."
+    )
+
+    assert (
+        labor_calendar["NonBillableHours"] >= -1e-9
+    ).all(), (
+        "Negative nonbillable labor hours detected."
+    )
+
+    total_worked = (
+        labor_calendar["RegularHours"]
+        + labor_calendar["OvertimeHours"]
+    )
+
+    allocated_hours = (
+        labor_calendar["BillableHours"]
+        + labor_calendar["NonBillableHours"]
+    )
+
+    assert np.allclose(
+        total_worked,
+        allocated_hours,
+        atol=1e-9,
+    ), (
+        "Paid labor hours do not reconcile."
+    )
+
+    assert labor_calendar["DateKey"].isin(
+        dimensions["DimDate"]["DateKey"]
+    ).all(), (
+        "Labor records contain invalid date keys."
+    )
+
+    print("\nEmployee paid-hour validation passed.")
+
+    print(
+        f"Total paid hours: "
+        f"{total_worked.sum():,.2f}"
+    )
+
+    print(
+        f"Billable service hours: "
+        f"{labor_calendar['BillableHours'].sum():,.2f}"
+    )
+
+    print(
+        f"Nonbillable hours: "
+        f"{labor_calendar['NonBillableHours'].sum():,.2f}"
+    )
+
+    print(
+        f"Overall service-billable utilization: "
+        f"{labor_calendar['BillableHours'].sum() / total_worked.sum():.1%}"
+    )
+
+    # Generate historical wage and payroll fields.
+    # Initial model assumes constant hourly rates during employment.
+    labor_calendar["BaseHourlyRate"] = (
+        labor_calendar["StandardHourlyRate"]
+        .round(2)
+    )
+
+    labor_calendar["OvertimeMultiplier"] = 1.50
+    labor_calendar["EmployerBurdenRate"] = 0.25
+
+    gross_wages = []
+    employer_burden = []
+    fully_loaded_costs = []
+
+    for row in labor_calendar.itertuples(index=False):
+        regular_wages = (
+            Decimal(str(row.RegularHours))
+            * Decimal(str(row.BaseHourlyRate))
+        )
+
+        overtime_wages = (
+            Decimal(str(row.OvertimeHours))
+            * Decimal(str(row.BaseHourlyRate))
+            * Decimal(str(row.OvertimeMultiplier))
+        )
+
+        wages = money(regular_wages + overtime_wages)
+
+        burden = money(
+            wages * Decimal(str(row.EmployerBurdenRate))
+        )
+
+        fully_loaded = money(wages + burden)
+
+        gross_wages.append(float(wages))
+        employer_burden.append(float(burden))
+        fully_loaded_costs.append(float(fully_loaded))
+
+    labor_calendar["GrossWages"] = gross_wages
+    labor_calendar["EmployerBurdenCost"] = employer_burden
+    labor_calendar["FullyLoadedLaborCost"] = fully_loaded_costs
+
+    # Direct labor costs will be determined from job allocations.
+    labor_calendar["DirectServiceLaborCost"] = 0.0
+
+    labor_calendar["NonDirectLaborCost"] = (
+        labor_calendar["FullyLoadedLaborCost"].copy()
+    )
+
+    # Validate payroll calculations.
+    assert (
+        labor_calendar["GrossWages"] >= 0
+    ).all(), "Negative gross wages detected."
+
+    assert (
+        labor_calendar["EmployerBurdenCost"] >= 0
+    ).all(), "Negative employer burden detected."
+
+    assert np.allclose(
+        labor_calendar["FullyLoadedLaborCost"],
+        labor_calendar["GrossWages"]
+        + labor_calendar["EmployerBurdenCost"],
+        atol=0.001,
+    ), "Fully loaded labor costs do not reconcile."
+
+    print("\nPayroll cost validation passed.")
+
+    print(
+        f"Gross wages: "
+        f"${labor_calendar['GrossWages'].sum():,.2f}"
+    )
+
+    print(
+        f"Employer burden: "
+        f"${labor_calendar['EmployerBurdenCost'].sum():,.2f}"
+    )
+
+    print(
+        f"Fully loaded labor cost: "
+        f"${labor_calendar['FullyLoadedLaborCost'].sum():,.2f}"
+    )
+
+    # Calculate technician-specific service utilization.
+    service_labor = labor_calendar[
+        labor_calendar["Department"] == "Service"
+    ].copy()
+
+    technician_paid_hours = (
+        service_labor["RegularHours"]
+        + service_labor["OvertimeHours"]
+    ).sum()
+
+    technician_billable_hours = (
+        service_labor["BillableHours"].sum()
+    )
+
+    technician_utilization = (
+        technician_billable_hours / technician_paid_hours
+        if technician_paid_hours > 0
+        else 0.0
+    )
+
+    print("\nTechnician labor utilization:")
+    print(f"Technician paid hours: {technician_paid_hours:,.2f}")
+    print(f"Technician billable hours: {technician_billable_hours:,.2f}")
+    print(f"Technician utilization: {technician_utilization:.1%}")
+
+    # Assign stable, unique labor record identifiers.
+    labor_calendar = labor_calendar.sort_values(
+        ["WorkDate", "EmployeeKey", "LocationKey"]
+    ).reset_index(drop=True)
+
+    labor_calendar.insert(
+        0,
+        "LaborKey",
+        np.arange(1, len(labor_calendar) + 1),
+    )
+
+    # Validate labor record grain and identifiers.
+    assert labor_calendar["LaborKey"].is_unique, (
+        "Duplicate labor keys detected."
+    )
+
+    assert not labor_calendar.duplicated(
+        ["EmployeeKey", "DateKey", "LocationKey"]
+    ).any(), (
+        "Duplicate employee/date/location labor records."
+    )
+
+    assert labor_calendar["LaborKey"].notna().all(), (
+        "Missing labor record identifiers."
+    )
+
+    print("\nLabor record identifiers validated.")
+    print(f"Unique LaborKeys: {labor_calendar['LaborKey'].nunique():,}")
+
+    return labor_calendar
+
+def generate_job_labor_allocations(
+    service_jobs: pd.DataFrame,
+    labor: pd.DataFrame,
+) -> pd.DataFrame:
+    """
+    Allocate completed service hours to their source labor records.
+
+    FactLabor remains the authoritative source of payroll costs.
+    Allocations support job-level profitability without
+    introducing additional payroll expense.
+    """
+
+    completed = service_jobs.loc[
+        service_jobs["JobStatus"] == "Completed"
+    ].copy()
+
+    # Match completed jobs to employee/date/location labor records.
+    labor_reference = labor[
+        [
+            "LaborKey",
+            "EmployeeKey",
+            "DateKey",
+            "LocationKey",
+            "BaseHourlyRate",
+            "OvertimeMultiplier",
+            "EmployerBurdenRate",
+            "BillableHours",
+        ]
+    ].copy()
+
+    allocations = completed.merge(
+        labor_reference,
+        left_on=[
+            "EmployeeKey",
+            "CompletedDateKey",
+            "LocationKey",
+        ],
+        right_on=[
+            "EmployeeKey",
+            "DateKey",
+            "LocationKey",
+        ],
+        how="left",
+        validate="many_to_one",
+    )
+
+    assert allocations["LaborKey"].notna().all(), (
+        "Completed jobs could not be matched to labor records."
+    )
+
+    assert len(allocations) == len(completed), (
+        "Completed jobs were lost or duplicated during allocation."
+    )
+
+    # The initial model has no overtime.
+    allocations["AllocatedRegularHours"] = (
+        allocations["ActualServiceHours"].round(2)
+    )
+
+    allocations["AllocatedOvertimeHours"] = 0.0
+
+    allocations["AllocatedHours"] = (
+        allocations["AllocatedRegularHours"]
+        + allocations["AllocatedOvertimeHours"]
+    )
+
+    allocations = allocations.sort_values(
+        ["LaborKey", "ServiceJobKey"]
+    ).reset_index(drop=True)
+
+    allocations.insert(
+        0,
+        "JobLaborAllocationKey",
+        np.arange(1, len(allocations) + 1),
+    )
+
+    print("\nJob labor allocation initialized.")
+
+    print(
+        f"Completed jobs matched: "
+        f"{len(allocations):,}"
+    )
+
+    print(
+        f"Allocated service hours: "
+        f"{allocations['AllocatedHours'].sum():,.2f}"
+    )
+
+    # Validate allocated hours by originating labor record.
+    allocated_by_labor = (
+        allocations.groupby("LaborKey")["AllocatedHours"]
+        .sum()
+    )
+
+    expected_by_labor = labor.set_index(
+        "LaborKey"
+    )["BillableHours"]
+
+    reconciled = expected_by_labor.subtract(
+        allocated_by_labor,
+        fill_value=0,
+    )
+
+    assert (reconciled.abs() < 0.01).all(), (
+        "Allocated service hours do not reconcile to FactLabor."
+    )
+
+    assert not allocations.duplicated(
+        ["LaborKey", "ServiceJobKey"]
+    ).any(), (
+        "Duplicate labor-to-job allocations detected."
+    )
+
+    print("Job labor hour reconciliation passed.")
+
+    # Calculate fully loaded direct labor costs.
+    # Decimal arithmetic avoids binary floating-point rounding errors.
+    allocations["AllocatedDirectLaborCost"] = [
+        float(
+            money(
+                (
+                    Decimal(str(row.AllocatedRegularHours))
+                    * Decimal(str(row.BaseHourlyRate))
+                    + Decimal(str(row.AllocatedOvertimeHours))
+                    * Decimal(str(row.BaseHourlyRate))
+                    * Decimal(str(row.OvertimeMultiplier))
+                )
+                * (
+                    Decimal("1")
+                    + Decimal(str(row.EmployerBurdenRate))
+                )
+            )
+        )
+        for row in allocations.itertuples(index=False)
+    ]
+
+    # The authoritative direct labor cost is the sum of
+    # allocations, not a second independently generated expense.
+    direct_costs = (
+        allocations.groupby("LaborKey")[
+            "AllocatedDirectLaborCost"
+        ]
+        .sum()
+    )
+
+    print("\nDirect labor cost allocation:")
+
+    print(
+        f"Allocated direct labor cost: "
+        f"${allocations['AllocatedDirectLaborCost'].sum():,.2f}"
+    )
+
+    print(
+        f"Labor records receiving allocations: "
+        f"{len(direct_costs):,}"
+    )
+
+    assert (
+        allocations["AllocatedDirectLaborCost"] >= 0
+    ).all(), (
+        "Negative allocated direct labor cost detected."
+    )
+
+    assert allocations["JobLaborAllocationKey"].is_unique, (
+        "Duplicate job-labor allocation keys detected."
+    )
+
+    print("Job labor cost generation validated.")
+
+    return allocations
+
 def main() -> None:
     """Generate and validate Northstar fact tables."""
 
@@ -1815,6 +2591,188 @@ def main() -> None:
 
     print(f"\nFactServiceJobs exported: {service_output_path}")
     print(f"Service-job records exported: {len(service_jobs):,}")
+
+    # Begin labor generation using completed service activity.
+    labor_workload = generate_labor(
+        dimensions,
+        service_jobs,
+        rng,
+    )
+
+    print(
+        f"Service labor workload records: "
+        f"{len(labor_workload):,}"
+    )
+
+    # Allocate completed jobs to their originating labor records.
+    job_labor_allocations = generate_job_labor_allocations(
+        service_jobs,
+        labor_workload,
+    )
+
+    # Reconcile allocated direct labor costs to FactLabor.
+    direct_costs = (
+        job_labor_allocations.groupby("LaborKey")[
+            "AllocatedDirectLaborCost"
+        ]
+        .sum()
+        .round(2)
+    )
+
+    labor_workload["DirectServiceLaborCost"] = (
+        labor_workload["LaborKey"]
+        .map(direct_costs)
+        .fillna(0.0)
+        .round(2)
+    )
+
+    # Non-direct labor is the remaining fully loaded payroll cost.
+    labor_workload["NonDirectLaborCost"] = (
+        labor_workload["FullyLoadedLaborCost"]
+        - labor_workload["DirectServiceLaborCost"]
+    ).round(2)
+
+    # Validate that allocations do not exceed the source payroll.
+    assert (
+        labor_workload["DirectServiceLaborCost"]
+        <= labor_workload["FullyLoadedLaborCost"] + 0.001
+    ).all(), (
+        "Allocated direct labor exceeds fully loaded labor cost."
+    )
+
+    assert (
+        labor_workload["NonDirectLaborCost"] >= -0.001
+    ).all(), (
+        "Negative non-direct labor cost detected."
+    )
+
+    # Validate labor cost reconciliation by individual labor record.
+    assert np.allclose(
+        labor_workload["FullyLoadedLaborCost"],
+        labor_workload["DirectServiceLaborCost"]
+        + labor_workload["NonDirectLaborCost"],
+        atol=0.001,
+    ), (
+        "Labor costs do not reconcile by labor record."
+    )
+
+    # Validate total direct labor allocation.
+    total_allocated = money(
+        job_labor_allocations["AllocatedDirectLaborCost"].sum()
+    )
+
+    total_direct = money(
+        labor_workload["DirectServiceLaborCost"].sum()
+    )
+
+    assert total_allocated == total_direct, (
+        "Direct labor costs do not reconcile to allocations."
+    )
+
+    print("\n=== FINAL LABOR COST RECONCILIATION ===")
+
+    print(
+        f"Fully loaded payroll: "
+        f"${labor_workload['FullyLoadedLaborCost'].sum():,.2f}"
+    )
+
+    print(
+        f"Direct service labor: "
+        f"${labor_workload['DirectServiceLaborCost'].sum():,.2f}"
+    )
+
+    print(
+        f"Non-direct labor: "
+        f"${labor_workload['NonDirectLaborCost'].sum():,.2f}"
+    )
+
+    print(
+        f"Allocated job labor: "
+        f"${job_labor_allocations['AllocatedDirectLaborCost'].sum():,.2f}"
+    )
+
+    print("Labor cost reconciliation passed.")
+
+    # Finalize FactLabor using the documented analytical schema.
+    labor_columns = [
+        "LaborKey",
+        "DateKey",
+        "EmployeeKey",
+        "LocationKey",
+        "ScheduledHours",
+        "RegularHours",
+        "OvertimeHours",
+        "AvailableProductiveHours",
+        "BillableHours",
+        "NonBillableHours",
+        "BaseHourlyRate",
+        "OvertimeMultiplier",
+        "EmployerBurdenRate",
+        "GrossWages",
+        "EmployerBurdenCost",
+        "FullyLoadedLaborCost",
+        "DirectServiceLaborCost",
+        "NonDirectLaborCost",
+    ]
+
+    # Finalize FactJobLaborAllocation.
+    allocation_columns = [
+        "JobLaborAllocationKey",
+        "LaborKey",
+        "ServiceJobKey",
+        "AllocatedRegularHours",
+        "AllocatedOvertimeHours",
+        "AllocatedHours",
+        "AllocatedDirectLaborCost",
+    ]
+
+    assert set(labor_columns).issubset(labor_workload.columns), (
+        "FactLabor is missing required columns."
+    )
+
+    assert set(allocation_columns).issubset(
+        job_labor_allocations.columns
+    ), (
+        "FactJobLaborAllocation is missing required columns."
+    )
+
+    labor_final = labor_workload[labor_columns].copy()
+
+    allocations_final = job_labor_allocations[
+        allocation_columns
+    ].copy()
+
+    assert len(labor_final) == 10524
+    assert len(allocations_final) == 8944
+
+    assert labor_final["LaborKey"].is_unique
+    assert allocations_final["JobLaborAllocationKey"].is_unique
+
+    print("\nFinal labor schemas validated.")
+    print(
+        f"FactLabor: {len(labor_final):,} rows, "
+        f"{len(labor_final.columns)} columns"
+    )
+    print(
+        f"FactJobLaborAllocation: "
+        f"{len(allocations_final):,} rows, "
+        f"{len(allocations_final.columns)} columns"
+    )
+
+    # Export the reconciled fact tables.
+    labor_path = DATA_DIR / "FactLabor.csv"
+    allocations_path = DATA_DIR / "FactJobLaborAllocation.csv"
+
+    labor_final.to_csv(labor_path, index=False)
+    allocations_final.to_csv(allocations_path, index=False)
+
+    print(f"\nFactLabor exported: {labor_path}")
+    print(f"FactJobLaborAllocation exported: {allocations_path}")
+
+    print(
+        f"Job labor allocation records: "
+        f"{len(job_labor_allocations):,}"
+    )
 
 if __name__ == "__main__":
     main()
