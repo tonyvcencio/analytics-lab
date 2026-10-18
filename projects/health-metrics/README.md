@@ -92,12 +92,17 @@ Incremental ingestion is a planned optimization.
 |---|---|---|---|
 | health-metrics.service | health-metrics.timer | Approximately 5 minutes | Collect system observations |
 | health-metrics-ingest.service | health-metrics-ingest.timer | Every 5 minutes | Ingest observations into PostgreSQL |
+| health-metrics-backup.service | health-metrics-backup.timer | Daily at 03:30 UTC | Create and rotate PostgreSQL backups |
 
 The ingestion timer uses the calendar schedule:
 
 `OnCalendar=*-*-* *:02/5:00`
 
-Both services run under the nonadministrative `tony` Linux account.
+The collection and ingestion services run under the nonadministrative
+`tony` Linux account.
+
+The PostgreSQL backup service runs under the `postgres` operating-system
+account. Its script and systemd configurations are owned by root.
 
 ### PostgreSQL Configuration
 
@@ -149,6 +154,79 @@ GitHub stores:
 Generated observations, operational databases, virtual environments,
 and authentication credentials are excluded from version control.
 
+## PostgreSQL Backup and Recovery
+
+Health Metrics uses automated PostgreSQL backups to provide local
+database recovery capability.
+
+### Backup Architecture
+
+Backups are created on Ichabod using PostgreSQL's `pg_dump` utility.
+
+Configuration:
+
+| Setting | Value |
+|---|---|
+| Database | `health_metrics` |
+| Backup format | PostgreSQL custom archive |
+| Compression | PostgreSQL custom-format compression |
+| Backup directory | `/var/backups/health-metrics/` |
+| Schedule | Daily at 03:30 UTC |
+| Retention | Seven days for automated backups |
+| Execution account | `postgres` |
+| Scheduling | systemd service and timer |
+
+The backup directory uses permissions `700`, and backup archives
+use permissions `600`.
+
+Database backups and credentials are excluded from Git.
+
+### Backup Automation
+
+The backup script is maintained at:
+
+`backup/backup_health_metrics.sh`
+
+The script:
+
+1. Creates a timestamped PostgreSQL archive.
+2. Writes the archive to a temporary file.
+3. Validates the archive catalog using `pg_restore --list`.
+4. Checks for an existing destination filename.
+5. Moves the validated archive to its final filename.
+6. Deletes automated archives older than seven days.
+7. Reports execution results through the systemd journal.
+
+Backup rotation runs only after a new archive is successfully created
+and validated.
+
+The original manually created archive,
+`health_metrics_initial.dump`, is excluded from automated retention.
+
+### Backup Service
+
+The systemd configurations are maintained in:
+
+`deployment/systemd/health-metrics-backup.service`
+
+`deployment/systemd/health-metrics-backup.timer`
+
+The timer uses:
+
+`OnCalendar=*-*-* 03:30:00 UTC`
+
+`Persistent=true`
+
+The persistent timer allows systemd to execute a missed scheduled
+backup when the timer becomes active again.
+
+### Monitoring Backups
+
+Check the timer:
+
+```bash
+systemctl status health-metrics-backup.timer
+
 ## Initial Metrics
 
 The current collector records:
@@ -198,9 +276,9 @@ database queries requires authorized access to Ichabod.
 
 ## Project Status
 
-**Version:** 0.3
-**Current Phase:** Initial Analytics and Visualization Complete
-**Last Updated:** October 14, 2026
+**Version:** 0.4
+**Current Phase:** Automated Backup and Recovery Complete
+**Last Updated:** October 18, 2026
 
 ### Completed
 
@@ -230,12 +308,23 @@ database queries requires authorized access to Ichabod.
 - Calculated descriptive statistics for system-health metrics.
 - Verified that the initial 577 observations contained no missing values.
 - Published the analytics notebook to GitHub.
+- Implemented PostgreSQL custom-format database backups.
+- Validated backup restoration into a separate recovery database.
+- Verified recovery of 1,381 historical observations.
+- Created a dedicated PostgreSQL backup script.
+- Implemented timestamped archives and temporary-file handling.
+- Configured restricted backup directory and file permissions.
+- Implemented seven-day automated backup retention.
+- Tested retention using disposable backup files.
+- Created a dedicated systemd backup service and timer.
+- Verified successful backup execution through systemd.
+- Enabled daily PostgreSQL backups at 03:30 UTC.
 
 ### Next Milestones
 
 1. Validate timestamp ordering, sampling intervals, and duplicate records.
 2. Implement ingestion monitoring and automated data-quality checks.
-3. Establish PostgreSQL backup and recovery procedures.
+3. Establish off-machine PostgreSQL backup replication.
 4. Optimize ingestion to process new observations incrementally.
 5. Extend system-health collection to Nomad.
 6. Expand the collected metrics and analytical capabilities.
@@ -269,7 +358,17 @@ trends using pandas and Matplotlib.
 
 Additional analytical validation and reporting improvements remain planned.
 
-### Phase 5 — Monitoring and Expansion
+### Phase 5 — Backup and Recovery
+**Status: Complete — Local Backup Automation**
+
+Implemented PostgreSQL custom-format backups, validated database
+restoration, configured seven-day retention, and deployed a daily
+systemd backup service and timer.
+
+Off-machine backup replication and automated recovery testing
+remain future improvements.
+
+### Phase 6 — Monitoring and Expansion
 **Status: Planned**
 
 Implement data-quality monitoring, improve ingestion efficiency,
