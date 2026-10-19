@@ -5,8 +5,8 @@
 A synthetic business intelligence project designed to evaluate the financial and operational performance of a fictional retail and technology services company.
 
 **Data-generation phase: Complete**  
-**Database integration: Planned**  
-**Power BI development: Planned**
+**Database integration: Deployed and Validated**
+**Power BI development: In Progress**
 
 ## 1. Project Overview
 
@@ -39,8 +39,8 @@ The analytical solution is designed to answer questions such as:
 | NumPy | Synthetic data simulation | Implemented |
 | Git and GitHub | Version control and documentation | Implemented |
 | PostgreSQL | Relational analytical database | Implemented |
-| Power BI | Business intelligence dashboards | Planned |
-| DAX | Analytical measures and KPIs | Planned |
+| Power BI | Business intelligence dashboards | In Progress |
+| DAX | Analytical measures and KPIs | In Progress |
 
 See [Database Infrastructure](docs/database_infrastructure.md)
 for PostgreSQL deployment, data loading, validation, and security details.
@@ -109,6 +109,19 @@ Key analytical relationships include:
 `FactJobLaborAllocation` connects completed service jobs to the labor records responsible for their fulfillment.
 
 Labor costs are recorded in `FactLabor`; job-level allocations provide analytical detail without creating additional payroll expense.
+
+### Power BI Semantic Model
+
+The Power BI semantic model imports all 13 analytical tables from the `northstar_analytics` PostgreSQL database hosted on Ichabod.
+
+The model uses dimension-to-fact relationships with one-to-many cardinality and single-direction filtering where appropriate.
+
+- Power BI automatically detected the initial relationships between the dimension and fact tables.
+- `DimDate[DateKey]` is actively related to `FactServiceJobs[CompletedDateKey]` for completed-service reporting.
+- The relationship between `FactJobLaborAllocation` and `FactServiceJobs` remains inactive pending further allocation-model development.
+- The first DAX measure, `Retail Net Revenue`, has been validated against the PostgreSQL total of $18,872,278.94.
+
+Further relationship validation, DAX development, and dashboard construction are in progress.
 
 ## 6. Data Generation
 
@@ -241,6 +254,25 @@ Opening inventory + replenishments − net units sold = closing inventory
 
 **Inventory quantity reconciliation difference: 0 units**
 
+### Database and Power BI Validation
+
+All 13 analytical tables were successfully imported into the `northstar_analytics` PostgreSQL database on Ichabod.
+
+Database validation confirmed:
+
+- All 106,997 records were loaded successfully.
+- PostgreSQL table counts match the original synthetic CSV datasets.
+- Eight financial and operational reconciliation totals match the Python-generated results.
+- The `northstar_reader` reporting account successfully retrieves data using read-only permissions.
+
+Power BI validation confirmed:
+
+- All seven dimension tables and six fact tables were imported successfully.
+- `DimDate` contains 744 rows with unique date keys and no detected nulls or errors.
+- The `Retail Net Revenue` DAX measure matches the independently verified PostgreSQL total of $18,872,278.94.
+
+Additional validation of relationships, filter behavior, and financial measures will continue during dashboard development.
+
 ## 8. Repository Structure
 
 ```text
@@ -261,13 +293,18 @@ business-performance/
 │   ├── FactExpenses.csv
 │   └── FactInventorySnapshot.csv
 ├── docs/
-│   └── data_dictionary.md
+│   ├── data_dictionary.md
+│   └── database_infrastructure.md
 ├── powerbi/
-└── scripts/
-    └── generate_facts.py
+│   └── Northstar_Business_Performance.pbix
+├── scripts/
+│   ├── generate_dimensions.py
+│   └── generate_facts.py
+└── sql/
+    ├── 01_create_tables.sql
+    ├── 02_load_dimensions.sql
+    └── 03_load_facts.sql
 ```
-
-Additional supporting scripts and project files may exist within these directories.
 
 ## 9. Running the Data Generator
 
@@ -311,43 +348,49 @@ These assumptions can be expanded in future versions.
 
 **Complete**
 
-- Dimension generation.
-- Fact-table generation.
-- Referential integrity validation.
-- Financial reconciliation.
-- Inventory simulation.
-- Independent CSV audits.
+- [x] Dimension generation.
+- [x] Fact-table generation.
+- [x] Referential integrity validation.
+- [x] Financial reconciliation.
+- [x] Inventory simulation.
+- [x] Independent CSV audits.
 
 ### Phase 2 — Database Integration
 
-**Planned**
+**In Progress**
 
-- Deploy PostgreSQL on Ichabod.
-- Design relational database schemas.
-- Load and validate Northstar datasets.
-- Develop SQL analytical queries.
-- Establish repeatable data-loading workflows.
+- [x] Deploy PostgreSQL on Ichabod.
+- [x] Design relational database schemas.
+- [x] Load and validate Northstar datasets.
+- [x] Configure database access and security.
+- [ ] Develop SQL analytical queries.
+- [ ] Establish repeatable data-loading workflows.
 
 ### Phase 3 — Business Intelligence
 
-**Planned**
+**In Progress**
 
-- Build the Power BI semantic model on Nomad.
-- Define DAX measures.
-- Create revenue and profitability dashboards.
-- Analyze service productivity.
-- Develop operating expense visualizations.
-- Create inventory performance dashboards.
+- [x] Connect Power Bi to PostgreSQL on Ichabod.
+- [x] Import all 13 analytical tables.
+- [x] Establish initial semantic model relationships.
+- [x] Create and validate the Retail Net Revenue DAX measure.
+- [ ] Complete semantic model validation and refinement.
+- [ ] Develop financial and operational DAX measures.
+- [ ] Build the Executive Overview dashboard.
+- [ ] Develop retail sales and service operations dashboards.
+- [ ] Develop labor and operating expense dashboards.
+- [ ] Create inventory performance dashboards.
+- [ ] Validate report calculations, filters, and interactions.
 
 ### Phase 4 — Portfolio Presentation
 
 **Planned**
 
-- Document business findings.
-- Publish dashboard screenshots.
-- Explain analytical methodology.
-- Identify operational improvement opportunities.
-- Prepare a portfolio case study.
+- [ ] Document business findings.
+- [ ] Publish dashboard screenshots.
+- [ ] Explain analytical methodology.
+- [ ] Identify operational improvement opportunities.
+- [ ] Prepare a portfolio case study.
 
 ## 12. Project Purpose
 
@@ -355,4 +398,4 @@ Northstar Business Performance Analytics demonstrates the development of an anal
 
 The project is intended to showcase practical data engineering, data validation, analytical modeling, SQL, and business intelligence skills.
 
-**Project status: Synthetic data generation complete; database and dashboard development pending.**
+**Project status: Synthetic data generation complete; PostgreSQL warehouse deployed and validated; Power BI development in progress.**
