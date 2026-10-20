@@ -1,5 +1,24 @@
 # Ichabod
 
+## Completed Build
+
+![Ichabod — completed exterior](images/ichabod/final-exterior.jpg)
+
+Ichabod's completed Cooler Master Q300L build, featuring custom insignia and the *Audi Vide Tace* crest.
+
+<details>
+<summary>Additional Build Photographs</summary>
+
+### Internal Hardware
+
+![Ichabod internal hardware](images/ichabod/internal-hardware.jpg)
+
+### Alternate Exterior View
+
+![Ichabod alternate exterior](images/ichabod/alternate-exterior.jpg)
+
+</details>
+
 ## Role
 
 Headless Linux server for databases, automation, services, storage, and remote analytics workloads.
@@ -153,11 +172,32 @@ testing, not a verified maximum temperature.
 - [ ] Establish storage strategy for Sr. Gimperihno
 - [ ] Configure scheduled maintenance and monitoring
 - [ ] Establish backup procedures
-- [ ] Review and apply outstanding Ubuntu package updates
+- [x] Review and apply outstanding Ubuntu package updates
 - [ ] Evaluate available firmware updates
 - [ ] Review and allocate unused LVM capacity
 - [ ] Perform controlled read/write testing on secondary SSD
 
+
+## Maintenance History
+
+### October 20, 2026 — Ubuntu Package Maintenance
+
+- Refreshed Ubuntu APT package indexes.
+- Reviewed 22 available package upgrades.
+- Applied system package updates.
+- Verified no packages required removal.
+- Rebooted Ichabod successfully.
+- Confirmed SSH access after restart.
+- Confirmed no outstanding APT upgrades.
+- Confirmed no remaining reboot-required flag.
+
+**Result: PASS — System updated and operational.**
+
+Future maintenance will include package reviews,
+system health verification, and controlled reboots
+when required.
+
+---
 
 ## Rabbit R1 Integration
 
@@ -368,7 +408,7 @@ The measurements were independently corroborated.
 However, the exact command-execution pathway used by
 Rabbit OS3 has not been independently verified.
 
-#### Project 004 — Ichabod Pocket
+#### Ichabod Pocket — Experimental Integration
 
 A dedicated Rabbit R1 monitoring project was established
 on October 16, 2026.
