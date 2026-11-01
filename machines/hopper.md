@@ -1,4 +1,4 @@
-# Nomad
+# Hopper
 
 ## Role
 
@@ -80,7 +80,7 @@ Validated on 2026-10-11:
 
 ## Current State
 
-Nomad is now a validated Windows analytics workstation and administration client.
+Hopper is now a validated Windows analytics workstation and administration client.
 
 It supports:
 

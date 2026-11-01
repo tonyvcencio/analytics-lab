@@ -1,10 +1,10 @@
-# Mac — M4 Pro Analytics Workstation
+# Carroll — M4 Pro Analytics Workstation
 
 ## Role
 
 Primary macOS analytics and development workstation within the Analytics Lab.
 
-The Mac serves as the main environment for Python development, data analysis,
+Carroll serves as the main environment for Python development, data analysis,
 performance benchmarking, Jupyter notebooks, GitHub development, and remote
 Linux administration.
 
@@ -60,16 +60,16 @@ Additional benchmark documentation is maintained in
 
 ## Git and GitHub
 
-The Mac uses Git and SSH-authenticated GitHub access for project version control.
+Carroll uses Git and SSH-authenticated GitHub access for project version control.
 
 Primary repository: `tonyvcencio/analytics-lab`
 
-The Mac and Windows Nomad share project code through GitHub while maintaining
+Carroll and Windows Hopper share project code through GitHub while maintaining
 independent Python environments.
 
 ## Linux Infrastructure Administration
 
-The Mac serves as the remote administration workstation for Ichabod,
+Carroll serves as the remote administration workstation for Ichabod,
 the headless Ubuntu Server 24.04 LTS machine.
 
 Completed activities:
@@ -91,7 +91,7 @@ Detailed hardware and commissioning records are maintained separately.
 
 - Analytics Lab development
 - Python and SQL experimentation
-- Cross-platform development with Nomad
+- Cross-platform development with Hopper
 - Ichabod remote administration
 
 ## Planned Development

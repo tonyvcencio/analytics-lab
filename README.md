@@ -10,7 +10,7 @@ Power BI, and Git.
 
 ## Systems
 
-### Nomad
+### Hopper
 
 Windows analytics workstation focused on:
 
@@ -22,7 +22,7 @@ Windows analytics workstation focused on:
 - PowerShell
 - Remote Linux administration
 
-### Mac
+### Carroll
 
 macOS analytics and development workstation focused on:
 
@@ -48,7 +48,7 @@ Secondary non-critical storage for testing and expendable workloads.
 
 ## Architecture
 
-Nomad and Mac serve as development and administration clients.
+Hopper and Carroll serve as development and administration clients.
 
 Ichabod provides Linux-based server services and remote compute/storage capabilities.
 

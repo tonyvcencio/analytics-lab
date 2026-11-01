@@ -17,7 +17,7 @@ Shared benchmark results for the Analytics Lab.
 - Polars: 0.0100 s
 - DuckDB: 0.0212 s
 
-## Nomad
+## Hopper
 
 - Date: 2026-10-11
 - Platform: Windows

@@ -71,7 +71,7 @@ Planned capabilities include:
 
 ## Administration
 
-Ichabod will be administered primarily from Nomad and Mac over SSH.
+Ichabod will be administered primarily from Hopper and Carroll over SSH.
 
 ## Storage
 
@@ -107,8 +107,8 @@ future tasks.
 - [x] Linux Ubuntu 24.04.5 LTS installed
 - [x] Wired network configured
 - [x] SSH server enabled
-- [x] Mac SSH authentication verified
-- [ ] Nomad SSH key authentication
+- [x] Carroll SSH authentication verified
+- [ ] Hopper SSH key authentication
 - [ ] Git configured
 - [ ] Python environment validated
 - [ ] Database service validated

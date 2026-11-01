@@ -10,7 +10,7 @@ stores them in structured formats, and supports the analysis of operational
 performance over time.
 
 The initial deployment operates on Ichabod, an Ubuntu Server, with development
-and analytical workloads performed on the Mac M4 Pro.
+and analytical workloads performed on Carroll's M4 Pro.
 
 ## Project Objectives
 
@@ -23,9 +23,9 @@ and analytical workloads performed on the Mac M4 Pro.
 
 ## Laboratory Infrastructure
 
-- **Mac M4 Pro:** Primary development and analytics workstation.
+- **Carroll (M4 Pro):** Primary development and analytics workstation.
 - **Ichabod:** Ubuntu Server responsible for collection, ingestion, and storage.
-- **Nomad:** Windows analytics workstation and cross-platform validation environment.
+- **Hopper:** Windows analytics workstation and cross-platform validation environment.
 
 ## Data Architecture
 
@@ -118,9 +118,9 @@ The application role has restricted database privileges.
 
 Database credentials are stored outside the Git repository.
 
-### Mac M4 Pro
+### Carroll (M4 Pro)
 
-The Mac serves as the primary development and analytical environment.
+Carroll serves as the primary development and analytical environment.
 
 Analytical responsibilities:
 
@@ -130,9 +130,9 @@ Analytical responsibilities:
 - Analyze datasets using pandas and Jupyter.
 - Visualize system performance using Matplotlib.
 
-### Nomad
+### Hopper
 
-Nomad provides a secondary development environment.
+Hopper provides a secondary development environment.
 
 Responsibilities:
 
@@ -301,7 +301,7 @@ database queries requires authorized access to Ichabod.
 - Confirmed independent operation of collection and ingestion.
 - Created a dedicated read-only PostgreSQL analytics role.
 - Established secure remote PostgreSQL access using an SSH tunnel.
-- Connected the Mac analytics environment to Ichabod using Psycopg.
+- Connected Carroll's analytics environment to Ichabod using Psycopg.
 - Retrieved PostgreSQL observations into pandas.
 - Created the first Jupyter exploratory analysis notebook.
 - Visualized CPU, memory, and disk utilization over time.
@@ -326,7 +326,7 @@ database queries requires authorized access to Ichabod.
 2. Implement ingestion monitoring and automated data-quality checks.
 3. Establish off-machine PostgreSQL backup replication.
 4. Optimize ingestion to process new observations incrementally.
-5. Extend system-health collection to Nomad.
+5. Extend system-health collection to Hopper.
 6. Expand the collected metrics and analytical capabilities.
 7. Evaluate Power BI integration for operational monitoring.
 
@@ -352,7 +352,7 @@ systemd services and timers.
 ### Phase 4 — Analytics and Visualization
 **Status: Initial implementation complete**
 
-Established secure, read-only PostgreSQL access from the Mac,
+Established secure, read-only PostgreSQL access from Carroll,
 developed the first Jupyter notebook, and visualized system-health
 trends using pandas and Matplotlib.
 
