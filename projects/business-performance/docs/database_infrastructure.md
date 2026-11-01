@@ -101,22 +101,23 @@ Northstar's development environment uses three machines:
 
 | Machine | Responsibility |
 |---|---|
-| Mac | Python engineering and data preparation |
-| Ichabod | PostgreSQL database hosting |
-| Nomad | Power BI Desktop and reporting |
+| Carroll | macOS workstation for Python engineering and data preparation |
+| Ichabod | Ubuntu Server hosting PostgreSQL |
+| Hopper | Windows workstation for Power BI Desktop, DAX, and reporting |
 
-PostgreSQL listens on localhost and Ichabod's designated
-private LAN address.
+PostgreSQL is configured for local and authorized private-network connectivity.
 
-Remote database access is restricted by PostgreSQL
-authentication rules.
+Database access is controlled through PostgreSQL authentication and client-access rules.
 
-The Mac uses northstar_app for data engineering.
+Carroll uses the `northstar_app` role for authorized data engineering operations.
 
-Nomad uses northstar_reader for reporting.
+Hopper uses the `northstar_reader` role for Power BI reporting and database validation.
 
-The reporting role has SELECT permissions on analytical
-tables and does not have INSERT, UPDATE, or DELETE permissions.
+The reporting role has SELECT permissions on analytical tables and does not have INSERT, UPDATE, or DELETE permissions.
+
+The Power BI report uses an imported analytical model. Previously imported report data can be explored without a live PostgreSQL query connection; refreshing from the original source requires authorized database connectivity and credentials.
+
+The development database is not intended to serve as a publicly accessible reporting endpoint.
 
 ## Security
 
@@ -129,18 +130,39 @@ tables and does not have INSERT, UPDATE, or DELETE permissions.
   from source control.
 - Ubuntu UFW rules are configured to restrict inbound access.
 
-Firewall activation and remote connectivity require
-final verification.
+The current firewall activation state and complete remote-access rules have not been independently reverified during the v1.0 release review.
 
 ## Next Steps
 
-1. Verify UFW is active and SSH remains accessible.
-2. Test PostgreSQL connectivity from the Mac.
-3. Test PostgreSQL connectivity from Nomad.
-4. Connect Power BI Desktop using northstar_reader.
-5. Configure the Power BI semantic model.
-6. Develop database validation and analytical SQL queries.
-7. Build reproducible staging-to-analytics ETL workflows.
+The PostgreSQL warehouse and Power BI integration are complete for Northstar v1.0.
+
+Future infrastructure improvements may include:
+
+1. Implement a repeatable staging-to-analytics ETL workflow.
+2. Expand automated database and data-quality testing.
+3. Verify and document firewall and access-control settings.
+4. Evaluate scheduled report refresh and deployment options.
+5. Review database backup and restoration procedures periodically.
+6. Evaluate deployment alternatives for public portfolio demonstrations without exposing the development database.
+
+These enhancements are outside the Northstar v1.0 release scope.
+
+## Project Status
+
+| Component | Status |
+|---|---|
+| Synthetic data generation | Complete |
+| PostgreSQL database creation | Complete |
+| Initial data loading | Complete |
+| Financial reconciliation | Complete |
+| Read-only reporting access | Verified |
+| Power BI Desktop integration | Complete |
+| Analytical model and DAX | Complete for v1.0 |
+| Six business dashboards | Complete |
+| Report filtering and functional QA | Complete for documented scope |
+| Repeatable staging-to-analytics ETL | Future enhancement |
+| Public report embedding | Future enhancement |
+| Final infrastructure security recheck | Outstanding |
 
 ## Project Status
 

@@ -4,9 +4,10 @@
 
 A synthetic business intelligence project designed to evaluate the financial and operational performance of a fictional retail and technology services company.
 
-**Data-generation phase: Complete**  
-**Database integration: Deployed and Validated**
-**Power BI development: In Progress**
+**Data Generation: Complete**
+**Database Integration: Deployed and Validated**
+**Power BI Development: Complete — Six Dashboards**
+**Project Status: v1.0 Release Preparation**
 
 ## 1. Project Overview
 
@@ -17,6 +18,24 @@ Its retail business includes computers, accessories, networking equipment, and s
 This project develops an integrated analytical dataset to investigate profitability, operational efficiency, inventory management, and opportunities for business improvement.
 
 All company data is synthetic.
+
+### Explore the Project
+
+- [Executive Overview Dashboard](outputs/screenshots/executive_overview.png)
+- [Retail Sales Performance](outputs/screenshots/retail_sales.png)
+- [Service Operations](outputs/screenshots/service_operations.png)
+- [Labor & Workforce](outputs/screenshots/labor_workforce.png)
+- [Operating Expenses](outputs/screenshots/operating_expenses.png)
+- [Inventory Performance](outputs/screenshots/inventory_performance.png)
+
+### Supporting Documentation
+
+- [Data Dictionary](docs/data_dictionary.md)
+- [Database Infrastructure](docs/database_infrastructure.md)
+- [Data and Report Validation](docs/validation.md)
+- [Business Case Study](docs/business_case_study.md)
+
+The dashboards use a fully synthetic dataset representing a fictional retail and technology services business. Screenshots illustrate the completed Power BI report; they are not an interactive web deployment.
 
 ## 2. Business Objectives
 
@@ -39,25 +58,29 @@ The analytical solution is designed to answer questions such as:
 | NumPy | Synthetic data simulation | Implemented |
 | Git and GitHub | Version control and documentation | Implemented |
 | PostgreSQL | Relational analytical database | Implemented |
-| Power BI | Business intelligence dashboards | In Progress |
-| DAX | Analytical measures and KPIs | In Progress |
+| Power BI | Interactive financial and operational reporting | Implemented |
+| DAX | Financial, workforce, service, and inventory measures | Implemented and Validated |
 
 See [Database Infrastructure](docs/database_infrastructure.md)
 for PostgreSQL deployment, data loading, validation, and security details.
 
+
 ### Development Environment
 
-**Mac — Data Engineering**
+**Carroll — Data Engineering**
 
-Python-based data generation, validation, and analytical development.
+Mac M4 Pro workstation used for Python-based synthetic data generation, validation, and analytical development.
 
 **Ichabod — Database Infrastructure**
 
-Ubuntu server designated for PostgreSQL and future data pipelines.
+Ubuntu Server hosting PostgreSQL and the Northstar analytical warehouse.
 
-**Nomad — Business Intelligence**
+**Hopper — Business Intelligence**
 
-Windows workstation designated for Power BI Desktop, data modeling, and dashboard development.
+Windows workstation used for Power BI Desktop, DAX development, report validation, and dashboard presentation.
+
+The `analytics-lab` repository is maintained across the development environments using Git and GitHub.
+
 
 ## 4. Dataset Overview
 
@@ -110,18 +133,49 @@ Key analytical relationships include:
 
 Labor costs are recorded in `FactLabor`; job-level allocations provide analytical detail without creating additional payroll expense.
 
+
 ### Power BI Semantic Model
 
-The Power BI semantic model imports all 13 analytical tables from the `northstar_analytics` PostgreSQL database hosted on Ichabod.
+The Power BI semantic model uses all 13 analytical tables from the Northstar PostgreSQL warehouse.
 
-The model uses dimension-to-fact relationships with one-to-many cardinality and single-direction filtering where appropriate.
+The model supports six interactive business dashboards covering financial performance, retail sales, service operations, labor, operating expenses, and inventory management.
 
-- Power BI automatically detected the initial relationships between the dimension and fact tables.
-- `DimDate[DateKey]` is actively related to `FactServiceJobs[CompletedDateKey]` for completed-service reporting.
-- The relationship between `FactJobLaborAllocation` and `FactServiceJobs` remains inactive pending further allocation-model development.
-- The first DAX measure, `Retail Net Revenue`, has been validated against the PostgreSQL total of $18,872,278.94.
+Key implementation details include:
 
-Further relationship validation, DAX development, and dashboard construction are in progress.
+- Dimension-to-fact relationships supporting Year, Location, Product, Service, and other reporting dimensions.
+- Synchronized Year and Location slicers across all six business-facing report pages.
+- DAX measures for retail revenue, cost of goods sold, gross profit, and gross margin.
+- Completed-service revenue, parts costs, and directly allocated service labor.
+- Consolidated profitability measures that avoid double-counting direct service labor.
+- Fully loaded payroll, non-direct labor, labor hours, and technician utilization.
+- Non-payroll operating expenses, total operating costs, and estimated operating results.
+- Snapshot-aware inventory measures that report the latest available month-end position within the selected reporting period.
+
+#### Service Labor Allocation
+
+Direct service labor originates in `FactLabor`, while `FactJobLaborAllocation` provides job-level allocation details.
+
+Service-category profitability uses DAX filter propagation through matching service job keys to associate allocated labor with completed service jobs and their categories.
+
+This prevents company-wide direct labor costs from being incorrectly repeated across individual service categories.
+
+#### Inventory Snapshot Methodology
+
+`FactInventorySnapshot` contains monthly inventory balances for each product-location combination.
+
+Inventory valuation and quantity measures use the latest available snapshot within the selected reporting period rather than summing inventory balances across historical months.
+
+With all reporting years selected, the measures return the December 2026 closing inventory position.
+
+Selecting 2025 returns the December 2025 closing position instead.
+
+#### Model Validation
+
+The analytical model has undergone independent PostgreSQL reconciliation and Power BI filter testing.
+
+Validated areas include retail and service financial results, payroll allocation, operating expenses, inventory balances, location-level reporting, and synchronized slicer behavior.
+
+Detailed reconciliation evidence will be documented in `docs/validation.md`.
 
 ## 6. Data Generation
 
@@ -267,11 +321,21 @@ Database validation confirmed:
 
 Power BI validation confirmed:
 
-- All seven dimension tables and six fact tables were imported successfully.
-- `DimDate` contains 744 rows with unique date keys and no detected nulls or errors.
-- The `Retail Net Revenue` DAX measure matches the independently verified PostgreSQL total of $18,872,278.94.
+- All seven dimension tables and six fact tables are incorporated into the analytical model.
+- Consolidated revenue of $19,877,057.79 and consolidated gross profit of $4,086,389.90 reconcile to independently verified results.
+- The estimated operating result of $716,171.96 reconciles after accounting for non-direct labor and non-payroll expenses.
+- Fully loaded labor of $2,873,702.15 reconciles to direct service labor of $509,155.15 plus non-direct labor of $2,364,547.00.
+- Completed-service revenue of $1,004,778.85 and service gross profit of $394,949.75 have been validated.
+- Operating expenses totaling $1,005,670.94 have been reconciled by category, month, and location.
+- December 2026 closing inventory value is $2,004,290.88, representing 14,549 units on hand.
+- December 2025 closing inventory value is $2,017,323.98, representing 14,533 units on hand.
+- Inventory value by product category and location has been independently reconciled against PostgreSQL for tested reporting periods.
+- Year and Location slicers are synchronized across all six business-facing dashboards.
+- Report filtering, navigation, and visual interactions have passed functional testing.
 
-Additional validation of relationships, filter behavior, and financial measures will continue during dashboard development.
+Inventory metrics use closing month-end snapshots rather than summing inventory balances across reporting periods.
+
+A detailed record of validation results and limitations will be maintained in `docs/validation.md`.
 
 ## 8. Repository Structure
 
@@ -348,49 +412,53 @@ These assumptions can be expanded in future versions.
 
 **Complete**
 
-- [x] Dimension generation.
-- [x] Fact-table generation.
-- [x] Referential integrity validation.
-- [x] Financial reconciliation.
-- [x] Inventory simulation.
-- [x] Independent CSV audits.
+- [x] Generate seven dimension tables and six fact tables.
+- [x] Validate referential integrity and business rules.
+- [x] Reconcile financial, labor, expense, and inventory calculations.
+- [x] Complete independent CSV audits.
 
 ### Phase 2 — Database Integration
 
-**In Progress**
+**Complete for v1.0**
 
-- [x] Deploy PostgreSQL on Ichabod.
-- [x] Design relational database schemas.
-- [x] Load and validate Northstar datasets.
-- [x] Configure database access and security.
-- [ ] Develop SQL analytical queries.
-- [ ] Establish repeatable data-loading workflows.
+- [x] Deploy and configure PostgreSQL.
+- [x] Create and populate the Northstar analytical warehouse.
+- [x] Validate all 106,997 loaded records.
+- [x] Configure read-only reporting access.
+- [x] Execute independent SQL reconciliation queries.
 
 ### Phase 3 — Business Intelligence
 
+**Complete for v1.0**
+
+- [x] Connect Power BI Desktop to PostgreSQL.
+- [x] Import all 13 analytical tables.
+- [x] Configure semantic model relationships.
+- [x] Develop financial and operational DAX measures.
+- [x] Build all six business-facing dashboards.
+- [x] Implement synchronized Year and Location slicers.
+- [x] Validate calculations, filtering, and visual interactions.
+- [x] Complete dashboard presentation review.
+
+### Phase 4 — Portfolio Release
+
 **In Progress**
 
-- [x] Connect Power Bi to PostgreSQL on Ichabod.
-- [x] Import all 13 analytical tables.
-- [x] Establish initial semantic model relationships.
-- [x] Create and validate the Retail Net Revenue DAX measure.
-- [ ] Complete semantic model validation and refinement.
-- [ ] Develop financial and operational DAX measures.
-- [ ] Build the Executive Overview dashboard.
-- [ ] Develop retail sales and service operations dashboards.
-- [ ] Develop labor and operating expense dashboards.
-- [ ] Create inventory performance dashboards.
-- [ ] Validate report calculations, filters, and interactions.
+- [x] Complete core warehouse and Power BI development.
+- [x] Complete independent financial and inventory QA.
+- [ ] Finalize the Northstar README.
+- [ ] Prepare validation documentation.
+- [ ] Capture six clean dashboard screenshots.
+- [ ] Complete the business case study.
+- [ ] Review repository contents for sensitive information.
+- [ ] Commit and publish the v1.0 deliverables.
 
-### Phase 4 — Portfolio Presentation
+### Future Enhancements (Outside v1.0)
 
-**Planned**
-
-- [ ] Document business findings.
-- [ ] Publish dashboard screenshots.
-- [ ] Explain analytical methodology.
-- [ ] Identify operational improvement opportunities.
-- [ ] Prepare a portfolio case study.
+- Optional additional service-status reporting.
+- Expanded inventory turnover and aging analysis.
+- Automated reporting refresh workflows.
+- Interactive Northstar demonstration on the future Atlas Realm Consulting website.
 
 ## 12. Project Purpose
 
@@ -398,4 +466,4 @@ Northstar Business Performance Analytics demonstrates the development of an anal
 
 The project is intended to showcase practical data engineering, data validation, analytical modeling, SQL, and business intelligence skills.
 
-**Project status: Synthetic data generation complete; PostgreSQL warehouse deployed and validated; Power BI development in progress.**
+**Project status: Core development and validation complete; Northstar v1.0 documentation and portfolio release in progress.**
