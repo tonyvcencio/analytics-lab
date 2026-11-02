@@ -1,0 +1,383 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Northstar | Business Performance Analytics</title>
+  <meta name="description"
+        content="A business intelligence case study featuring Power BI, PostgreSQL, Python, and financial and operational analytics.">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Northstar | Business Performance Analytics">
+  <meta property="og:description"
+        content="Explore an end-to-end business intelligence solution with six Power BI dashboards and a 13-table analytical warehouse.">
+  <meta property="og:url"
+        content="https://tonyvcencio.github.io/analytics-lab/northstar/">
+  <meta property="og:image"
+        content="https://tonyvcencio.github.io/analytics-lab/northstar/assets/executive_overview.png">
+
+  <style>
+    :root {
+      --navy: #142b40;
+      --navy-light: #203d56;
+      --blue: #28618c;
+      --background: #f4f7fa;
+      --text: #243746;
+      --muted: #607282;
+      --border: #dce5ed;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont,
+                   "Segoe UI", Arial, sans-serif;
+      background: var(--background);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 0 24px;
+    }
+
+    header {
+      background: var(--navy);
+      color: white;
+      padding: 64px 0;
+    }
+
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 12px;
+      color: #a9c5da;
+      font-weight: 700;
+    }
+
+    h1 {
+      font-size: clamp(34px, 5vw, 54px);
+      line-height: 1.15;
+      margin: 14px 0;
+    }
+
+    header p {
+      color: #d4e1eb;
+      max-width: 760px;
+    }
+
+    .tech {
+      color: #b6d0e3;
+      font-size: 14px;
+      margin-top: 24px;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 36px;
+    }
+
+    .metric {
+      background: var(--navy-light);
+      padding: 22px;
+      border-radius: 10px;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 28px;
+      color: white;
+    }
+
+    .metric span {
+      font-size: 13px;
+      color: #c1d4e2;
+    }
+
+    main { padding: 52px 0; }
+
+    section {
+      background: white;
+      padding: 36px;
+      margin-bottom: 28px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    h2 {
+      margin-top: 0;
+      color: var(--navy);
+      font-size: 26px;
+    }
+
+    h3 { color: var(--blue); }
+
+    .dashboard {
+      width: 100%;
+      height: auto;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    figure { margin: 0; }
+
+    figcaption {
+      margin-top: 8px;
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .finding {
+      padding: 18px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .finding:last-child { border-bottom: 0; }
+
+    a { color: var(--blue); }
+
+    a:hover { text-decoration: none; }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      background: var(--navy);
+      color: #c1d4e2;
+      font-size: 13px;
+    }
+
+    @media (max-width: 700px) {
+      header { padding: 42px 0; }
+      .metrics, .gallery {
+        grid-template-columns: 1fr;
+      }
+      section { padding: 24px; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <div class="eyebrow">Analytics Lab / Project 002</div>
+      <h1>Northstar Home &amp; Tech</h1>
+      <p>Business Performance Analytics — an integrated
+      business intelligence case study exploring financial
+      performance, retail operations, workforce productivity,
+      operating expenses, and inventory.</p>
+
+      <div class="tech">
+        Python · PostgreSQL · SQL · Power BI · DAX
+      </div>
+
+      <div class="metrics">
+        <div class="metric">
+          <strong>$19.88M</strong>
+          <span>Simulated revenue, 2025–2026</span>
+        </div>
+        <div class="metric">
+          <strong>$716K</strong>
+          <span>Estimated operating result</span>
+        </div>
+        <div class="metric">
+          <strong>106,997</strong>
+          <span>Synthetic records across 13 tables</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section>
+      <h2>Executive Overview</h2>
+      <p>Northstar Home &amp; Tech is a fictional retailer
+      and technology services provider operating across
+      three business locations.</p>
+
+      <p>The completed solution integrates retail sales,
+      technical services, labor, operating expenses, and
+      inventory into six Power BI reporting pages with
+      synchronized Year and Location slicers.</p>
+
+      <img class="dashboard"
+           src="assets/executive_overview.png"
+           alt="Northstar Power BI executive overview dashboard"
+           width="1200" loading="eager">
+    </section>
+
+    <section>
+      <h2>The Business Challenge</h2>
+      <p>Retail, service, workforce, and inventory information
+      originates from different operational processes.
+      Evaluating these activities separately can obscure
+      their combined impact on profitability.</p>
+
+      <p>This project establishes a unified analytical
+      view to support management decisions about location
+      performance, retail margins, service profitability,
+      labor utilization, expenses, and inventory investment.</p>
+    </section>
+
+    <section>
+      <h2>Key Business Findings</h2>
+
+      <div class="finding">
+        <h3>01 — Location Profitability</h3>
+        <p>Northstar East recorded an estimated operating
+        loss of $65,982 despite having the highest technician
+        utilization at 46.18%.</p>
+        <p><strong>Management consideration:</strong>
+        Investigate revenue mix, staffing allocation, and
+        location-level margins before making cost decisions.</p>
+      </div>
+
+      <div class="finding">
+        <h3>02 — Retail Margin Differences</h3>
+        <p>Accessories achieved a 44.46% gross margin,
+        compared with 13.26% for computers.</p>
+        <p><strong>Management consideration:</strong>
+        Evaluate product mix, inventory investment,
+        and complementary accessory sales.</p>
+      </div>
+
+      <div class="finding">
+        <h3>03 — Expense Concentration</h3>
+        <p>Merchant processing fees and rent represented
+        approximately 77.1% of non-payroll operating expenses.</p>
+        <p><strong>Management consideration:</strong>
+        Review transaction economics, lease arrangements,
+        and expense allocation assumptions.</p>
+      </div>
+
+      <div class="finding">
+        <h3>04 — Service Profitability</h3>
+        <p>Technical Support achieved approximately 56.32%
+        gross margin, compared with 22.99% for Computer Repair.</p>
+        <p><strong>Management consideration:</strong>
+        Examine pricing, parts consumption, and technician
+        time requirements.</p>
+      </div>
+
+      <div class="finding">
+        <h3>05 — Inventory Interpretation</h3>
+        <p>At year-end 2026, inventory was valued at
+        approximately $2.00 million. No product-location
+        positions were below their recorded reorder points.</p>
+        <p><strong>Management consideration:</strong>
+        Incorporate real supplier lead times, inventory
+        aging, and stockout history before drawing
+        production-level conclusions.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Power BI Dashboard Gallery</h2>
+      <p>Six report pages provide complementary views
+      of Northstar's business performance.</p>
+
+      <div class="gallery">
+        <figure>
+          <img class="dashboard"
+               src="assets/retail_sales.png"
+               alt="Retail sales performance dashboard"
+               loading="lazy">
+          <figcaption>Retail Sales Performance</figcaption>
+        </figure>
+
+        <figure>
+          <img class="dashboard"
+               src="assets/service_operations.png"
+               alt="Service operations dashboard"
+               loading="lazy">
+          <figcaption>Service Operations</figcaption>
+        </figure>
+
+        <figure>
+          <img class="dashboard"
+               src="assets/labor_workforce.png"
+               alt="Labor and workforce dashboard"
+               loading="lazy">
+          <figcaption>Labor &amp; Workforce</figcaption>
+        </figure>
+
+        <figure>
+          <img class="dashboard"
+               src="assets/operating_expenses.png"
+               alt="Operating expenses dashboard"
+               loading="lazy">
+          <figcaption>Operating Expenses</figcaption>
+        </figure>
+
+        <figure>
+          <img class="dashboard"
+               src="assets/inventory_performance.png"
+               alt="Inventory performance dashboard"
+               loading="lazy">
+          <figcaption>Inventory Performance</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section>
+      <h2>Technical Implementation</h2>
+      <p>The solution combines Python-generated synthetic
+      data, a 13-table PostgreSQL analytical warehouse,
+      dimensional modeling, SQL validation, and Power BI
+      reporting with DAX measures.</p>
+
+      <p>Selected reporting contexts were independently
+      reconciled against PostgreSQL aggregates. The model
+      includes job-level labor allocation and snapshot-aware
+      inventory valuation.</p>
+
+      <p>
+        <a href="https://github.com/tonyvcencio/analytics-lab/tree/main/projects/business-performance">
+          Explore the technical project on GitHub
+        </a>
+      </p>
+      <p>
+        <a href="https://github.com/tonyvcencio/analytics-lab/blob/main/projects/business-performance/docs/business_case_study.md">
+          Read the complete business case study
+        </a>
+      </p>
+      <p>
+        <a href="https://github.com/tonyvcencio/analytics-lab/blob/main/projects/business-performance/docs/validation.md">
+          Review the validation documentation
+        </a>
+      </p>
+    </section>
+
+    <section>
+      <h2>Scope &amp; Limitations</h2>
+      <p>Northstar Home &amp; Tech is entirely fictional.
+      All data is synthetic. No real customer, employee,
+      or transaction information was used.</p>
+
+      <p>Operating results are analytical estimates,
+      not audited financial statements. Recommendations
+      identify opportunities for further investigation,
+      not guaranteed business outcomes.</p>
+    </section>
+
+  </main>
+
+  <footer>
+    Analytics Lab · Project 002 · Northstar Business Performance Analytics
+  </footer>
+</body>
+</html>
