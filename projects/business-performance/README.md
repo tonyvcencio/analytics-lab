@@ -21,6 +21,14 @@ All company data is synthetic.
 
 ### Explore the Project
 
+**Live Portfolio Case Study**
+
+[Explore Northstar Business Performance Analytics](https://tonyvcencio.github.io/analytics-lab/northstar/)
+
+View the completed business case study, including key findings,
+management recommendations, and screenshots of all six Power BI
+dashboards.
+
 - [Executive Overview Dashboard](outputs/screenshots/executive_overview.png)
 - [Retail Sales Performance](outputs/screenshots/retail_sales.png)
 - [Service Operations](outputs/screenshots/service_operations.png)
@@ -175,7 +183,8 @@ The analytical model has undergone independent PostgreSQL reconciliation and Pow
 
 Validated areas include retail and service financial results, payroll allocation, operating expenses, inventory balances, location-level reporting, and synchronized slicer behavior.
 
-Detailed reconciliation evidence will be documented in `docs/validation.md`.
+Detailed reconciliation evidence is available in the
+[Data and Report Validation](docs/validation.md) documentation.
 
 ## 6. Data Generation
 
@@ -335,7 +344,8 @@ Power BI validation confirmed:
 
 Inventory metrics use closing month-end snapshots rather than summing inventory balances across reporting periods.
 
-A detailed record of validation results and limitations will be maintained in `docs/validation.md`.
+The completed [Data and Report Validation](docs/validation.md)
+document records reconciliation results, testing, and limitations.
 
 ## 8. Repository Structure
 
@@ -357,8 +367,18 @@ business-performance/
 │   ├── FactExpenses.csv
 │   └── FactInventorySnapshot.csv
 ├── docs/
+│   ├── business_case_study.md
 │   ├── data_dictionary.md
-│   └── database_infrastructure.md
+│   ├── database_infrastructure.md
+│   └── validation.md
+├── outputs/
+│   └── screenshots/
+│       ├── executive_overview.png
+│       ├── retail_sales.png
+│       ├── service_operations.png
+│       ├── labor_workforce.png
+│       ├── operating_expenses.png
+│       └── inventory_performance.png
 ├── powerbi/
 │   └── Northstar_Business_Performance.pbix
 ├── scripts/
@@ -442,16 +462,21 @@ These assumptions can be expanded in future versions.
 
 ### Phase 4 — Portfolio Release
 
-**In Progress**
+**Complete — v1.0 Published**
 
 - [x] Complete core warehouse and Power BI development.
 - [x] Complete independent financial and inventory QA.
-- [ ] Finalize the Northstar README.
-- [ ] Prepare validation documentation.
-- [ ] Capture six clean dashboard screenshots.
-- [ ] Complete the business case study.
-- [ ] Review repository contents for sensitive information.
-- [ ] Commit and publish the v1.0 deliverables.
+- [x] Finalize the Northstar README.
+- [x] Prepare validation documentation.
+- [x] Capture six clean dashboard screenshots.
+- [x] Complete the business case study.
+- [x] Review repository contents for sensitive information.
+- [x] Commit and publish the v1.0 deliverables.
+- [x] Publish the Northstar portfolio case study website.
+- [x] Add Northstar to the LinkedIn Projects section.
+
+**Published Portfolio:**
+[Northstar Business Performance Analytics](https://tonyvcencio.github.io/analytics-lab/northstar/)
 
 ### Future Enhancements (Outside v1.0)
 
@@ -466,4 +491,13 @@ Northstar Business Performance Analytics demonstrates the development of an anal
 
 The project is intended to showcase practical data engineering, data validation, analytical modeling, SQL, and business intelligence skills.
 
-**Project status: Core development and validation complete; Northstar v1.0 documentation and portfolio release in progress.**
+**Project Status: v1.0 Complete and Published**
+
+Northstar Business Performance Analytics has completed data
+engineering, PostgreSQL deployment, Power BI development,
+independent validation, technical documentation, and portfolio
+publication.
+
+The completed project is publicly accessible through its
+dedicated GitHub Pages case study website. Future enhancements
+will be managed separately from the completed v1.0 release.
