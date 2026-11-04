@@ -2,6 +2,45 @@ Attribute VB_Name = "Module1"
 
 Option Explicit
 
+Public Function GetReportDate() As Date
+
+    Dim ws As Worksheet
+    Set ws = ThisWorkbook.Worksheets("Summary")
+
+    If Not IsDate(ws.Range("K2").Value) Then
+        Err.Raise vbObjectError + 1003, "GetReportDate", "Invalid reporting date in Summary!K2."
+    End If
+
+    GetReportDate = CDate(ws.Range("K2").Value)
+
+End Function
+
+Private Sub ValidateCSVHeaders( _
+    ByVal ws As Worksheet, _
+    ByVal expectedHeaders As Variant, _
+    ByVal sourceName As String)
+
+    Dim i As Long
+    Dim actualHeader As String
+
+    For i = LBound(expectedHeaders) To UBound(expectedHeaders)
+
+        actualHeader = Trim$(CStr(ws.Cells(1, i + 1).Value))
+
+        If StrComp(actualHeader, CStr(expectedHeaders(i)), vbTextCompare) <> 0 Then
+
+            Err.Raise vbObjectError + 1004, _
+                "ValidateCSVHeaders", _
+                sourceName & " has an invalid header in column " & _
+                (i + 1) & ". Expected '" & expectedHeaders(i) & _
+                "', found '" & actualHeader & "'."
+
+        End If
+
+    Next i
+
+End Sub
+
 Public Sub ImportDailyExports()
 
     Dim projectPath As String
@@ -39,22 +78,67 @@ End If
 
 End Sub
 
+
 Private Sub ImportCSV(ByVal filePath As String, ByVal targetSheet As Worksheet)
 
     Dim sourceBook As Workbook
+    Dim sourceSheet As Worksheet
+    Dim expectedHeaders As Variant
 
+    ' Define expected headers for each source
+    Select Case targetSheet.Name
+
+        Case "External_Data"
+            expectedHeaders = Array( _
+                "WorkOrderID", "CreatedDate", "PropertyID", _
+                "RequestType", "Priority", "DueDate")
+
+        Case "Internal_Data"
+            expectedHeaders = Array( _
+                "WorkOrderID", "CreatedDate", "AssignedTo", _
+                "Region", "DueDate")
+
+        Case Else
+            Err.Raise vbObjectError + 1005, _
+                "ImportCSV", "Unknown target worksheet."
+
+    End Select
+
+    ' Open and validate before replacing existing data
+    Set sourceBook = Workbooks.Open(Filename:=filePath, Local:=True)
+    Set sourceSheet = sourceBook.Worksheets(1)
+
+    On Error GoTo ImportError
+
+    ValidateCSVHeaders sourceSheet, expectedHeaders, targetSheet.Name
+
+    ' Replace data only after validation succeeds
     targetSheet.Cells.Clear
 
-    Set sourceBook = Workbooks.Open(Filename:=filePath, Local:=True)
-
-    sourceBook.Worksheets(1).UsedRange.Copy _
+    sourceSheet.UsedRange.Copy _
         Destination:=targetSheet.Range("A1")
-
-    sourceBook.Close SaveChanges:=False
 
     targetSheet.Columns.AutoFit
 
+    sourceBook.Close SaveChanges:=False
+
+    Exit Sub
+
+ImportError:
+    Dim errorNumber As Long
+    Dim errorDescription As String
+
+    errorNumber = Err.Number
+    errorDescription = Err.Description
+
+    On Error Resume Next
+    sourceBook.Close SaveChanges:=False
+    On Error GoTo 0
+
+    Err.Raise errorNumber, "ImportCSV", errorDescription
+
 End Sub
+
 
 
 
@@ -169,7 +253,7 @@ Public Sub CalculateAging()
     Set wsExternal = ThisWorkbook.Worksheets("External_Data")
     Set wsInternal = ThisWorkbook.Worksheets("Internal_Data")
 
-    reportDate = DateSerial(2026, 10, 31)
+    reportDate = GetReportDate()
 
     lastRow = wsAging.Cells(wsAging.Rows.Count, 1).End(xlUp).Row
     lastExternal = wsExternal.Cells(wsExternal.Rows.Count, 1).End(xlUp).Row
@@ -340,6 +424,7 @@ Public Sub GenerateSummary()
     Dim criticalAging As Long
     Dim bucketNames As Variant
     Dim i As Long
+    Dim reportDate As Date
 
     Set wsSummary = ThisWorkbook.Worksheets("Summary")
     Set wsAging = ThisWorkbook.Worksheets("Aging_Detail")
@@ -370,7 +455,10 @@ Public Sub GenerateSummary()
     criticalAging = Application.CountIf( _
         wsAging.Range("G2:G" & lastRow), "Critical Aging")
 
-    wsSummary.Cells.Clear
+    reportDate = GetReportDate()
+
+' Clear generated dashboard content, preserving the date input
+wsSummary.Range("A1:I100").Clear
 
     ' Dashboard heading
     With wsSummary.Range("B2:H2")
@@ -382,7 +470,7 @@ Public Sub GenerateSummary()
 
     wsSummary.Range("B3").Value = "DAILY OPERATIONS SUMMARY"
     wsSummary.Range("B4").Value = "Report Date"
-    wsSummary.Range("C4").Value = DateSerial(2026, 10, 31)
+    wsSummary.Range("C4").Value = reportDate
     wsSummary.Range("C4").NumberFormat = "mmmm d, yyyy"
 
     ' KPI labels and values
