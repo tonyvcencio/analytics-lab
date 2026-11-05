@@ -41,40 +41,166 @@ Private Sub ValidateCSVHeaders( _
 
 End Sub
 
+Private Sub ValidateCSVRecords( _
+    ByVal ws As Worksheet, _
+    ByVal sourceName As String)
+
+    Dim lastRow As Long
+    Dim rowNum As Long
+    Dim workOrderID As String
+    Dim seenIDs As Object
+
+    Set seenIDs = CreateObject("Scripting.Dictionary")
+    seenIDs.CompareMode = vbTextCompare
+
+    Dim lastCell As Range
+
+    Set lastCell = ws.Cells.Find( _
+        What:="*", _
+        After:=ws.Cells(1, 1), _
+        LookIn:=xlValues, _
+        LookAt:=xlPart, _
+        SearchOrder:=xlByRows, _
+        SearchDirection:=xlPrevious)
+
+    If lastCell Is Nothing Then
+        lastRow = 0
+    Else
+        lastRow = lastCell.Row
+    End If
+
+    ' Reject empty exports
+    If lastRow < 2 Then
+        Err.Raise vbObjectError + 1006, "ValidateCSVRecords", _
+            sourceName & " contains no work-order records."
+    End If
+
+    For rowNum = 2 To lastRow
+
+        workOrderID = Trim$(CStr(ws.Cells(rowNum, "A").Value))
+
+        ' Reject blank IDs
+        If workOrderID = "" Then
+            Err.Raise vbObjectError + 1007, "ValidateCSVRecords", _
+                sourceName & " has a blank WorkOrderID at row " & rowNum & "."
+        End If
+
+        ' Reject duplicate IDs within the same export
+        If seenIDs.Exists(workOrderID) Then
+            Err.Raise vbObjectError + 1008, "ValidateCSVRecords", _
+                sourceName & " has a duplicate WorkOrderID '" & _
+                workOrderID & "' at row " & rowNum & "."
+        End If
+
+        seenIDs.Add workOrderID, True
+
+        ' Validate CreatedDate (column B)
+        If Not IsDate(ws.Cells(rowNum, "B").Value) Then
+            Err.Raise vbObjectError + 1009, "ValidateCSVRecords", _
+                sourceName & " has an invalid CreatedDate at row " & rowNum & "."
+        End If
+
+        ' Reject creation dates after the reporting date
+        If CDate(ws.Cells(rowNum, "B").Value) > GetReportDate() Then
+            Err.Raise vbObjectError + 1010, "ValidateCSVRecords", _
+                sourceName & " has a future CreatedDate at row " & rowNum & "."
+        End If
+
+        ' Validate DueDate (last column in each source)
+        Dim dueDateColumn As Long
+
+        If sourceName = "External_Data" Then
+            dueDateColumn = 6
+        Else
+            dueDateColumn = 5
+        End If
+
+        If Not IsDate(ws.Cells(rowNum, dueDateColumn).Value) Then
+            Err.Raise vbObjectError + 1011, "ValidateCSVRecords", _
+                sourceName & " has an invalid DueDate at row " & rowNum & "."
+        End If
+
+    Next rowNum
+
+End Sub
+
 Public Sub ImportDailyExports()
 
     Dim projectPath As String
     Dim sourceFolder As String
+    Dim externalPath As String
+    Dim internalPath As String
+    Dim externalBook As Workbook
+    Dim internalBook As Workbook
+    Dim errorNumber As Long
+    Dim errorDescription As String
 
     projectPath = ThisWorkbook.Path
     sourceFolder = Replace(projectPath, "\excel", "\data\daily-exports")
 
+    externalPath = sourceFolder & "\External_Open.csv"
+    internalPath = sourceFolder & "\Internal_Open.csv"
 
-If Dir(sourceFolder & "\External_Open.csv") = "" Then
-    Err.Raise vbObjectError + 1001, _
-              "ImportDailyExports", _
-              "External CSV file not found."
-End If
+    If Dir(externalPath) = "" Then
+        Err.Raise vbObjectError + 1001, "ImportDailyExports", _
+            "External CSV file not found."
+    End If
 
-If Dir(sourceFolder & "\Internal_Open.csv") = "" Then
-    Err.Raise vbObjectError + 1002, _
-              "ImportDailyExports", _
-              "Internal CSV file not found."
-End If
+    If Dir(internalPath) = "" Then
+        Err.Raise vbObjectError + 1002, "ImportDailyExports", _
+            "Internal CSV file not found."
+    End If
 
-    ImportCSV sourceFolder & "\External_Open.csv", _
-              ThisWorkbook.Worksheets("External_Data")
+    On Error GoTo ValidationError
 
-    ImportCSV sourceFolder & "\Internal_Open.csv", _
-              ThisWorkbook.Worksheets("Internal_Data")
+    ' Open both sources for validation
+    Set externalBook = Workbooks.Open(Filename:=externalPath, Local:=True)
+    Set internalBook = Workbooks.Open(Filename:=internalPath, Local:=True)
 
-    MsgBox "Daily exports imported successfully." & vbCrLf & _
-           "External records: " & _
-           ThisWorkbook.Worksheets("External_Data").Cells( _
-           Rows.Count, 1).End(xlUp).Row - 1 & vbCrLf & _
-           "Internal records: " & _
-           ThisWorkbook.Worksheets("Internal_Data").Cells( _
-           Rows.Count, 1).End(xlUp).Row - 1, vbInformation
+    ValidateCSVHeaders externalBook.Worksheets(1), _
+        Array("WorkOrderID", "CreatedDate", "PropertyID", _
+              "RequestType", "Priority", "DueDate"), "External_Data"
+
+    ValidateCSVRecords externalBook.Worksheets(1), "External_Data"
+
+    ValidateCSVHeaders internalBook.Worksheets(1), _
+        Array("WorkOrderID", "CreatedDate", "AssignedTo", _
+              "Region", "DueDate"), "Internal_Data"
+
+    ValidateCSVRecords internalBook.Worksheets(1), "Internal_Data"
+
+    ' Both files passed validation
+    externalBook.Close SaveChanges:=False
+    Set externalBook = Nothing
+
+    internalBook.Close SaveChanges:=False
+    Set internalBook = Nothing
+
+    ' Import only after both sources pass
+    ImportCSV externalPath, ThisWorkbook.Worksheets("External_Data")
+    ImportCSV internalPath, ThisWorkbook.Worksheets("Internal_Data")
+
+    MsgBox "Daily exports imported and validated successfully.", vbInformation
+
+    Exit Sub
+
+ValidationError:
+    errorNumber = Err.Number
+    errorDescription = Err.Description
+
+    On Error Resume Next
+
+    If Not externalBook Is Nothing Then
+        externalBook.Close SaveChanges:=False
+    End If
+
+    If Not internalBook Is Nothing Then
+        internalBook.Close SaveChanges:=False
+    End If
+
+    On Error GoTo 0
+
+    Err.Raise errorNumber, "ImportDailyExports", errorDescription
 
 End Sub
 
@@ -574,7 +700,13 @@ Public Sub RunDailyReport()
     Dim startTime As Double
     Dim elapsedSeconds As Double
 
+    Dim backupPath As String
+
     startTime = Timer
+
+    backupPath = ThisWorkbook.Path & "\Meridian_PreRefresh_Backup.xlsm"
+
+    ThisWorkbook.SaveCopyAs backupPath
 
     Application.ScreenUpdating = False
 
@@ -614,5 +746,3 @@ ReportError:
            Err.Description, vbCritical, "Meridian Aging Monitor"
 
 End Sub
-
-

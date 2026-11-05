@@ -18,3 +18,6 @@
 # Excel recovery and backup files
 *.xlk
 *.asd
+
+# Local pre-refresh workbook backup
+/excel/Meridian_PreRefresh_Backup.xlsm
