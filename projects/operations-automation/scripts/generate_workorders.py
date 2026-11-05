@@ -3,6 +3,7 @@ from pathlib import Path
 from datetime import date, timedelta
 import pandas as pd
 import random
+import argparse
 
 # Project paths
 PROJECT_DIR = Path(__file__).resolve().parents[1]
@@ -112,7 +113,7 @@ def generate_sample():
     print(f"Excluded: {(~expected['IncludeInAging']).sum()}")
 
 
-def generate_full():
+def generate_full(report_date=REPORT_DATE):
     """Generate Meridian's synthetic work-order lifecycle and daily exports."""
     rng = random.Random(RANDOM_SEED)
     FULL_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -121,7 +122,7 @@ def generate_full():
     current_date = SIMULATION_START
     order_number = 1
 
-    while current_date <= SIMULATION_END:
+    while current_date <= report_date:
         # Approximately 1,100 new work orders per 30-day month.
         daily_count = max(
             0, round(rng.gauss(MONTHLY_WORK_ORDERS / 30, 7))
@@ -208,12 +209,12 @@ def generate_full():
     # A work order is open until its resolution date.
     external_open = (
         pd.to_datetime(master["ExternalResolutionDate"]).dt.date
-        > REPORT_DATE
+        > report_date
     )
 
     internal_open = (
         pd.to_datetime(master["InternalResolutionDate"]).dt.date
-        > REPORT_DATE
+        > report_date
     )
 
     external_columns = [
@@ -235,7 +236,7 @@ def generate_full():
     expected["IncludeInAging"] = external_open | internal_open
 
     expected["AgeDays"] = (
-        pd.Timestamp(REPORT_DATE)
+        pd.Timestamp(report_date)
         - pd.to_datetime(expected["CreatedDate"])
     ).dt.days
 
@@ -268,5 +269,18 @@ def generate_full():
     )
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Generate synthetic Meridian work-order data."
+    )
+
+    parser.add_argument(
+        "--report-date",
+        type=date.fromisoformat,
+        default=REPORT_DATE,
+        help="Reporting date in YYYY-MM-DD format (default: 2026-10-31).",
+    )
+
+    args = parser.parse_args()
+
     generate_sample()
-    generate_full()
+    generate_full(report_date=args.report_date)

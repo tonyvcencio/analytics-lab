@@ -1,92 +1,86 @@
-# Module 001 — Daily Aging & Reconciliation Monitor
+# Module 001 — Meridian Daily Aging & Reconciliation Monitor
 
 **Project:** 003 — Operations Automation  
 **Company:** Meridian Property Services (fictional)  
 **Primary Platform:** Microsoft Excel / VBA  
-**Development Workstation:** Hopper  
-**Status:** Specification — v0.1  
-**Target:** November 2026
+**Development Workstation:** Hopper (Windows)
+**Status:** v1.0 Release Candidate
+**Validation Period:** October 31–November 2, 2026
 
 ## 1. Purpose
 
-Automate the daily reconciliation of outstanding maintenance work orders across two operational systems and generate a unified aging report.
+Automate the daily reconciliation of outstanding maintenance work orders across two operational systems and produce a consolidated aging and exception report.
 
-The report must include every unique work order appearing in either system's daily open-work-order export.
+The monitor identifies discrepancies between the two systems, calculates work-order aging, flags overdue requests, and presents operational metrics through an Excel dashboard.
 
 ## 2. Business Environment
 
-Meridian Property Services uses two systems:
+Meridian Property Services operates two fictional systems:
 
-- **Property Management System (External):** Originates maintenance requests and supplies records to the internal maintenance system.
-- **Maintenance Operations System (Internal):** Receives work orders from the external system and manages their operational processing.
+- **Property Management System (External):** Originates maintenance requests and maintains its open-work-order population.
+- **Maintenance Operations System (Internal):** Tracks assigned maintenance work and independently maintains its open-work-order population.
 
-Each system independently maintains its open-work-order population.
+A work order may appear in either or both systems. Differences may indicate synchronization delays, incomplete processing, or other conditions requiring investigation.
 
-Resolved work orders disappear from the following day's open-work-order export.
-
-Differences between the two exports may indicate synchronization delays, unresolved work, or operational discrepancies requiring investigation.
+The monitor consolidates all unique work orders appearing in at least one daily export.
 
 ## 3. Input Files
 
-The module processes two daily Excel exports.
+The application uses two CSV files located in:
 
-### Source A — External_Open_WorkOrders.xlsx
+`data/daily-exports/`
 
-Required fields:
+### External_Open.csv
+
+Required columns, in order:
 
 | Column | Description |
 |---|---|
-| WorkOrderID | Unique work order identifier |
-| CreatedDate | Original request creation date |
+| WorkOrderID | Unique work-order identifier |
+| CreatedDate | Original creation date |
 | PropertyID | Property identifier |
 | RequestType | Maintenance category |
-| Priority | Work order priority |
+| Priority | Work-order priority |
 | DueDate | Target completion date |
 
-### Source B — Internal_Open_WorkOrders.xlsx
+### Internal_Open.csv
 
-Required fields:
+Required columns, in order:
 
 | Column | Description |
 |---|---|
-| WorkOrderID | Shared work order identifier |
-| CreatedDate | Original creation date inherited from Source A |
-| AssignedTo | Responsible technician or coordinator |
+| WorkOrderID | Shared work-order identifier |
+| CreatedDate | Original creation date |
+| AssignedTo | Assigned technician or coordinator |
 | Region | Operational region |
 | DueDate | Target completion date |
 
-The MVP assumes that both sources use the same WorkOrderID and inherit the same original creation date.
+Both files must use the required column names and ordering.
+
+The workbook expects the repository's existing relative directory structure.
 
 ## 4. Reconciliation Rules
 
-All comparisons use WorkOrderID as the unique matching key.
+WorkOrderID is the unique matching key.
 
-| External | Internal | Result |
+| External | Internal | Classification |
 |---|---|---|
 | Present | Present | Matched |
 | Present | Absent | External Only |
 | Absent | Present | Internal Only |
 | Absent | Absent | Excluded |
 
-The consolidated active backlog is the union of unique WorkOrderIDs across both exports.
+The active backlog is the union of work orders appearing in either source.
 
-A work order must not be excluded simply because it is missing from one source.
+A missing record in one system does not automatically establish that the work order has been resolved.
 
-A missing record does not independently establish that the work order was resolved.
+## 5. Aging and Overdue Calculations
 
-## 5. Aging Calculation
+The reporting date is selected in `Summary!K2`.
 
-Aging is measured in calendar days:
+**AgeDays = ReportDate − CreatedDate**, measured in calendar days.
 
-**AgeDays = MAX(0, ReportDate - CreatedDate)**
-
-The report date must be explicitly defined for each run.
-
-For testing, use a fixed report date. Production runs will use the selected reporting date.
-
-### Aging Buckets
-
-| Days | Category |
+| Age in days | Classification |
 |---|---|
 | 0–2 | Fresh |
 | 3–5 | Developing |
@@ -94,85 +88,153 @@ For testing, use a fixed report date. Production runs will use the selected repo
 | 11–20 | High Aging |
 | 21+ | Critical Aging |
 
-These are fictional business thresholds and will eventually be configurable.
+A work order is overdue when:
 
-## 6. Exception Handling
+**DueDate < ReportDate**
 
-The tool must identify:
+Orders due on the reporting date are not yet classified as overdue.
 
-- Work orders present in only one source.
-- Duplicate WorkOrderIDs within a source.
-- Missing or invalid creation dates.
-- Creation dates later than the report date.
-- Conflicting creation dates between sources.
-- Missing required columns.
-- Empty or unreadable source files.
+These aging thresholds are fictional business rules and are fixed in the current VBA implementation.
 
-Invalid records must be reported rather than silently discarded.
+## 6. Input Validation and Exception Handling
 
-If a valid creation date cannot be established, the work order remains in the reconciliation output with an aging calculation exception.
+Before replacing the workbook's imported source data, the application validates both CSV files.
 
-## 7. Processing Workflow
+Implemented validation includes:
 
-1. Select the reporting date.
-2. Import the external open-work-order export.
-3. Import the internal open-work-order export.
-4. Validate file structure and required fields.
-5. Match WorkOrderIDs bidirectionally.
-6. Consolidate unique open work orders.
-7. Classify records as Matched, External Only, or Internal Only.
-8. Calculate aging where valid dates are available.
-9. Identify reconciliation and data-quality exceptions.
-10. Generate the daily report.
+- Required file existence
+- Required column names and ordering
+- Missing WorkOrderIDs
+- Duplicate WorkOrderIDs within a source
+- Invalid creation dates
+- Creation dates later than the reporting date
+- Invalid due dates
+
+Validation failures stop the reporting workflow and display an error message.
+
+The application distinguishes between two types of issues:
+
+**Input validation errors:** Prevent the report from proceeding.
+
+**Reconciliation exceptions:** Valid work orders appearing in only one system. These remain in the active backlog and are listed on the Exceptions worksheet for review.
+
+Cross-source field consistency checks and additional empty-file handling remain areas for future validation or enhancement.
+
+## 7. Daily Processing Workflow
+
+1. Place the two required CSV files in `data/daily-exports/`.
+2. Open `Meridian_Aging_Monitor.xlsm` in Microsoft Excel.
+3. Enter the reporting date in `Summary!K2`.
+4. Save the workbook.
+5. Select **Run Daily Report**.
+6. The workbook creates a pre-refresh backup.
+7. Both source files undergo validation.
+8. Valid source records are imported.
+9. Work orders are reconciled and consolidated.
+10. Aging and overdue classifications are calculated.
+11. Reconciliation exceptions are generated.
+12. The Summary dashboard and chart are refreshed.
+13. Review the results and save the completed workbook.
+
+The reporting workflow displays a completion message with processing time.
 
 ## 8. Report Outputs
 
-The Excel report will contain:
-
 ### Summary
 
-- Total unique open work orders
-- Matched work orders
-- External-only work orders
-- Internal-only work orders
-- Work orders by aging bucket
-- Total data-quality exceptions
+Displays:
 
-### Aging Detail
+- Active backlog
+- Matched records
+- Source discrepancies
+- External-only records
+- Internal-only records
+- Overdue work orders
+- Critical aging
+- Work orders by aging category
+- Aging distribution chart
 
-One row per unique WorkOrderID, including source presence, reconciliation classification, creation date, age, and aging category.
+### Aging_Detail
+
+Contains the consolidated active work-order population, source presence indicators, reconciliation classification, creation date, age, aging category, due date, and overdue status.
 
 ### Exceptions
 
-Records requiring review, including unmatched IDs, duplicates, missing dates, and invalid source data.
+Contains work orders found in only one source, including their classification, dates, aging information, overdue status, and review status.
 
-## 9. Validation Requirements
+### External_Data and Internal_Data
 
-The MVP must pass tests confirming:
+Contain the imported source records used for the current report.
 
-- Records appearing in both exports are counted once.
-- Records appearing in only one export are included.
-- Records absent from both exports are excluded.
-- Duplicate IDs do not inflate the consolidated backlog.
-- Aging calculations match independently verified expected results.
-- Missing dates do not cause records to disappear.
-- Empty exports are handled correctly.
-- Repeated processing of identical inputs produces identical results.
+## 9. Validation Results
 
-## 10. Initial Implementation
+The monitor was tested against synthetic daily snapshots for three consecutive dates.
 
-The first implementation will use Microsoft Excel and VBA on Hopper.
+| Metric | Oct 31 | Nov 1 | Nov 2 |
+|---|---:|---:|---:|
+| Active backlog | 470 | 479 | 475 |
+| Matched records | 441 | 450 | 444 |
+| Source discrepancies | 29 | 29 | 31 |
 
-COUNTIF-based presence checks will serve as the conceptual starting point, with VBA handling bidirectional reconciliation, deduplication, validation, and report generation.
+The November 2 results were independently checked using Python.
 
-Power Query and Python implementations may be developed later for comparison and additional functionality.
+| Metric | Verified count |
+|---|---:|
+| Fresh | 93 |
+| Developing | 85 |
+| Aging | 86 |
+| High Aging | 103 |
+| Critical Aging | 108 |
+| Overdue | 199 |
 
-## 11. Data Protection
+All six independently checked aging and overdue calculations matched the Excel results.
 
-All records, work-order identifiers, dates, and business scenarios will be synthetic.
+The November 2 Excel refresh completed in **8.02 seconds** on Hopper.
 
-No employer-owned data, code, proprietary procedures, or internal reporting files will be incorporated.
+Additional negative tests confirmed that the application rejects malformed headers, duplicate identifiers, invalid creation dates, and blank identifiers.
 
-## 12. MVP Completion Criteria
+## 10. Backup and Recovery
 
-The module is complete when two synthetic daily exports can be processed into one accurate, reproducible aging report with validated reconciliation results and documented exceptions.
+Before each report refresh, the workbook creates:
+
+`excel/Meridian_PreRefresh_Backup.xlsm`
+
+The backup contains a copy of the workbook's state immediately before processing.
+
+A recovery test confirmed that the backup could be opened and that the previous reporting dashboard remained readable.
+
+**Important limitations:**
+
+- The backup is overwritten on each report run.
+- Recovery is manual; the application does not automatically roll back a failed refresh.
+- The backup captures the workbook's current state, including any reporting-date changes made before refresh.
+- The operator should save the workbook after a successful report.
+- The backup file is excluded from Git version control.
+
+To recover, close the working workbook, preserve the backup by copying it to a separate filename, inspect that copy, and restore it only after confirming it contains the required information.
+
+## 11. Data Protection and Known Limitations
+
+All data is synthetic. No confidential employer information, proprietary source code, or production records are used.
+
+Current limitations include:
+
+- Fixed CSV schemas and relative folder structure
+- Fixed aging thresholds
+- Manual initiation of the reporting workflow
+- Manual backup recovery
+- No automatic report history or scheduled execution
+- Cross-source field conflicts are not yet independently validated
+- Empty-file handling requires additional testing
+
+The current release is a local Excel/VBA reporting solution, not a hosted or multi-user application.
+
+## 12. Completion Criteria and Future Development
+
+The v1.0 release candidate satisfies the principal functional requirements for daily reconciliation, consolidated aging, overdue monitoring, exception reporting, and dashboard generation.
+
+Final release preparation includes documentation review, repository verification, and packaging.
+
+Future enhancements may include configurable thresholds, additional data-quality checks, scheduled execution, historical reporting, and integration with other Operations Automation modules.
+
+The broader Project 003 remains in development.
