@@ -1,0 +1,11 @@
+# Local development and recovery workbooks
+Meridian_Deadline_Coordination_RECOVERY_TEST.xlsm
+
+# Automatic workbook backups
+backups/
+
+# Archived pre-release versions
+pre-release/
+
+# Excel temporary lock files
+~$*
